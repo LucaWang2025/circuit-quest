@@ -12,6 +12,7 @@ const DONE = [
   { id: 'safety',       icon: '🛡️', label: '安全用电 Safety' },
   { id: 'troubleshoot', icon: '🔍', label: '故障排查 Troubleshoot' },
   { id: 'bldc-fan',     icon: '🌀', label: '无刷电机风扇 BLDC Fan' },
+  { id: 'flashlight',   icon: '🔦', label: '手电筒电路 Flashlight' },
 ];
 
 const COMING = [

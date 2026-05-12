@@ -32,7 +32,8 @@ const CARD_GROUPS = [
     tag: 'APPLIANCE CIRCUITS',
     color: '#e040fb',
     cards: [
-      { id: 'bldc-fan', icon: '🌀', title: '无刷电机风扇', en: 'BLDC FAN', color: '#e040fb', desc: '三相绕组、六步换相、MOSFET全桥、PWM调速全解析' },
+      { id: 'bldc-fan',   icon: '🌀', title: '无刷电机风扇', en: 'BLDC FAN',   color: '#e040fb', desc: '三相绕组、六步换相、MOSFET全桥、PWM调速全解析' },
+      { id: 'flashlight', icon: '🔦', title: '手电筒电路',   en: 'FLASHLIGHT', color: '#ffd740', desc: '18650/21700电池、Type-C充电IC、恒流LED驱动设计' },
     ],
   },
 ];

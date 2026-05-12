@@ -16,6 +16,7 @@ import Outlet from './components/sections/Outlet';
 import Safety from './components/sections/Safety';
 import Troubleshoot from './components/sections/Troubleshoot';
 import BLDCFan from './components/sections/BLDCFan';
+import Flashlight from './components/sections/Flashlight';
 import Footer from './components/Footer';
 
 export default function App() {
@@ -52,6 +53,7 @@ export default function App() {
         <Safety />
         <Troubleshoot />
         <BLDCFan />
+        <Flashlight />
         <Footer />
       </main>
     </>
