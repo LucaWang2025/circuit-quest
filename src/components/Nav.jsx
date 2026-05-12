@@ -1,53 +1,49 @@
-import { useEffect, useState } from 'react';
 import styles from './Nav.module.css';
+import { CATEGORIES, SEC_CATEGORY } from '../secs';
 
-const SECS   = ['home','voltage','current','resistance','multimeter','power','capacitor','transformer','home-ckt','wiring','outlet','safety','troubleshoot','bldc-fan','flashlight'];
-const LABELS = ['首页','电压','电流','电阻','万用表','功率','电容','变压器','家用电路','接线','开关插座','安全用电','故障排查','无刷电机','手电筒'];
-
-export default function Nav({ theme, onToggleTheme }) {
-  const [active, setActive] = useState('home');
-
-  useEffect(() => {
-    const io = new IntersectionObserver(
-      entries => {
-        entries.forEach(e => {
-          if (e.isIntersecting) setActive(e.target.id);
-        });
-      },
-      { threshold: 0.38 }
-    );
-    SECS.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) io.observe(el);
-    });
-    return () => io.disconnect();
-  }, []);
-
-  const goTo = id => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
+export default function Nav({ theme, onToggleTheme, activeSection, onNavigate }) {
+  const activeCat = SEC_CATEGORY[activeSection] ?? CATEGORIES[0];
 
   return (
     <nav className={styles.nav}>
-      <div className={styles.logo}>⚡ 电路<em>探索</em></div>
+      {/* ── Row 1: Logo + Category tabs + Theme ── */}
+      <div className={styles.row1}>
+        <div className={styles.logo}>⚡ 电路<em>探索</em></div>
 
-      {SECS.map((id, i) => (
-        <button
-          key={id}
-          className={`${styles.pill} ${active === id ? styles.on : ''}`}
-          onClick={() => goTo(id)}
-        >
-          {LABELS[i]}
+        <div className={styles.catRow}>
+          {CATEGORIES.map(cat => (
+            <button
+              key={cat.id}
+              className={`${styles.catTab} ${activeCat.id === cat.id ? styles.catOn : ''}`}
+              style={{ '--cat-color': cat.color }}
+              onClick={() => onNavigate(cat.sections[0].id)}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
+        <button className={styles.themeBtn} onClick={onToggleTheme} title="切换主题">
+          {theme === 'dark' ? '☀️' : '🌙'}
         </button>
-      ))}
+      </div>
 
-      <button
-        className={styles.themeBtn}
-        onClick={onToggleTheme}
-        title="切换主题"
-      >
-        {theme === 'dark' ? '☀️' : '🌙'}
-      </button>
+      {/* ── Row 2: Section pills for active category ── */}
+      <div className={styles.row2}>
+        <div className={styles.pillRow}>
+          {activeCat.sections.map(sec => (
+            <button
+              key={sec.id}
+              className={`${styles.pill} ${activeSection === sec.id ? styles.on : ''}`}
+              style={{ '--cat-color': activeCat.color }}
+              onClick={() => onNavigate(sec.id)}
+            >
+              <span className={styles.pillIcon}>{sec.icon}</span>
+              {sec.label}
+            </button>
+          ))}
+        </div>
+      </div>
     </nav>
   );
 }

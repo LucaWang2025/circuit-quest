@@ -1,4 +1,5 @@
 import styles from './Home.module.css';
+import { useNav } from '../../NavContext';
 
 const CARD_GROUPS = [
   {
@@ -38,10 +39,8 @@ const CARD_GROUPS = [
   },
 ];
 
-const goTo = id =>
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
 export default function Home() {
+  const navigate = useNav();
   return (
     <section id="home" className={`sec ${styles.home}`}>
       <div className={styles.badge}>⚡ 电力工程师培养门户 · 三阶段系统学习路径</div>
@@ -74,7 +73,7 @@ export default function Home() {
           </div>
           <div className={styles.cards}>
             {group.cards.map(c => (
-              <div key={c.id} className={styles.card} style={{ '--cc': c.color }} onClick={() => goTo(c.id)}>
+              <div key={c.id} className={styles.card} style={{ '--cc': c.color }} onClick={() => navigate(c.id)}>
                 <span className={styles.cardIcon}>{c.icon}</span>
                 <div className={styles.cardTitle}>{c.title}</div>
                 <div className={styles.cardEn}>{c.en}</div>
@@ -85,7 +84,7 @@ export default function Home() {
         </div>
       ))}
 
-      <div className={styles.scrollHint}>SCROLL DOWN TO EXPLORE ↓</div>
+      <div className={styles.scrollHint}>选择章节开始探索 →</div>
     </section>
   );
 }

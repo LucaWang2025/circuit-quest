@@ -17,7 +17,7 @@ html { scroll-behavior: smooth; font-size: 16px; }
   --red:    #ff1744;
   --white:  #e8f4f8;
   --dim:    #607a90;
-  --nav-h:  62px;
+  --nav-h:  98px;
 }
 
 /* ── Light theme overrides ── */
@@ -62,6 +62,16 @@ body {
 
 /* ── Main wrapper ── */
 main { position: relative; z-index: 1; padding-top: var(--nav-h); }
+
+/* ── Section switch animation ── */
+@keyframes secIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.sec-fade { animation: secIn .28s ease-out both; }
+
+/* ── Section separator line: hide in SPA mode (sections don't stack) ── */
+.sec + .sec::before { display: none; }
 
 /* ── Section base ── */
 .sec {
