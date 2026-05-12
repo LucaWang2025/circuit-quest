@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { setupHiDpi } from '../../utils/canvas';
 
 const ACC = '#00e676';
 
@@ -7,8 +8,8 @@ function WireCanvas({ wire }) {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
-    const ctx = cv.getContext('2d');
-    const W = cv.width, H = cv.height;
+    const ctx = setupHiDpi(cv, 340, 280);
+    const W = 340, H = 280;
     let t = 0, rafId;
 
     function draw() {

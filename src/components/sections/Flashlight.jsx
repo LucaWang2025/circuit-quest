@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { setupHiDpi } from '../../utils/canvas';
 
 const ACC = '#ffd740';   // amber
 
@@ -7,8 +8,8 @@ function FlashlightCanvas({ mode, soc, charging }) {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
-    const ctx = cv.getContext('2d');
-    const W = cv.width, H = cv.height;
+    const ctx = setupHiDpi(cv, 340, 260);
+    const W = 340, H = 260;
     let t = 0, rafId;
 
     const MODES = { off: 0, eco: 0.12, low: 0.3, mid: 0.6, high: 0.88, turbo: 1 };

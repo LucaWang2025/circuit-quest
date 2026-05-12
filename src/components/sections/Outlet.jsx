@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { setupHiDpi } from '../../utils/canvas';
 
 const ACC = '#00bcd4';
 
@@ -7,8 +8,8 @@ function OutletCanvas({ step }) {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
-    const ctx = cv.getContext('2d');
-    const W = cv.width, H = cv.height;
+    const ctx = setupHiDpi(cv, 300, 300);
+    const W = 300, H = 300;
     let t = 0, rafId;
 
     function draw() {

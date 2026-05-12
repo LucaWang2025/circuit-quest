@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { setupHiDpi } from '../../utils/canvas';
 
 const ACC = '#e040fb';   // magenta
 
@@ -8,8 +9,8 @@ function BLDCCanvas({ pwm, step: extStep }) {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
-    const ctx = cv.getContext('2d');
-    const W = cv.width, H = cv.height;
+    const ctx = setupHiDpi(cv, 360, 300);
+    const W = 360, H = 300;
     let t = 0, rafId;
     const CX = W * 0.38, CY = H * 0.5;
     const SR = 80;   // stator radius
@@ -157,8 +158,8 @@ function CircuitDiagram() {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
-    const ctx = cv.getContext('2d');
-    const W = cv.width, H = cv.height;
+    const ctx = setupHiDpi(cv, 470, 260);
+    const W = 470, H = 260;
     let t = 0, rafId;
 
     function draw() {

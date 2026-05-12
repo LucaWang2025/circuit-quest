@@ -6,11 +6,15 @@ export default function CircuitBg() {
   useEffect(() => {
     const cv = canvasRef.current;
     const cx = cv.getContext('2d');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     let W, H, segs = [], dots = [], rafId;
 
     function build() {
-      W = cv.width = window.innerWidth;
-      H = cv.height = window.innerHeight;
+      W = window.innerWidth;
+      H = window.innerHeight;
+      cv.width = W * dpr; cv.height = H * dpr;
+      cv.style.width = W + 'px'; cv.style.height = H + 'px';
+      cx.scale(dpr, dpr);
       const CELL = 88;
       const cols = Math.ceil(W / CELL) + 2;
       const rows = Math.ceil(H / CELL) + 2;

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { setupHiDpi } from '../../utils/canvas';
 
 const ACC = '#ff9800';
 
@@ -6,8 +7,8 @@ function HairDryerCanvas({ speed, heat }) {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
-    const ctx = cv.getContext('2d');
-    const W = cv.width, H = cv.height;
+    const ctx = setupHiDpi(cv, 340, 260);
+    const W = 340, H = 260;
     let t = 0, raf;
     const HEAT_COLORS = { cold: 'rgba(100,180,255,', low: 'rgba(255,200,100,', high: 'rgba(255,80,20,' };
     const particles = Array.from({ length: 30 }, () => ({

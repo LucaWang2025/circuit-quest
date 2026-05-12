@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { setupHiDpi } from '../../utils/canvas';
 
 const ACC = '#ffab00';
 
@@ -7,8 +8,8 @@ function HouseCktCanvas({ activeBreaker }) {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
-    const ctx = cv.getContext('2d');
-    const W = cv.width, H = cv.height;
+    const ctx = setupHiDpi(cv, 360, 310);
+    const W = 360, H = 310;
     let t = 0, rafId;
 
     // Wire paths: [x1,y1,x2,y2, label, color]

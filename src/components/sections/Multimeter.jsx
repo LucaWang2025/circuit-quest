@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { setupHiDpi } from '../../utils/canvas';
 
 const TABS = [
   { id: 'volts', label: '⚡ 测电压' },
@@ -46,7 +47,7 @@ export default function Multimeter() {
   useEffect(() => {
     const cv = canvasRef.current;
     if (!cv) return;
-    const cx = cv.getContext('2d');
+    const cx = setupHiDpi(cv, 300, 400);
     const W = 300, H = 400;
     let fr = 0, dispVal = 0, targVal = 12.58, dialPhase = 0, rafId;
 

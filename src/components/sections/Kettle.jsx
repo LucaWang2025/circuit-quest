@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { setupHiDpi } from '../../utils/canvas';
 
 const ACC = '#ff6b35';
 
@@ -6,8 +7,8 @@ function KettleCanvas({ temp, heating }) {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
-    const ctx = cv.getContext('2d');
-    const W = cv.width, H = cv.height;
+    const ctx = setupHiDpi(cv, 320, 300);
+    const W = 320, H = 300;
     let t = 0, raf;
     const bubbles = Array.from({ length: 18 }, () => ({
       x: Math.random() * 70 + 115, y: Math.random() * 80 + 140,

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { setupHiDpi } from '../../utils/canvas';
 
 const ACC = '#9c7dff';
 
@@ -7,8 +8,8 @@ function TransformerCanvas({ n1, n2 }) {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
-    const ctx = cv.getContext('2d');
-    const W = cv.width, H = cv.height;
+    const ctx = setupHiDpi(cv, 360, 260);
+    const W = 360, H = 260;
     let t = 0, rafId;
 
     const ratio = n2 / n1;

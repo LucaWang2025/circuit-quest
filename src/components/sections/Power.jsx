@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { setupHiDpi } from '../../utils/canvas';
 
 const ACC = '#ff6b35';
 
@@ -7,8 +8,8 @@ function PowerMeter({ watt }) {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
-    const ctx = cv.getContext('2d');
-    const W = cv.width, H = cv.height;
+    const ctx = setupHiDpi(cv, 320, 300);
+    const W = 320, H = 300;
     let rafId, t = 0;
 
     function draw() {

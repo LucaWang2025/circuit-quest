@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { setupHiDpi } from '../../utils/canvas';
 
 export default function Current() {
   const canvasRef = useRef(null);
@@ -6,7 +7,7 @@ export default function Current() {
   useEffect(() => {
     const cv = canvasRef.current;
     if (!cv) return;
-    const cx = cv.getContext('2d');
+    const cx = setupHiDpi(cv, 360, 360);
     const W = 360, H = 360;
     const MX = W / 2, MY = H / 2 - 10;
     const RW = 128, RH = 100;

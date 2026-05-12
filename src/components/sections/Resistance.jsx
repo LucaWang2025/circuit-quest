@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { setupHiDpi } from '../../utils/canvas';
 
 const COLOR_BANDS = [
   ['#111','黑',0,'×1 Ω','—'],['#7B3F00','棕',1,'×10','±1%'],['#cc0000','红',2,'×100','±2%'],
@@ -13,7 +14,7 @@ export default function Resistance() {
   useEffect(() => {
     const cv = canvasRef.current;
     if (!cv) return;
-    const cx = cv.getContext('2d');
+    const cx = setupHiDpi(cv, 340, 190);
     const W = 340, H = 190;
     const WY = H / 2 - 8;
     const R1 = 82, R2 = 255;

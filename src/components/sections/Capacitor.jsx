@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { setupHiDpi } from '../../utils/canvas';
 
 const ACC = '#00bcd4';
 
@@ -7,8 +8,8 @@ function RCCanvas({ charging, R, C }) {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
-    const ctx = cv.getContext('2d');
-    const W = cv.width, H = cv.height;
+    const ctx = setupHiDpi(cv, 360, 280);
+    const W = 360, H = 280;
     let t = 0, rafId;
     const tau = R * C;          // time constant τ = RC
 

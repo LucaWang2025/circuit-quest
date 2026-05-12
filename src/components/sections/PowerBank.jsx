@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { setupHiDpi } from '../../utils/canvas';
 
 const ACC = '#00bcd4';
 
@@ -7,8 +8,8 @@ function CircuitCanvas({ charging, outputting, soc, protocol }) {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
-    const ctx = cv.getContext('2d');
-    const W = cv.width, H = cv.height;
+    const ctx = setupHiDpi(cv, 460, 200);
+    const W = 460, H = 200;
     let t = 0, raf;
 
     // Particle pools
@@ -160,7 +161,7 @@ function CircuitCanvas({ charging, outputting, soc, protocol }) {
     draw();
     return () => cancelAnimationFrame(raf);
   }, [charging, outputting, soc, protocol]);
-  return <canvas ref={ref} width={460} height={200} style={{ maxWidth: '100%', width: '100%' }} />;
+  return <canvas ref={ref} width={460} height={200} style={{ maxWidth: '100%' }} />;
 }
 
 /* ── CC/CV 充电曲线 Canvas ─────────────────────────────────── */
@@ -168,8 +169,8 @@ function ChargeCurveCanvas({ soc }) {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
-    const ctx = cv.getContext('2d');
-    const W = cv.width, H = cv.height;
+    const ctx = setupHiDpi(cv, 340, 120);
+    const W = 340, H = 120;
     const PX = 44, PY = 14, CW = W - PX - 16, CH = H - PY - 28;
 
     ctx.clearRect(0, 0, W, H);
@@ -238,7 +239,7 @@ function ChargeCurveCanvas({ soc }) {
       ctx.fillStyle = c + 'cc'; ctx.fillText(l, PX + CW - 62 + i * 44, PY + 10);
     });
   }, [soc]);
-  return <canvas ref={ref} width={340} height={120} style={{ maxWidth: '100%', width: '100%' }} />;
+  return <canvas ref={ref} width={340} height={120} style={{ maxWidth: '100%' }} />;
 }
 
 /* ── Boost 转换原理图 ─────────────────────────────────────── */
@@ -246,8 +247,8 @@ function BoostCanvas() {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
-    const ctx = cv.getContext('2d');
-    const W = cv.width, H = cv.height;
+    const ctx = setupHiDpi(cv, 320, 130);
+    const W = 320, H = 130;
     let t = 0, raf;
 
     function draw() {
@@ -339,7 +340,7 @@ function BoostCanvas() {
     draw();
     return () => cancelAnimationFrame(raf);
   }, []);
-  return <canvas ref={ref} width={320} height={130} style={{ maxWidth: '100%', width: '100%' }} />;
+  return <canvas ref={ref} width={320} height={130} style={{ maxWidth: '100%' }} />;
 }
 
 /* ── 主组件 ─────────────────────────────────────────────── */
