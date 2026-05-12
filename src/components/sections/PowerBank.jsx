@@ -3,14 +3,35 @@ import { setupHiDpi } from '../../utils/canvas';
 
 const ACC = '#00bcd4';
 
-/* ── 主电路图 Canvas ─────────────────────────────────────── */
+/* ── 主电路图 Canvas（自适应宽度）───────────────────────────── */
 function CircuitCanvas({ charging, outputting, soc, protocol }) {
-  const ref = useRef(null);
+  const wrapRef = useRef(null);
+  const ref     = useRef(null);
   useEffect(() => {
-    const cv = ref.current; if (!cv) return;
-    const ctx = setupHiDpi(cv, 460, 200);
-    const W = 460, H = 200;
-    let t = 0, raf;
+    const wrap = wrapRef.current;
+    const cv   = ref.current;
+    if (!wrap || !cv) return;
+
+    let raf, ro;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    function start() {
+      cancelAnimationFrame(raf);
+      const W = wrap.offsetWidth || 580;
+      const H = Math.round(W * 0.34);
+      cv.width  = W * dpr; cv.height = H * dpr;
+      cv.style.width = W + 'px'; cv.style.height = H + 'px';
+      const ctx = cv.getContext('2d');
+      ctx.scale(dpr, dpr);
+      run(ctx, W, H);
+    }
+
+    ro = new ResizeObserver(start);
+    ro.observe(wrap);
+    start();
+
+    function run(ctx, W, H) {
+    let t = 0;
 
     // Particle pools
     const chargeParticles  = Array.from({ length: 12 }, (_, i) => ({ p: i / 12 }));
@@ -73,11 +94,13 @@ function CircuitCanvas({ charging, outputting, soc, protocol }) {
       ctx.clearRect(0, 0, W, H);
       t += 0.025;
 
-      // ─── Layout constants ───
+      // ─── Responsive layout ───
       const Y = H / 2;
+      const pad = W * 0.04;
+      const usableW = W - pad * 2;
       // Block x-centers: Adapter | ChargeIC | Cells | BoostIC | Phone
-      const BLK = [50, 130, 230, 330, 415];
-      const BW = 65, BH = 52;
+      const BLK = [pad + usableW*0.07, pad + usableW*0.25, pad + usableW*0.47, pad + usableW*0.68, pad + usableW*0.87];
+      const BW = Math.round(usableW * 0.14), BH = Math.round(H * 0.36);
 
       // ─── Wires ───
       wire(BLK[0] + BW/2, Y, BLK[1] - BW/2, Y, '#00e676', charging);
@@ -159,9 +182,14 @@ function CircuitCanvas({ charging, outputting, soc, protocol }) {
       raf = requestAnimationFrame(draw);
     }
     draw();
-    return () => cancelAnimationFrame(raf);
+    } // end run
+    return () => { cancelAnimationFrame(raf); ro.disconnect(); };
   }, [charging, outputting, soc, protocol]);
-  return <canvas ref={ref} width={460} height={200} style={{ maxWidth: '100%' }} />;
+  return (
+    <div ref={wrapRef} style={{ width: '100%' }}>
+      <canvas ref={ref} style={{ display: 'block' }} />
+    </div>
+  );
 }
 
 /* ── CC/CV 充电曲线 Canvas ─────────────────────────────────── */
@@ -383,148 +411,161 @@ export default function PowerBank() {
         <div className="divider" style={{ background: `linear-gradient(90deg,transparent,${ACC},transparent)` }} />
       </div>
 
-      {/* ── 快充协议选择器 ── */}
-      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 20 }}>
-        {PROTOCOLS.map(p => (
-          <button key={p.id} onClick={() => setProtocol(p.id)} style={{
-            flex: 1, minWidth: 100, padding: '10px 12px', borderRadius: 12, cursor: 'pointer',
-            border: `1px solid ${protocol === p.id ? p.color : p.color + '30'}`,
-            background: protocol === p.id ? p.color + '16' : 'rgba(6,12,28,.6)',
-            transition: 'all .2s',
-          }}>
-            <div style={{ fontWeight: 700, color: protocol === p.id ? p.color : 'var(--dim)', fontSize: 13 }}>{p.label}</div>
-            <div style={{ font: '10px "Courier New",monospace', color: protocol === p.id ? p.color + 'cc' : 'rgba(130,150,170,.5)', marginTop: 3 }}>
-              {p.v} · {p.w}W
+      {/* ══ Row 1: 左侧电路图 + 右侧控制/状态 ══ */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 280px', gap: 16, marginBottom: 20, alignItems: 'start' }}>
+
+        {/* 左：协议选择器 + 电路拓扑图 */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {/* 快充协议选择器 */}
+          <div style={{ display: 'flex', gap: 8 }}>
+            {PROTOCOLS.map(p => (
+              <button key={p.id} onClick={() => setProtocol(p.id)} style={{
+                flex: 1, padding: '8px 6px', borderRadius: 10, cursor: 'pointer',
+                border: `1px solid ${protocol === p.id ? p.color : p.color + '30'}`,
+                background: protocol === p.id ? p.color + '16' : 'rgba(6,12,28,.6)',
+                transition: 'all .2s',
+              }}>
+                <div style={{ fontWeight: 700, color: protocol === p.id ? p.color : 'var(--dim)', fontSize: 12 }}>{p.label}</div>
+                <div style={{ font: '10px "Courier New",monospace', color: protocol === p.id ? p.color + 'cc' : 'rgba(130,150,170,.5)', marginTop: 2 }}>
+                  {p.v} · {p.w}W
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* 电路拓扑图 */}
+          <div className="reveal" style={{ background: 'rgba(6,12,28,.85)', border: `1px solid ${proto.color}22`, borderRadius: 14, padding: '12px 10px 10px' }}>
+            <div style={{ font: '10px "Courier New",monospace', color: 'var(--dim)', textAlign: 'center', marginBottom: 6, letterSpacing: 2 }}>
+              ⚡ 实时电路拓扑图
             </div>
-          </button>
-        ))}
-      </div>
-
-      {/* ── 主电路图 ── */}
-      <div className="reveal" style={{ background: 'rgba(6,12,28,.8)', border: `1px solid ${proto.color}22`, borderRadius: 14, padding: '14px 8px 10px', marginBottom: 20 }}>
-        <div style={{ font: '10px "Courier New",monospace', color: 'var(--dim)', textAlign: 'center', marginBottom: 6, letterSpacing: 2 }}>
-          ⚡ 实时电路拓扑图
-        </div>
-        <CircuitCanvas charging={charging} outputting={outputting} soc={Math.round(soc)} protocol={protocol} />
-        <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginTop: 12 }}>
-          <button onClick={() => setCharging(c => !c)} style={{
-            padding: '8px 22px', borderRadius: 10, cursor: 'pointer',
-            border: `1px solid ${charging ? '#00e676' : 'rgba(0,230,118,.22)'}`,
-            background: charging ? 'rgba(0,230,118,.12)' : 'transparent',
-            color: charging ? '#00e676' : 'var(--dim)', font: '13px/1 inherit', transition: 'all .2s',
-          }}>🔌 {charging ? '断开充电' : '接入充电器'}</button>
-          <button onClick={() => setOutputting(o => !o)} style={{
-            padding: '8px 22px', borderRadius: 10, cursor: 'pointer',
-            border: `1px solid ${outputting ? proto.color : proto.color + '30'}`,
-            background: outputting ? proto.color + '14' : 'transparent',
-            color: outputting ? proto.color : 'var(--dim)', font: '13px/1 inherit', transition: 'all .2s',
-          }}>📱 {outputting ? '断开手机' : '接入手机'}</button>
-        </div>
-      </div>
-
-      {/* ── SOC 实时状态卡 ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(130px,1fr))', gap: 12, marginBottom: 28 }}>
-        {[
-          { label: '当前电量', val: `${Math.round(soc)}%`, sub: `${(2.8 + soc/100*1.4).toFixed(2)}V / 节`, color: fc },
-          { label: '可用能量', val: `${wh5} Wh`, sub: '（3.7V侧→5V后约90%效率）', color: ACC },
-          { label: '协议功率', val: `${proto.w}W`, sub: `${proto.v} × ${proto.i}`, color: proto.color },
-          { label: '充满剩余', val: soc >= 100 ? '已满' : `约 ${Math.round((100-soc)/100*37/proto.w*60)} 分钟`, sub: '以当前协议速率估算', color: '#ffab00' },
-        ].map(c => (
-          <div key={c.label} className="glass" style={{ borderColor: c.color + '25', padding: '12px 14px' }}>
-            <div style={{ font: '10px "Courier New",monospace', color: 'var(--dim)', marginBottom: 5 }}>{c.label}</div>
-            <div style={{ fontWeight: 700, color: c.color, fontSize: 18 }}>{c.val}</div>
-            <div style={{ fontSize: 10.5, color: 'var(--dim)', marginTop: 3 }}>{c.sub}</div>
+            <CircuitCanvas charging={charging} outputting={outputting} soc={Math.round(soc)} protocol={protocol} />
           </div>
-        ))}
-      </div>
 
-      <div className="grid2">
-        {/* CC/CV 曲线 */}
-        <div className="reveal" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <div style={{ fontWeight: 700, color: ACC, fontSize: 15 }}>📈 CC/CV 充电曲线</div>
-          <div style={{ background: 'rgba(6,12,28,.8)', border: '1px solid rgba(0,188,212,.14)', borderRadius: 12, padding: '12px 8px 6px' }}>
-            <ChargeCurveCanvas soc={Math.round(soc)} />
+          {/* 操作按钮 */}
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button onClick={() => setCharging(c => !c)} style={{
+              flex: 1, padding: '9px 0', borderRadius: 10, cursor: 'pointer',
+              border: `1px solid ${charging ? '#00e676' : 'rgba(0,230,118,.22)'}`,
+              background: charging ? 'rgba(0,230,118,.12)' : 'transparent',
+              color: charging ? '#00e676' : 'var(--dim)', font: '13px/1 inherit', transition: 'all .2s',
+            }}>🔌 {charging ? '断开充电' : '接入充电器'}</button>
+            <button onClick={() => setOutputting(o => !o)} style={{
+              flex: 1, padding: '9px 0', borderRadius: 10, cursor: 'pointer',
+              border: `1px solid ${outputting ? proto.color : proto.color + '30'}`,
+              background: outputting ? proto.color + '14' : 'transparent',
+              color: outputting ? proto.color : 'var(--dim)', font: '13px/1 inherit', transition: 'all .2s',
+            }}>📱 {outputting ? '断开手机' : '接入手机'}</button>
           </div>
+        </div>
+
+        {/* 右：实时状态卡 + 快充列表 */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {/* 2×2 状态卡 */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
             {[
-              { p: '预充（< 10%）', c: '#ff6b35', d: '小电流（0.1C）激活亏电电芯，防损伤' },
-              { p: '恒流 CC（10~70%）', c: '#00bcd4', d: '最大电流快速充入，电压线性上升' },
-              { p: '恒压 CV（70~100%）', c: '#00e676', d: '4.2V 恒压，电流渐降至截止值' },
-              { p: '截止', c: '#ffab00', d: '电流 ≤ 0.05C 自动断电，防过充' },
+              { label: '当前电量', val: `${Math.round(soc)}%`, sub: `${(2.8+soc/100*1.4).toFixed(2)}V/节`, color: fc },
+              { label: '可用能量', val: `${wh5}Wh`, sub: '升压90%效率后', color: ACC },
+              { label: '协议功率', val: `${proto.w}W`, sub: `${proto.v}×${proto.i}`, color: proto.color },
+              { label: '充满剩余', val: soc>=100?'已满':`${Math.round((100-soc)/100*37/proto.w*60)}分钟`, sub: '按协议速率估算', color: '#ffab00' },
+            ].map(c => (
+              <div key={c.label} className="glass" style={{ borderColor: c.color+'25', padding: '10px 12px' }}>
+                <div style={{ font: '9px "Courier New",monospace', color: 'var(--dim)', marginBottom: 4 }}>{c.label}</div>
+                <div style={{ fontWeight: 700, color: c.color, fontSize: 17 }}>{c.val}</div>
+                <div style={{ fontSize: 10, color: 'var(--dim)', marginTop: 2 }}>{c.sub}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* 快充协议列表 */}
+          <div className="glass" style={{ borderColor: 'rgba(255,171,0,.18)', flex: 1 }}>
+            <div style={{ fontWeight: 700, color: '#ffab00', marginBottom: 8, fontSize: 12 }}>⚡ 快充协议</div>
+            {PROTOCOLS.map(p => (
+              <div key={p.id} onClick={() => setProtocol(p.id)} style={{
+                display: 'flex', gap: 8, padding: '5px 4px', borderBottom: '1px solid rgba(255,255,255,.05)',
+                cursor: 'pointer', alignItems: 'center', borderRadius: 4,
+                background: protocol === p.id ? p.color + '0a' : 'transparent',
+              }}>
+                <div style={{ width: 3, height: 24, background: p.color, borderRadius: 2, flexShrink: 0 }} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 700, color: p.color, fontSize: 11 }}>{p.label}</div>
+                  <div style={{ fontSize: 10, color: 'var(--dim)', lineHeight: 1.3 }}>{p.note}</div>
+                </div>
+                <div style={{ font: 'bold 12px "Courier New",monospace', color: p.color }}>{p.w}W</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ══ Row 2: CC/CV 曲线 + Boost 原理 + 容量识别 ══ */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14, marginTop: 4 }}>
+
+        {/* CC/CV 曲线 */}
+        <div className="reveal" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div style={{ fontWeight: 700, color: ACC, fontSize: 14 }}>📈 CC/CV 充电曲线</div>
+          <div style={{ background: 'rgba(6,12,28,.8)', border: '1px solid rgba(0,188,212,.14)', borderRadius: 12, padding: '10px 6px 4px' }}>
+            <ChargeCurveCanvas soc={Math.round(soc)} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            {[
+              { p: '预充 < 10%', c: '#ff6b35', d: '小电流激活亏电电芯' },
+              { p: '恒流 CC 10~70%', c: '#00bcd4', d: '最大电流，电压线性上升' },
+              { p: '恒压 CV 70~100%', c: '#00e676', d: '4.2V 恒压，电流渐降' },
+              { p: '截止', c: '#ffab00', d: '电流≤0.05C 自动停充' },
             ].map(item => (
-              <div key={item.p} style={{ padding: '8px 10px', background: 'rgba(6,12,28,.6)', borderRadius: 8, borderLeft: `3px solid ${item.c}` }}>
-                <div style={{ fontWeight: 700, color: item.c, fontSize: 11, marginBottom: 3 }}>{item.p}</div>
-                <div style={{ fontSize: 11.5, color: '#8aacb8' }}>{item.d}</div>
+              <div key={item.p} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', padding: '4px 6px', background: 'rgba(6,12,28,.5)', borderRadius: 6, borderLeft: `2px solid ${item.c}` }}>
+                <div>
+                  <div style={{ fontWeight: 700, color: item.c, fontSize: 10.5 }}>{item.p}</div>
+                  <div style={{ fontSize: 11, color: '#8aacb8' }}>{item.d}</div>
+                </div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Boost 原理 */}
-        <div className="reveal" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <div style={{ fontWeight: 700, color: '#ffab00', fontSize: 15 }}>⚙️ Boost 升压工作原理</div>
-          <div style={{ background: 'rgba(6,12,28,.8)', border: '1px solid rgba(255,171,0,.14)', borderRadius: 12, padding: '10px 8px 6px' }}>
+        <div className="reveal" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div style={{ fontWeight: 700, color: '#ffab00', fontSize: 14 }}>⚙️ Boost 升压原理</div>
+          <div style={{ background: 'rgba(6,12,28,.8)', border: '1px solid rgba(255,171,0,.14)', borderRadius: 12, padding: '10px 6px 4px' }}>
             <BoostCanvas />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
             {[
-              { s: '阶段一：开关闭合', c: '#00bcd4', d: 'MOSFET 导通，电流流过电感 L，电感积累磁能（3.7V 输入）' },
-              { s: '阶段二：开关断开', c: '#ffab00', d: '电感反向释能，叠加输入电压，通过二极管向电容充电（输出 5V）' },
-              { s: '高频切换', c: '#00e676', d: '典型频率 300kHz~1MHz，输出电压 = Vin×(1÷(1-占空比))，效率 88~94%' },
+              { s: '开关闭合', c: '#00bcd4', d: 'MOSFET 导通，电感积累磁能（3.7V 输入）' },
+              { s: '开关断开', c: '#ffab00', d: '电感反向释能叠加输入，推高至 5V 输出' },
+              { s: '高频切换', c: '#00e676', d: '300kHz~1MHz，Vout = Vin/(1-D)，效率 88~94%' },
             ].map(item => (
-              <div key={item.s} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-                <div style={{ width: 3, height: 40, background: item.c, borderRadius: 2, flexShrink: 0, marginTop: 2 }} />
+              <div key={item.s} style={{ display: 'flex', gap: 7, alignItems: 'flex-start' }}>
+                <div style={{ width: 3, minHeight: 32, background: item.c, borderRadius: 2, flexShrink: 0, marginTop: 2 }} />
                 <div>
-                  <div style={{ fontWeight: 700, color: item.c, fontSize: 12 }}>{item.s}</div>
-                  <div style={{ fontSize: 12, color: '#8aacb8', lineHeight: 1.55 }}>{item.d}</div>
+                  <div style={{ fontWeight: 700, color: item.c, fontSize: 11 }}>{item.s}</div>
+                  <div style={{ fontSize: 11.5, color: '#8aacb8', lineHeight: 1.5 }}>{item.d}</div>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </div>
 
-      {/* 容量计算 + 快充对比 + 安全 */}
-      <div style={{ marginTop: 28, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 14 }}>
-        <div className="glass reveal" style={{ borderColor: 'rgba(0,188,212,.18)' }}>
-          <div style={{ fontWeight: 700, color: ACC, marginBottom: 10 }}>🔢 容量虚标识别</div>
-          <div className="fbox"><div className="fbox-f">37 Wh</div><div className="fbox-desc">10000mAh × 3.7V（可靠指标）</div></div>
-          <div style={{ fontSize: 12.5, color: '#8aacb8', lineHeight: 1.65, marginTop: 10 }}>
-            商家标注的 mAh 是电芯在 <strong style={{color:'var(--white)'}}>3.7V</strong> 下的容量。
-            经 Boost 升压到 5V 后，5V 侧实际可输出约 <strong style={{color:ACC}}>37Wh ÷ 5V × 0.9 ≈ 6660mAh</strong>，
-            并非标称的 10000mAh。<br/><br/>
-            <span style={{color:'#ffab00'}}>查铭牌 Wh 才是最诚实的指标！</span>
-          </div>
-        </div>
-
-        <div className="glass reveal" style={{ borderColor: 'rgba(255,171,0,.18)' }}>
-          <div style={{ fontWeight: 700, color: '#ffab00', marginBottom: 10 }}>⚡ 快充协议对比</div>
-          {PROTOCOLS.map(p => (
-            <div key={p.id} onClick={() => setProtocol(p.id)} style={{
-              display: 'flex', gap: 8, padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,.05)',
-              cursor: 'pointer', alignItems: 'center',
-              background: protocol === p.id ? p.color + '0a' : 'transparent',
-              borderRadius: 4, paddingLeft: 4,
-            }}>
-              <div style={{ width: 3, height: 28, background: p.color, borderRadius: 2, flexShrink: 0 }} />
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 700, color: p.color, fontSize: 12 }}>{p.label}</div>
-                <div style={{ fontSize: 11, color: 'var(--dim)' }}>{p.note}</div>
-              </div>
-              <div style={{ font: 'bold 13px "Courier New",monospace', color: p.color }}>{p.w}W</div>
+        {/* 容量识别 + 安全 */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div className="glass reveal" style={{ borderColor: 'rgba(0,188,212,.18)' }}>
+            <div style={{ fontWeight: 700, color: ACC, marginBottom: 8, fontSize: 13 }}>🔢 容量虚标识别</div>
+            <div className="fbox" style={{ marginBottom: 8 }}><div className="fbox-f">37 Wh</div><div className="fbox-desc">10000mAh × 3.7V（可靠指标）</div></div>
+            <div style={{ fontSize: 12, color: '#8aacb8', lineHeight: 1.65 }}>
+              商家的 mAh 是 <strong style={{color:'var(--white)'}}>3.7V</strong> 下容量。升压到 5V 后实际约 <strong style={{color:ACC}}>6660mAh</strong>，非标称 10000mAh。
+              <br/><span style={{color:'#ffab00', marginTop: 4, display: 'block'}}>看铭牌 Wh 最可靠！</span>
             </div>
-          ))}
-        </div>
-
-        <div className="glass reveal" style={{ borderColor: 'rgba(255,23,68,.18)' }}>
-          <div style={{ fontWeight: 700, color: '#ff1744', marginBottom: 8 }}>⚠️ 安全与寿命</div>
-          <div style={{ fontSize: 12.5, color: '#8aacb8', lineHeight: 1.8 }}>
-            ▸ 车内高温曝晒（≥ 60°C）会加速析锂，引发热失控<br/>
-            ▸ 鼓包变形立即停用，不可刺穿/挤压<br/>
-            ▸ 飞机规定：&gt; 100Wh 需申报；&gt; 160Wh 禁带<br/>
-            ▸ 保持 20~80% 使用区间，延长循环寿命<br/>
-            ▸ 闲置 3 个月+请保存在 50% 电量<br/>
-            ▸ 边充边用（直通模式）发热，长期损伤电芯
+          </div>
+          <div className="glass reveal" style={{ borderColor: 'rgba(255,23,68,.18)', flex: 1 }}>
+            <div style={{ fontWeight: 700, color: '#ff1744', marginBottom: 8, fontSize: 13 }}>⚠️ 安全与寿命</div>
+            <div style={{ fontSize: 12, color: '#8aacb8', lineHeight: 1.75 }}>
+              ▸ 高温曝晒（≥60°C）引发热失控<br/>
+              ▸ 鼓包立即停用<br/>
+              ▸ 飞机 &gt;100Wh 需申报<br/>
+              ▸ 20~80% 区间使用延寿命<br/>
+              ▸ 闲置保存 50% 电量<br/>
+              ▸ 边充边用长期损伤电芯
+            </div>
           </div>
         </div>
       </div>
