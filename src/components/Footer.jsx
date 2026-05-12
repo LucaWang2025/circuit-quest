@@ -5,16 +5,19 @@ const DONE = [
   { id: 'multimeter', icon: '📟', label: '万用表 Multimeter' },
   { id: 'power',      icon: '💡', label: '功率与电能 Power' },
   { id: 'home-ckt',   icon: '🏠', label: '家用电路 Home Circuit' },
-  { id: 'wiring',     icon: '🔌', label: '导线接线 Wiring' },
-  { id: 'outlet',     icon: '🔧', label: '开关插座 Switch & Outlet' },
-  { id: 'safety',     icon: '🛡️', label: '安全用电 Safety' },
+  { id: 'capacitor',    icon: '⚡', label: '电容 Capacitor' },
+  { id: 'transformer',  icon: '🔄', label: '变压器 Transformer' },
+  { id: 'wiring',       icon: '🔌', label: '导线接线 Wiring' },
+  { id: 'outlet',       icon: '🔧', label: '开关插座 Switch & Outlet' },
+  { id: 'safety',       icon: '🛡️', label: '安全用电 Safety' },
+  { id: 'troubleshoot', icon: '🔍', label: '故障排查 Troubleshoot' },
 ];
 
 const COMING = [
-  '电容 Capacitor', '电感 Inductor', '二极管 Diode', '三极管 Transistor',
-  '变压器 Transformer', '逻辑门 Logic Gates', '继电器 Relay', '电机驱动 Motor',
+  '电感 Inductor', '二极管 Diode', '三极管 Transistor',
+  '继电器 Relay', '电机驱动 Motor', '逻辑门 Logic Gates',
   '示波器 Oscilloscope', '焊接技术 Soldering', 'PCB 设计基础', 'Arduino 入门',
-  '家用排查故障全流程', '弱电布线 Structured Cabling', '光伏发电 Solar PV',
+  '弱电布线 Structured Cabling', '光伏发电 Solar PV', '智能家居布线',
 ];
 
 const goTo = id =>

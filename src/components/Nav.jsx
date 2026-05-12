@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import styles from './Nav.module.css';
 
-const SECS   = ['home','voltage','current','resistance','multimeter','power','home-ckt','wiring','outlet','safety'];
-const LABELS = ['首页','电压','电流','电阻','万用表','功率','家用电路','接线','开关插座','安全用电'];
+const SECS   = ['home','voltage','current','resistance','multimeter','power','home-ckt','capacitor','transformer','wiring','outlet','safety','troubleshoot'];
+const LABELS = ['首页','电压','电流','电阻','万用表','功率','家用电路','电容','变压器','接线','开关插座','安全用电','故障排查'];
 
 export default function Nav({ theme, onToggleTheme }) {
   const [active, setActive] = useState('home');

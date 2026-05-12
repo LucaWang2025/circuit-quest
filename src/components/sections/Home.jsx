@@ -13,8 +13,10 @@ const CARD_GROUPS = [
   {
     label: '第二阶段 · 进阶理解',
     cards: [
-      { id: 'power',    icon: '💡', title: '功率与电能', en: 'POWER & ENERGY', color: '#ff6b35', desc: '理解瓦特、度数与电费，掌握能耗计算' },
-      { id: 'home-ckt', icon: '🏠', title: '家用电路',   en: 'HOME CIRCUIT',   color: '#ffab00', desc: '火零地线、断路器、插座回路，看懂家庭配电' },
+      { id: 'power',       icon: '💡', title: '功率与电能', en: 'POWER & ENERGY',   color: '#ff6b35', desc: '理解瓦特、度数与电费，掌握能耗计算' },
+      { id: 'home-ckt',    icon: '🏠', title: '家用电路',   en: 'HOME CIRCUIT',     color: '#ffab00', desc: '火零地线、断路器、插座回路，看懂家庭配电' },
+      { id: 'capacitor',   icon: '⚡', title: '电容基础',   en: 'CAPACITOR',        color: '#00bcd4', desc: '充放电原理、四大类型、滤波与维修应用' },
+      { id: 'transformer', icon: '🔄', title: '变压器',     en: 'TRANSFORMER',      color: '#9c7dff', desc: '电磁感应、匝数比、开关电源工作流程' },
     ],
   },
   {
@@ -22,7 +24,8 @@ const CARD_GROUPS = [
     cards: [
       { id: 'wiring', icon: '🔌', title: '导线与接线', en: 'WIRING',          color: '#00e676', desc: '线色规范、线径选择、安全接线方法全攻略' },
       { id: 'outlet', icon: '🔧', title: '开关插座安装', en: 'SWITCH & OUTLET', color: '#00bcd4', desc: '从拆旧到接线完整步骤，自己动手换插座' },
-      { id: 'safety', icon: '🛡️', title: '安全用电',   en: 'ELECTRICAL SAFETY', color: '#ff1744', desc: '接地保护、漏电开关、触电急救，生命第一' },
+      { id: 'safety',       icon: '🛡️', title: '安全用电',   en: 'ELECTRICAL SAFETY', color: '#ff1744', desc: '接地保护、漏电开关、触电急救，生命第一' },
+      { id: 'troubleshoot', icon: '🔍', title: '故障排查',   en: 'TROUBLESHOOT',      color: '#ff6b35', desc: '断路器/插座/灯具/家电四大故障交互决策树' },
     ],
   },
 ];
