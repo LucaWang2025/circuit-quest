@@ -1,0 +1,227 @@
+/* ============================================================
+   CIRCUIT QUEST — Global Styles
+   ============================================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+/* ── CSS Variables (dark theme default) ── */
+:root {
+  --bg:     #03060e;
+  --bg2:    #060c18;
+  --blue:   #00e5ff;
+  --gold:   #ffab00;
+  --cyan:   #00bcd4;
+  --orange: #ff6b35;
+  --purple: #9c7dff;
+  --green:  #00e676;
+  --red:    #ff1744;
+  --white:  #e8f4f8;
+  --dim:    #607a90;
+  --nav-h:  62px;
+}
+
+/* ── Light theme overrides ── */
+[data-theme="light"] {
+  --bg:     #edf3fb;
+  --bg2:    #e4eef8;
+  --blue:   #0077cc;
+  --gold:   #c97800;
+  --cyan:   #0099b5;
+  --orange: #d95520;
+  --purple: #6e4ed6;
+  --green:  #00a854;
+  --red:    #d4002e;
+  --white:  #1a2840;
+  --dim:    #5a7284;
+}
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', 'Segoe UI', sans-serif;
+  line-height: 1.7;
+  overflow-x: hidden;
+  transition: background .35s, color .35s;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.25); border-radius: 3px; }
+[data-theme="light"] ::-webkit-scrollbar-track { background: #edf3fb; }
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(0,100,200,0.22); }
+
+/* ── Background Canvas ── */
+#bgCanvas {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0; pointer-events: none;
+  transition: opacity .35s;
+}
+[data-theme="light"] #bgCanvas { opacity: 0.18; filter: invert(1) hue-rotate(200deg); }
+
+/* ── Main wrapper ── */
+main { position: relative; z-index: 1; padding-top: var(--nav-h); }
+
+/* ── Section base ── */
+.sec {
+  min-height: 100vh;
+  padding: 90px 48px 100px;
+  max-width: 1240px;
+  margin: 0 auto;
+  position: relative;
+}
+.sec + .sec::before {
+  content: '';
+  position: absolute; top: 0;
+  left: -48px; right: -48px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,229,255,.13), transparent);
+}
+[data-theme="light"] .sec + .sec::before {
+  background: linear-gradient(90deg, transparent, rgba(0,100,180,.12), transparent);
+}
+
+/* ── Section header ── */
+.sh { text-align: center; margin-bottom: 64px; }
+.sh-icon {
+  font-size: 56px; display: block; margin-bottom: 10px;
+  animation: float 3.5s ease-in-out infinite;
+}
+@keyframes float { 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-9px) } }
+.sh-tag {
+  font: 11px/1 'Courier New', monospace;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: var(--dim); margin-bottom: 10px;
+}
+.sh-title {
+  font-size: clamp(32px, 4vw, 46px);
+  font-weight: 800; letter-spacing: -1px; line-height: 1.1;
+}
+.sh-sub {
+  margin-top: 14px; color: var(--dim);
+  font-size: 15px; max-width: 540px;
+  margin-left: auto; margin-right: auto;
+}
+.divider {
+  width: 56px; height: 3px; border-radius: 2px;
+  margin: 20px auto 0;
+  background: linear-gradient(90deg, transparent, var(--blue), transparent);
+}
+
+/* ── Two-column layout ── */
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 52px; align-items: center;
+}
+.grid2.rev { direction: rtl; }
+.grid2.rev > * { direction: ltr; }
+
+/* ── Animation box ── */
+.anim-box {
+  background: rgba(4,9,26,0.7);
+  border: 1px solid rgba(0,229,255,0.11);
+  border-radius: 22px; overflow: hidden;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: 320px; padding: 24px;
+  position: relative;
+}
+.anim-box::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 0%, rgba(0,229,255,.045) 0%, transparent 68%);
+}
+[data-theme="light"] .anim-box {
+  background: rgba(225,238,255,0.72);
+  border-color: rgba(0,100,180,0.13);
+}
+
+/* ── Glass card ── */
+.glass {
+  background: rgba(8,16,36,0.6);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px; padding: 26px 30px;
+  backdrop-filter: blur(10px);
+  transition: border-color .3s, transform .3s, box-shadow .3s;
+}
+.glass:hover {
+  border-color: rgba(0,229,255,0.2);
+  box-shadow: 0 6px 40px rgba(0,229,255,.07);
+  transform: translateY(-3px);
+}
+[data-theme="light"] .glass {
+  background: rgba(255,255,255,0.9);
+  border-color: rgba(0,0,0,0.08);
+  box-shadow: 0 2px 14px rgba(0,0,0,.06);
+}
+[data-theme="light"] .glass:hover {
+  border-color: rgba(0,130,210,0.28);
+  box-shadow: 0 6px 28px rgba(0,130,210,.1);
+}
+
+/* ── Info card stack ── */
+.info-stack { display: grid; gap: 14px; }
+.icard {
+  background: rgba(6,12,28,0.75);
+  border-left: 3px solid var(--blue);
+  border-radius: 0 14px 14px 0;
+  padding: 15px 20px;
+  transition: background .25s, transform .25s;
+}
+.icard:hover { background: rgba(0,229,255,.055); transform: translateX(5px); }
+.icard h4 {
+  font: bold 11px 'Courier New', monospace;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--blue); margin-bottom: 7px;
+}
+.icard p { font-size: 13.5px; color: #aabfc8; line-height: 1.65; }
+[data-theme="light"] .icard { background: rgba(255,255,255,0.82); }
+[data-theme="light"] .icard:hover { background: rgba(235,246,255,0.95); }
+[data-theme="light"] .icard p { color: #3a5060; }
+
+/* ── Formula box ── */
+.fbox {
+  background: rgba(0,229,255,.05);
+  border: 1px solid rgba(0,229,255,.18);
+  border-radius: 14px; padding: 16px 22px;
+  text-align: center; margin: 6px 0;
+}
+.fbox-f {
+  font: bold 22px 'Courier New', monospace;
+  color: var(--blue);
+  text-shadow: 0 0 18px rgba(0,229,255,.45);
+  letter-spacing: 3px;
+  margin-bottom: 5px;
+}
+.fbox-desc { font-size: 14px; color: var(--white); margin-bottom: 3px; }
+.fbox-note { font-size: 12px; color: var(--dim); }
+.formula {
+  font: bold 30px 'Courier New', monospace;
+  color: var(--blue);
+  text-shadow: 0 0 22px rgba(0,229,255,.5);
+  letter-spacing: 4px;
+}
+.fdesc { font-size: 12px; color: var(--dim); margin-top: 6px; }
+
+/* ── Chips ── */
+.chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+.chip {
+  padding: 4px 14px; border-radius: 20px;
+  font: 11.5px 'Courier New', monospace;
+  border: 1px solid currentColor; opacity: .8;
+  transition: opacity .2s, transform .2s;
+}
+.chip:hover { opacity: 1; transform: scale(1.04); }
+
+/* ── Scroll reveal ── */
+.reveal {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+.reveal.vis { opacity: 1; transform: none; }
+
+/* ── Responsive ── */
+@media (max-width: 840px) {
+  .sec { padding: 70px 22px 80px; }
+  .grid2, .grid2.rev { grid-template-columns: 1fr; direction: ltr; }
+}

@@ -1,0 +1,45 @@
+.animBox { border-color: rgba(255,171,0,.18) !important; }
+.hint { font: 11px 'Courier New',monospace; color: var(--dim); margin-bottom: 14px; text-align: center; }
+
+.tankRow {
+  display: flex; align-items: flex-end;
+  justify-content: center; gap: 12px;
+  height: 220px; width: 100%; padding: 10px 20px;
+}
+.twrap { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+.tlabel { font: 11px 'Courier New',monospace; color: var(--dim); }
+.tank {
+  width: 64px;
+  border: 2px solid rgba(255,171,0,.35);
+  border-radius: 4px 4px 0 0;
+  background: rgba(0,0,0,.3);
+  position: relative; overflow: hidden;
+}
+[data-theme="light"] .tank { background: rgba(240,245,255,.5); }
+.tinner {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(180deg, rgba(255,200,0,.45), rgba(255,140,0,.9));
+  transition: height .55s ease;
+  animation: shimmer 3s ease-in-out infinite;
+}
+@keyframes shimmer { 0%,100%{opacity:.88} 50%{opacity:1} }
+.pipeWrap { display: flex; flex-direction: column; align-items: center; gap: 6px; padding-bottom: 28px; }
+.pipeLabel { font: 10px 'Courier New',monospace; color: var(--dim); }
+.pipeH {
+  width: 90px; height: 12px;
+  background: rgba(255,171,0,.2);
+  border: 1px solid rgba(255,171,0,.2);
+  border-radius: 2px; position: relative; overflow: hidden;
+}
+.pipeFlow {
+  position: absolute; height: 100%; width: 28px;
+  background: linear-gradient(90deg,transparent,rgba(255,171,0,.85),transparent);
+  animation: pflow 1.1s linear infinite;
+}
+@keyframes pflow { from{left:-28px} to{left:100%} }
+.diffVal { font: bold 26px 'Courier New',monospace; color: var(--gold); text-shadow: 0 0 18px rgba(255,171,0,.65); }
+.vtag { font: bold 24px 'Courier New',monospace; color: var(--gold); text-shadow: 0 0 18px rgba(255,171,0,.65); }
+
+.sliderWrap { width: 90%; text-align: center; padding-top: 6px; }
+.sliderHint { font: 11px 'Courier New',monospace; color: var(--dim); margin-bottom: 8px; }
+.voltDisp { font: bold 32px 'Courier New',monospace; color: var(--gold); margin-top: 10px; text-shadow: 0 0 22px rgba(255,171,0,.55); }
