@@ -11,8 +11,13 @@ const DONE = [
   { id: 'outlet',       icon: '🔧', label: '开关插座 Switch & Outlet' },
   { id: 'safety',       icon: '🛡️', label: '安全用电 Safety' },
   { id: 'troubleshoot', icon: '🔍', label: '故障排查 Troubleshoot' },
-  { id: 'bldc-fan',     icon: '🌀', label: '无刷电机风扇 BLDC Fan' },
-  { id: 'flashlight',   icon: '🔦', label: '手电筒电路 Flashlight' },
+  { id: 'bldc-fan',   icon: '🌀', label: '无刷电机风扇 BLDC Fan' },
+  { id: 'flashlight', icon: '🔦', label: '手电筒电路 Flashlight' },
+  { id: 'desk-lamp',  icon: '🪔', label: '台灯电路 Desk Lamp' },
+  { id: 'kettle',     icon: '☕', label: '热水壶电路 Kettle' },
+  { id: 'hair-dryer', icon: '💨', label: '电吹风电路 Hair Dryer' },
+  { id: 'power-bank', icon: '🔋', label: '充电宝电路 Power Bank' },
+  { id: 'router',     icon: '📡', label: 'WiFi路由器 Router' },
 ];
 
 const COMING = [

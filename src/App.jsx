@@ -22,6 +22,11 @@ import Safety from './components/sections/Safety';
 import Troubleshoot from './components/sections/Troubleshoot';
 import BLDCFan from './components/sections/BLDCFan';
 import Flashlight from './components/sections/Flashlight';
+import DeskLamp from './components/sections/DeskLamp';
+import Kettle from './components/sections/Kettle';
+import HairDryer from './components/sections/HairDryer';
+import PowerBank from './components/sections/PowerBank';
+import Router from './components/sections/Router';
 
 const SECTION_MAP = {
   home: Home, voltage: Voltage, current: Current,
@@ -30,6 +35,8 @@ const SECTION_MAP = {
   'home-ckt': HomeCkt, wiring: Wiring, outlet: Outlet,
   safety: Safety, troubleshoot: Troubleshoot,
   'bldc-fan': BLDCFan, flashlight: Flashlight,
+  'desk-lamp': DeskLamp, kettle: Kettle,
+  'hair-dryer': HairDryer, 'power-bank': PowerBank, router: Router,
 };
 
 function BottomNav({ currentId, onNavigate }) {

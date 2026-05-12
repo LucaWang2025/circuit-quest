@@ -35,6 +35,11 @@ const CARD_GROUPS = [
     cards: [
       { id: 'bldc-fan',   icon: '🌀', title: '无刷电机风扇', en: 'BLDC FAN',   color: '#e040fb', desc: '三相绕组、六步换相、MOSFET全桥、PWM调速全解析' },
       { id: 'flashlight', icon: '🔦', title: '手电筒电路',   en: 'FLASHLIGHT', color: '#ffd740', desc: '18650/21700电池、Type-C充电IC、恒流LED驱动设计' },
+      { id: 'desk-lamp',  icon: '🪔', title: '台灯电路',     en: 'DESK LAMP',  color: '#ffe066', desc: 'AC-DC驱动、恒流LED、PWM调光与色温调节全流程' },
+      { id: 'kettle',     icon: '☕', title: '热水壶电路',   en: 'KETTLE',     color: '#ff6b35', desc: '发热管、双金属片温控、防干烧保护，220V家电拆解' },
+      { id: 'hair-dryer', icon: '💨', title: '电吹风电路',   en: 'HAIR DRYER', color: '#ff9800', desc: '串励电机调速、Ni-Cr发热丝、档位切换与过热保护' },
+      { id: 'power-bank', icon: '🔋', title: '充电宝电路',   en: 'POWER BANK', color: '#00bcd4', desc: '锂电BMS、Boost升压、快充协议PD/QC实现原理' },
+      { id: 'router',     icon: '📡', title: 'WiFi路由器',   en: 'WIFI ROUTER', color: '#00e676', desc: 'SMPS供电链路、SoC架构、RF前端与散热设计' },
     ],
   },
 ];

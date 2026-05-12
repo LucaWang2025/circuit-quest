@@ -33,6 +33,11 @@ export const CATEGORIES = [
     sections: [
       { id: 'bldc-fan',   label: '无刷电机', icon: '🌀' },
       { id: 'flashlight', label: '手电筒',   icon: '🔦' },
+      { id: 'desk-lamp',  label: '台灯',     icon: '🪔' },
+      { id: 'kettle',     label: '热水壶',   icon: '☕' },
+      { id: 'hair-dryer', label: '电吹风',   icon: '💨' },
+      { id: 'power-bank', label: '充电宝',   icon: '🔋' },
+      { id: 'router',     label: 'WiFi路由', icon: '📡' },
     ],
   },
 ];
