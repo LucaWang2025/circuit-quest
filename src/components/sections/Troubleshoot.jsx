@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const ACC = '#ff6b35';
 
@@ -197,9 +197,24 @@ const SAFETY_FIRST = [
 
 export default function Troubleshoot() {
   const [activeTree, setActiveTree] = useState('breaker');
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const timer = setTimeout(() => {
+      const io = new IntersectionObserver(
+        entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); }),
+        { threshold: 0.08 }
+      );
+      section.querySelectorAll('.reveal:not(.vis)').forEach(el => io.observe(el));
+      return () => io.disconnect();
+    }, 60);
+    return () => clearTimeout(timer);
+  }, [activeTree]);
 
   return (
-    <section id="troubleshoot" className="sec">
+    <section id="troubleshoot" className="sec" ref={sectionRef}>
       <div className="sh">
         <span className="sh-icon">🔍</span>
         <div className="sh-tag">Stage 3 · Hands-on · Fault Diagnosis</div>

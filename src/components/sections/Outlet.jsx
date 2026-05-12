@@ -50,12 +50,17 @@ function OutletCanvas({ step }) {
         // Outlet face (simplified)
         if (step >= 4) {
           // Screw terminals inside
-          [[-24, '#ff5252'], [0, '#64b5f6'], [24, '#4caf50']].forEach(([ox, color]) => {
+          const termColors = [
+            { ox: -24, rgb: '255,82,82' },
+            { ox: 0,   rgb: '100,181,246' },
+            { ox: 24,  rgb: '76,175,80' },
+          ];
+          termColors.forEach(({ ox, rgb }) => {
             ctx.fillStyle = 'rgba(200,200,200,.15)';
             ctx.beginPath(); ctx.roundRect(cx + ox - 10, cy - 20, 20, 40, 3); ctx.fill();
             const pulse = 0.6 + 0.35 * Math.sin(t * 3 + ox);
-            ctx.fillStyle = `${color}${Math.round(pulse * 255).toString(16).padStart(2, '0')}`;
-            ctx.shadowColor = color; ctx.shadowBlur = 8 * pulse;
+            ctx.fillStyle = `rgba(${rgb},${pulse})`;
+            ctx.shadowColor = `rgba(${rgb},1)`; ctx.shadowBlur = 8 * pulse;
             ctx.beginPath(); ctx.arc(cx + ox, cy, 6, 0, Math.PI * 2); ctx.fill();
             ctx.shadowBlur = 0;
           });
@@ -173,9 +178,25 @@ export default function Outlet() {
   const [step, setStep] = useState(1);
   const [activeTab, setActiveTab] = useState('outlet');
   const current = OUTLET_STEPS[step - 1];
+  const sectionRef = useRef(null);
+
+  // Re-observe reveal elements whenever tab switches
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const timer = setTimeout(() => {
+      const io = new IntersectionObserver(
+        entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); }),
+        { threshold: 0.08 }
+      );
+      section.querySelectorAll('.reveal:not(.vis)').forEach(el => io.observe(el));
+      return () => io.disconnect();
+    }, 60);
+    return () => clearTimeout(timer);
+  }, [activeTab]);
 
   return (
-    <section id="outlet" className="sec">
+    <section id="outlet" className="sec" ref={sectionRef}>
       <div className="sh">
         <span className="sh-icon">🔧</span>
         <div className="sh-tag">Stage 3 · Installation Practice</div>
