@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 
 const ACC = '#00bcd4';
 
-function PowerBankCanvas({ charging, outputting, soc }) {
+/* ── 主电路图 Canvas ─────────────────────────────────────── */
+function CircuitCanvas({ charging, outputting, soc, protocol }) {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
@@ -10,140 +11,364 @@ function PowerBankCanvas({ charging, outputting, soc }) {
     const W = cv.width, H = cv.height;
     let t = 0, raf;
 
-    function drawArrow(x1, y1, x2, y2, color, speed, flowing) {
-      if (!flowing) return;
-      ctx.strokeStyle = color + '55'; ctx.lineWidth = 1.5;
-      ctx.setLineDash([5, 4]);
+    // Particle pools
+    const chargeParticles  = Array.from({ length: 12 }, (_, i) => ({ p: i / 12 }));
+    const outputParticles  = Array.from({ length: 12 }, (_, i) => ({ p: i / 12 }));
+
+    const PROTO_COLORS = { '5W': '#00bcd4', 'QC3': '#ffab00', 'PD45': '#9c7dff', 'PD100': '#e040fb' };
+    const pColor = PROTO_COLORS[protocol] ?? ACC;
+
+    function block(x, y, w, h, label, sublabel, color, lit) {
+      // Shadow glow
+      if (lit) { ctx.shadowColor = color; ctx.shadowBlur = 14; }
+      const bg = ctx.createLinearGradient(x, y, x + w, y + h);
+      bg.addColorStop(0, lit ? color + '22' : 'rgba(30,30,48,.9)');
+      bg.addColorStop(1, lit ? color + '0a' : 'rgba(20,20,36,.9)');
+      ctx.fillStyle = bg; ctx.beginPath(); ctx.roundRect(x, y, w, h, 6); ctx.fill();
+      ctx.strokeStyle = lit ? color : color + '44'; ctx.lineWidth = lit ? 1.5 : 1;
+      ctx.beginPath(); ctx.roundRect(x, y, w, h, 6); ctx.stroke();
+      ctx.shadowBlur = 0;
+      ctx.textAlign = 'center';
+      ctx.fillStyle = lit ? color : color + '99';
+      ctx.font = `bold 11px "Courier New",monospace`;
+      ctx.fillText(label, x + w / 2, y + h / 2 - (sublabel ? 5 : 0));
+      if (sublabel) {
+        ctx.fillStyle = lit ? color + 'cc' : 'rgba(130,150,170,.55)';
+        ctx.font = '9px "Courier New",monospace';
+        ctx.fillText(sublabel, x + w / 2, y + h / 2 + 8);
+      }
+    }
+
+    function wire(x1, y1, x2, y2, color, active) {
+      ctx.strokeStyle = active ? color + 'aa' : 'rgba(80,100,120,.35)';
+      ctx.lineWidth = active ? 2 : 1.5;
+      ctx.setLineDash(active ? [] : [4, 3]);
       ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
       ctx.setLineDash([]);
-      // Moving dot
-      const progress = (t * speed) % 1;
-      const px = x1 + (x2 - x1) * progress;
-      const py = y1 + (y2 - y1) * progress;
-      ctx.fillStyle = color; ctx.shadowColor = color; ctx.shadowBlur = 8;
-      ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI * 2); ctx.fill();
+    }
+
+    function particle(x1, y1, x2, y2, color, particles, active, speed) {
+      if (!active) return;
+      particles.forEach(p => {
+        p.p = (p.p + speed * 0.015) % 1;
+        const px = x1 + (x2 - x1) * p.p;
+        const py = y1 + (y2 - y1) * p.p;
+        const alpha = Math.sin(p.p * Math.PI) * 0.9 + 0.1;
+        ctx.fillStyle = color; ctx.shadowColor = color; ctx.shadowBlur = 7 * alpha;
+        ctx.beginPath(); ctx.arc(px, py, 3.5, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+    }
+
+    function voltLabel(x, y, v, color, active) {
+      if (!active) return;
+      ctx.fillStyle = color + 'cc'; ctx.font = 'bold 10px "Courier New",monospace'; ctx.textAlign = 'center';
+      ctx.shadowColor = color; ctx.shadowBlur = 6;
+      ctx.fillText(v, x, y);
       ctx.shadowBlur = 0;
     }
 
     function draw() {
       ctx.clearRect(0, 0, W, H);
-      t += 0.02;
+      t += 0.025;
 
-      const CX = W / 2, CY = H / 2 - 10;
+      // ─── Layout constants ───
+      const Y = H / 2;
+      // Block x-centers: Adapter | ChargeIC | Cells | BoostIC | Phone
+      const BLK = [50, 130, 230, 330, 415];
+      const BW = 65, BH = 52;
 
-      // ── Central power bank body ──
-      const pbW = 80, pbH = 140;
-      const pbGrad = ctx.createLinearGradient(CX - pbW/2, CY - pbH/2, CX + pbW/2, CY + pbH/2);
-      pbGrad.addColorStop(0, '#2a2a3a'); pbGrad.addColorStop(1, '#1a1a28');
-      ctx.fillStyle = pbGrad;
-      ctx.beginPath(); ctx.roundRect(CX - pbW/2, CY - pbH/2, pbW, pbH, 10); ctx.fill();
-      ctx.strokeStyle = ACC + '44'; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.roundRect(CX - pbW/2, CY - pbH/2, pbW, pbH, 10); ctx.stroke();
+      // ─── Wires ───
+      wire(BLK[0] + BW/2, Y, BLK[1] - BW/2, Y, '#00e676', charging);
+      wire(BLK[1] + BW/2, Y, BLK[2] - BW/2, Y, '#00e676', charging);
+      wire(BLK[2] + BW/2, Y, BLK[3] - BW/2, Y, ACC,       outputting);
+      wire(BLK[3] + BW/2, Y, BLK[4] - 18,   Y, pColor,    outputting);
+      // BMS protective ring (above)
+      wire(BLK[1] + BW/2, Y - 26, BLK[2] - BW/2, Y - 26, '#ff1744', charging || outputting);
 
-      // Battery cells inside (3 cells stacked)
-      const cellH = 30, gap = 6;
-      const totalH = 3 * cellH + 2 * gap;
-      const startY = CY - totalH / 2;
-      [0, 1, 2].forEach(i => {
-        const cy = startY + i * (cellH + gap);
-        const cellFill = soc / 100;
-        const fH = cellFill * (cellH - 4);
-        const fc = soc > 50 ? '#00e676' : soc > 20 ? '#ffab00' : '#ff1744';
-        ctx.fillStyle = 'rgba(255,255,255,.06)';
-        ctx.beginPath(); ctx.roundRect(CX - 28, cy, 56, cellH, 4); ctx.fill();
-        if (fH > 0) {
-          ctx.fillStyle = fc + 'cc';
-          ctx.beginPath(); ctx.roundRect(CX - 26, cy + (cellH - 4) - fH + 2, 52, fH, 3); ctx.fill();
-        }
-        // Terminal
-        ctx.fillStyle = 'rgba(255,255,255,.15)';
-        ctx.beginPath(); ctx.roundRect(CX - 10, cy - 4, 20, 4, 2); ctx.fill();
-      });
-
-      // USB-C port (top)
-      ctx.fillStyle = charging ? 'rgba(0,230,118,.6)' : 'rgba(255,255,255,.15)';
-      ctx.beginPath(); ctx.roundRect(CX - 8, CY - pbH/2 - 6, 16, 7, 2); ctx.fill();
-      ctx.fillStyle = 'rgba(30,30,50,1)'; ctx.beginPath(); ctx.roundRect(CX - 6, CY - pbH/2 - 5, 12, 5, 1); ctx.fill();
-
-      // USB-A port (bottom)
-      ctx.fillStyle = outputting ? 'rgba(0,188,212,.6)' : 'rgba(255,255,255,.15)';
-      ctx.beginPath(); ctx.roundRect(CX - 12, CY + pbH/2 - 1, 24, 8, 2); ctx.fill();
-      ctx.fillStyle = 'rgba(30,30,50,1)'; ctx.beginPath(); ctx.roundRect(CX - 10, CY + pbH/2, 20, 6, 1); ctx.fill();
-
-      // SOC indicator LEDs (right side)
-      [0,1,2,3].forEach(i => {
-        const lit = soc >= (i + 1) * 25;
-        const ledY = CY - 24 + i * 16;
-        ctx.fillStyle = lit ? (soc < 25 && i===0 ? '#ff1744cc' : '#00e676cc') : 'rgba(255,255,255,.1)';
-        if (lit) { ctx.shadowColor = '#00e676'; ctx.shadowBlur = 6; }
-        ctx.beginPath(); ctx.arc(CX + pbW/2 - 8, ledY, 4, 0, Math.PI * 2); ctx.fill();
+      // ─── Blocks ───
+      const adOn = charging;
+      block(BLK[0]-BW/2, Y-BH/2, BW, BH, 'USB-C', '充电器', '#00e676', adOn);
+      block(BLK[1]-BW/2, Y-BH/2, BW, BH, 'CC/CV', '充电IC', '#00e676', charging);
+      // Cell bank (wider)
+      const cW = 80;
+      const fc = soc > 60 ? '#00e676' : soc > 25 ? '#ffab00' : '#ff1744';
+      block(BLK[2]-cW/2, Y-BH/2, cW, BH, `电芯组`, `${soc}%`, fc, true);
+      // Fill bar inside cell block
+      const barW = (soc / 100) * (cW - 12);
+      if (soc > 0) {
+        ctx.shadowColor = fc; ctx.shadowBlur = 5;
+        ctx.fillStyle = fc + 'cc';
+        ctx.beginPath(); ctx.roundRect(BLK[2] - cW/2 + 6, Y + BH/2 - 10, barW, 6, 3); ctx.fill();
         ctx.shadowBlur = 0;
-      });
+      }
+      // SOC voltage
+      const v = (2.8 + soc / 100 * 1.4).toFixed(2);
+      ctx.fillStyle = fc; ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'center';
+      ctx.fillText(`${v}V / 节`, BLK[2], Y + BH/2 + 12);
 
-      // ── Input: USB-C charger (left) ──
-      const chargerX = CX - 130, chargerY = CY - 40;
-      ctx.fillStyle = '#333'; ctx.beginPath(); ctx.roundRect(chargerX - 20, chargerY - 20, 40, 40, 6); ctx.fill();
-      ctx.strokeStyle = '#555'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(chargerX - 20, chargerY - 20, 40, 40, 6); ctx.stroke();
-      ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.font = '8px "Courier New",monospace'; ctx.textAlign = 'center';
-      ctx.fillText('USB-C', chargerX, chargerY - 5); ctx.fillText('充电器', chargerX, chargerY + 5);
-      // Labels
-      ctx.fillStyle = charging ? '#00e676' : 'var(--dim)'; ctx.font = '10px "Courier New",monospace';
-      ctx.fillText('5V / 2A', chargerX, chargerY + 26);
-
-      // ── Output: Phone (right) ──
-      const phoneX = CX + 130, phoneY = CY + 30;
-      ctx.fillStyle = '#2a2a3a'; ctx.beginPath(); ctx.roundRect(phoneX - 16, phoneY - 35, 32, 55, 5); ctx.fill();
-      ctx.strokeStyle = '#555'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(phoneX - 16, phoneY - 35, 32, 55, 5); ctx.stroke();
+      block(BLK[3]-BW/2, Y-BH/2, BW, BH, 'Boost', '升压IC', pColor, outputting);
+      // Phone
+      const phOn = outputting;
+      ctx.fillStyle = phOn ? '#1a2040' : '#141420';
+      ctx.strokeStyle = phOn ? pColor : pColor + '33'; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.roundRect(BLK[4]-16, Y-30, 32, 50, 5); ctx.fill(); ctx.stroke();
       // Screen
-      ctx.fillStyle = outputting ? 'rgba(0,188,212,.25)' : 'rgba(255,255,255,.08)';
-      ctx.beginPath(); ctx.roundRect(phoneX - 12, phoneY - 30, 24, 40, 3); ctx.fill();
-      if (outputting) {
-        ctx.fillStyle = '#00bcd4'; ctx.font = '11px serif'; ctx.textAlign = 'center';
-        ctx.fillText('⚡', phoneX, phoneY - 8);
+      ctx.fillStyle = phOn ? pColor + '28' : 'rgba(255,255,255,.04)';
+      ctx.beginPath(); ctx.roundRect(BLK[4]-12, Y-25, 24, 36, 3); ctx.fill();
+      if (phOn) {
+        ctx.shadowColor = pColor; ctx.shadowBlur = 8;
+        ctx.fillStyle = pColor; ctx.font = '14px serif'; ctx.textAlign = 'center';
+        ctx.fillText('⚡', BLK[4], Y - 4);
+        ctx.shadowBlur = 0;
       }
-      ctx.fillStyle = outputting ? ACC : 'var(--dim)'; ctx.font = '10px "Courier New",monospace';
-      ctx.fillText('5V / 2.4A', phoneX, phoneY + 28);
+      ctx.fillStyle = phOn ? pColor : 'var(--dim)'; ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'center';
+      ctx.fillText('手机', BLK[4], Y + 28);
 
-      // ── Flow arrows ──
-      drawArrow(chargerX + 22, chargerY, CX - pbW/2, CY - pbH/2 + 20, '#00e676', 0.6, charging);
-      drawArrow(CX + pbW/2, CY + pbH/2 - 20, phoneX - 18, phoneY, ACC, 0.7, outputting);
+      // ─── Particles ───
+      const chSpeed = charging ? (protocol === 'PD100' ? 2.5 : protocol === 'PD45' ? 2 : protocol === 'QC3' ? 1.5 : 1) : 0;
+      particle(BLK[0]+BW/2, Y, BLK[1]-BW/2, Y, '#00e676', chargeParticles, charging, chSpeed);
+      particle(BLK[1]+BW/2, Y, BLK[2]-BW/2, Y, '#00e676', chargeParticles.slice(0,8), charging, chSpeed);
+      particle(BLK[2]+BW/2, Y, BLK[3]-BW/2, Y, ACC, outputParticles, outputting, 1.2);
+      particle(BLK[3]+BW/2, Y, BLK[4]-18,   Y, pColor, outputParticles.slice(0,8), outputting, 1.4);
 
-      // ── Boost converter label ──
-      if (outputting) {
-        ctx.fillStyle = ACC + 'bb'; ctx.font = '10px "Courier New",monospace'; ctx.textAlign = 'center';
-        ctx.fillText('升压 3.7V→5V', CX + 60, CY + pbH/2 + 20);
+      // ─── Voltage labels ───
+      voltLabel((BLK[0]+BW/2+BLK[1]-BW/2)/2, Y-10, '5V', '#00e676', charging);
+      voltLabel((BLK[1]+BW/2+BLK[2]-BW/2)/2, Y-10, 'CC/CV', '#00e676', charging);
+      voltLabel((BLK[2]+BW/2+BLK[3]-BW/2)/2, Y-10, '3.7V', ACC, outputting);
+      voltLabel((BLK[3]+BW/2+BLK[4]-18)/2, Y-10, { '5W':'5V','QC3':'9V','PD45':'20V','PD100':'20V' }[protocol]||'5V', pColor, outputting);
+
+      // ─── Protocol badge ───
+      const pLabel = { '5W':'5W 普通','QC3':'QC3 18W','PD45':'PD 45W','PD100':'PD 100W' }[protocol];
+      ctx.fillStyle = pColor + 'cc'; ctx.font = 'bold 11px "Courier New",monospace'; ctx.textAlign = 'left';
+      ctx.fillText(`协议: ${pLabel}`, 12, H - 12);
+
+      // ─── BMS label ───
+      if (charging || outputting) {
+        ctx.fillStyle = '#ff174499'; ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'center';
+        ctx.fillText('BMS 保护', (BLK[1]+BLK[2])/2, Y - 32);
       }
-      if (charging) {
-        ctx.fillStyle = '#00e676bb'; ctx.font = '10px "Courier New",monospace'; ctx.textAlign = 'center';
-        ctx.fillText('CC/CV 充电', CX - 65, CY - pbH/2 - 14);
-      }
 
-      // SOC text
-      const fc2 = soc > 50 ? '#00e676' : soc > 20 ? '#ffab00' : '#ff1744';
-      ctx.fillStyle = fc2; ctx.font = 'bold 14px "Courier New",monospace'; ctx.textAlign = 'center';
-      ctx.fillText(`${soc}%`, CX, CY + pbH/2 + 22);
+      // ─── Adapter plug animation ───
+      if (!charging) {
+        ctx.fillStyle = 'rgba(200,220,232,.18)'; ctx.font = '10px "Courier New",monospace'; ctx.textAlign = 'center';
+        ctx.fillText('未连接', BLK[0], Y + BH / 2 + 12);
+      }
 
       raf = requestAnimationFrame(draw);
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, [charging, outputting, soc]);
-  return <canvas ref={ref} width={360} height={280} style={{ maxWidth: '100%' }} />;
+  }, [charging, outputting, soc, protocol]);
+  return <canvas ref={ref} width={460} height={200} style={{ maxWidth: '100%', width: '100%' }} />;
 }
 
+/* ── CC/CV 充电曲线 Canvas ─────────────────────────────────── */
+function ChargeCurveCanvas({ soc }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const cv = ref.current; if (!cv) return;
+    const ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height;
+    const PX = 44, PY = 14, CW = W - PX - 16, CH = H - PY - 28;
+
+    ctx.clearRect(0, 0, W, H);
+
+    // Axes
+    ctx.strokeStyle = 'rgba(200,220,232,.18)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(PX, PY); ctx.lineTo(PX, PY + CH); ctx.lineTo(PX + CW, PY + CH); ctx.stroke();
+
+    // Grid
+    [0.25, 0.5, 0.75, 1].forEach(v => {
+      const y = PY + CH - v * CH;
+      ctx.strokeStyle = 'rgba(255,255,255,.05)'; ctx.setLineDash([3, 3]);
+      ctx.beginPath(); ctx.moveTo(PX, y); ctx.lineTo(PX + CW, y); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = 'rgba(200,220,232,.35)'; ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'right';
+      ctx.fillText(`${Math.round(v * 100)}%`, PX - 4, y + 3);
+    });
+
+    // Phase regions
+    const p1 = 0.08, p2 = 0.68;
+    [[0, p1, 'rgba(255,107,53,.07)', '预充'], [p1, p2, 'rgba(0,188,212,.07)', '恒流 CC'], [p2, 1, 'rgba(0,230,118,.07)', '恒压 CV']].forEach(([s, e, c, l]) => {
+      const x1 = PX + s * CW, x2 = PX + e * CW;
+      ctx.fillStyle = c; ctx.fillRect(x1, PY, x2 - x1, CH);
+      ctx.fillStyle = 'rgba(200,220,232,.3)'; ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'center';
+      ctx.fillText(l, (x1 + x2) / 2, PY + 10);
+    });
+
+    // Voltage curve (rises in CC, flat in CV)
+    ctx.strokeStyle = '#00bcd4'; ctx.lineWidth = 2; ctx.shadowColor = '#00bcd4'; ctx.shadowBlur = 4;
+    ctx.beginPath();
+    for (let i = 0; i <= 200; i++) {
+      const x = i / 200;
+      let v;
+      if (x < p1) v = 0.55 + x / p1 * 0.1;
+      else if (x < p2) v = 0.65 + (x - p1) / (p2 - p1) * 0.35;
+      else v = 1.0;
+      ctx.lineTo(PX + x * CW, PY + CH - v * CH);
+    }
+    ctx.stroke(); ctx.shadowBlur = 0;
+
+    // Current curve (flat in CC, drops in CV)
+    ctx.strokeStyle = '#ffab00'; ctx.lineWidth = 2; ctx.shadowColor = '#ffab00'; ctx.shadowBlur = 4;
+    ctx.beginPath();
+    for (let i = 0; i <= 200; i++) {
+      const x = i / 200;
+      let c;
+      if (x < p1) c = 0.15 + x / p1 * 0.7;
+      else if (x < p2) c = 0.85;
+      else c = 0.85 * Math.pow(1 - (x - p2) / (1 - p2), 0.7);
+      ctx.lineTo(PX + x * CW, PY + CH - c * CH);
+    }
+    ctx.stroke(); ctx.shadowBlur = 0;
+
+    // Current position (based on soc)
+    const xPos = PX + (soc / 100) * CW;
+    ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(xPos, PY); ctx.lineTo(xPos, PY + CH); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'center';
+    ctx.fillText(`${soc}%`, xPos, PY + CH + 14);
+
+    // Legend
+    [['电压', '#00bcd4'], ['电流', '#ffab00']].forEach(([l, c], i) => {
+      ctx.fillStyle = c; ctx.font = '10px "Courier New",monospace'; ctx.textAlign = 'left';
+      ctx.fillRect(PX + CW - 80 + i * 44, PY + 2, 14, 3);
+      ctx.fillStyle = c + 'cc'; ctx.fillText(l, PX + CW - 62 + i * 44, PY + 10);
+    });
+  }, [soc]);
+  return <canvas ref={ref} width={340} height={120} style={{ maxWidth: '100%', width: '100%' }} />;
+}
+
+/* ── Boost 转换原理图 ─────────────────────────────────────── */
+function BoostCanvas() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const cv = ref.current; if (!cv) return;
+    const ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height;
+    let t = 0, raf;
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      t += 0.035;
+
+      const phase = (Math.sin(t * 1.8) + 1) / 2;  // 0=switch on, 1=switch off
+      const switchOn = phase < 0.5;
+
+      // ── Labels ──
+      ctx.fillStyle = 'rgba(200,220,232,.45)'; ctx.font = '10px "Courier New",monospace'; ctx.textAlign = 'center';
+      ctx.fillText(switchOn ? '阶段一：开关闭合，电感储能' : '阶段二：开关断开，电感释能升压', W / 2, 14);
+
+      // Circuit elements positions
+      const VIN_X = 38, VOUT_X = W - 38, MID_Y = H / 2 + 8;
+      const IND_X = W / 2 - 10, IND_Y = MID_Y - 2;
+      const SW_X = W / 2 + 40, SW_Y = MID_Y + 40;
+      const CAP_X = VOUT_X - 10, CAP_Y = MID_Y;
+
+      // Wires
+      ctx.strokeStyle = 'rgba(200,220,232,.25)'; ctx.lineWidth = 1.5;
+      // Top wire: Vin → Inductor → Diode → Vout
+      ctx.beginPath(); ctx.moveTo(VIN_X, MID_Y - 20); ctx.lineTo(IND_X - 22, MID_Y - 20); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(IND_X + 22, MID_Y - 20); ctx.lineTo(CAP_X, MID_Y - 20); ctx.stroke();
+      // Capacitor top/bottom
+      ctx.beginPath(); ctx.moveTo(CAP_X, MID_Y - 20); ctx.lineTo(VOUT_X, MID_Y - 20); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(CAP_X, MID_Y + 20); ctx.lineTo(VOUT_X, MID_Y + 20); ctx.stroke();
+      // Ground wire bottom
+      ctx.beginPath(); ctx.moveTo(VIN_X, MID_Y + 20); ctx.lineTo(SW_X, MID_Y + 20); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(SW_X, MID_Y + 20); ctx.lineTo(VOUT_X, MID_Y + 20); ctx.stroke();
+      // Switch vertical
+      ctx.beginPath(); ctx.moveTo(SW_X, MID_Y - 20); ctx.lineTo(SW_X, MID_Y + 20); ctx.stroke();
+
+      // ── Inductor ──
+      ctx.strokeStyle = switchOn ? '#00bcd4' : '#ffab00'; ctx.lineWidth = 2;
+      ctx.shadowColor = switchOn ? '#00bcd4' : '#ffab00'; ctx.shadowBlur = switchOn ? 8 : 4;
+      ctx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        ctx.arc(IND_X - 15 + i * 10, MID_Y - 20, 5, Math.PI, 0);
+      }
+      ctx.stroke(); ctx.shadowBlur = 0;
+      ctx.fillStyle = switchOn ? '#00bcd4aa' : '#ffab00aa'; ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'center';
+      ctx.fillText(switchOn ? '储能' : '释能', IND_X, MID_Y - 36);
+
+      // ── Diode ──
+      const DX = IND_X + 50;
+      const dColor = switchOn ? 'rgba(200,220,232,.3)' : '#00e676';
+      ctx.fillStyle = dColor; ctx.strokeStyle = dColor; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(DX - 6, MID_Y - 27); ctx.lineTo(DX + 6, MID_Y - 20); ctx.lineTo(DX - 6, MID_Y - 13); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(DX + 6, MID_Y - 27); ctx.lineTo(DX + 6, MID_Y - 13); ctx.stroke();
+
+      // ── Switch (MOSFET) ──
+      const swColor = switchOn ? '#00e676' : 'rgba(200,220,232,.3)';
+      ctx.strokeStyle = swColor; ctx.lineWidth = 2; ctx.shadowColor = switchOn ? '#00e676' : 'transparent'; ctx.shadowBlur = switchOn ? 8 : 0;
+      // Switch symbol
+      ctx.beginPath(); ctx.moveTo(SW_X - 8, MID_Y - 20); ctx.lineTo(SW_X - 8, MID_Y - 6);
+      if (switchOn) { ctx.lineTo(SW_X + 8, MID_Y + 6); ctx.lineTo(SW_X + 8, MID_Y + 20); }
+      else { ctx.moveTo(SW_X + 8, MID_Y + 20); }
+      ctx.stroke(); ctx.shadowBlur = 0;
+      ctx.fillStyle = swColor; ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'center';
+      ctx.fillText(switchOn ? 'ON' : 'OFF', SW_X, MID_Y + 34);
+
+      // ── Capacitor ──
+      ctx.strokeStyle = '#9c7dff'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(CAP_X, MID_Y - 8); ctx.lineTo(CAP_X, MID_Y - 20); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(CAP_X, MID_Y + 8); ctx.lineTo(CAP_X, MID_Y + 20); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(CAP_X - 10, MID_Y - 8); ctx.lineTo(CAP_X + 10, MID_Y - 8); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(CAP_X - 10, MID_Y + 8); ctx.lineTo(CAP_X + 10, MID_Y + 8); ctx.stroke();
+
+      // ── Voltage labels ──
+      ctx.fillStyle = '#00e67699'; ctx.font = 'bold 11px "Courier New",monospace'; ctx.textAlign = 'center';
+      ctx.fillText('3.7V', VIN_X, MID_Y + 34);
+      ctx.fillStyle = '#ffab0099';
+      ctx.fillText('5V', VOUT_X, MID_Y + 34);
+
+      // ── Current flow arrows ──
+      const arrowX = switchOn
+        ? [IND_X - 22, IND_X + 22]   // switch on: current into inductor
+        : [IND_X + 22, CAP_X - 10];  // switch off: current through diode to cap
+      const arrowColor = switchOn ? '#00bcd4' : '#00e676';
+      const ap = ((t * 2) % 1);
+      const ax = arrowX[0] + (arrowX[1] - arrowX[0]) * ap;
+      ctx.fillStyle = arrowColor; ctx.shadowColor = arrowColor; ctx.shadowBlur = 8;
+      ctx.beginPath(); ctx.arc(ax, MID_Y - 20, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+
+      raf = requestAnimationFrame(draw);
+    }
+    draw();
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  return <canvas ref={ref} width={320} height={130} style={{ maxWidth: '100%', width: '100%' }} />;
+}
+
+/* ── 主组件 ─────────────────────────────────────────────── */
+const PROTOCOLS = [
+  { id: '5W',   label: '5W 普通',  color: '#00bcd4', v: '5V',  i: '1A',  w: 5,   note: '所有设备通用，充电最慢' },
+  { id: 'QC3',  label: 'QC 3.0',  color: '#ffab00', v: '5~12V', i: '3A', w: 18,  note: '高通协议，安卓旗舰主流' },
+  { id: 'PD45', label: 'PD 45W',  color: '#9c7dff', v: '20V',  i: '2.25A', w: 45, note: '笔记本 / MacBook / iPad' },
+  { id: 'PD100',label: 'PD 100W', color: '#e040fb', v: '20V',  i: '5A',  w: 100, note: '高端充电宝，可充游戏本' },
+];
+
 export default function PowerBank() {
-  const [charging, setCharging] = useState(false);
-  const [outputting, setOutputting] = useState(true);
-  const [soc, setSoc] = useState(65);
+  const [charging, setCharging] = useState(true);
+  const [outputting, setOutputting] = useState(false);
+  const [soc, setSoc] = useState(42);
+  const [protocol, setProtocol] = useState('QC3');
 
   useEffect(() => {
     const timer = setInterval(() => setSoc(s => {
-      if (charging && !outputting) return Math.min(100, s + 0.8);
-      if (outputting && !charging) return Math.max(0, s - 0.5);
+      if (charging && !outputting) return Math.min(100, +(s + 0.6).toFixed(1));
+      if (outputting && !charging) return Math.max(0, +(s - 0.4).toFixed(1));
       return s;
-    }), 300);
+    }), 250);
     return () => clearInterval(timer);
   }, [charging, outputting]);
+
+  const proto = PROTOCOLS.find(p => p.id === protocol);
+  const fc = soc > 60 ? '#00e676' : soc > 25 ? '#ffab00' : '#ff1744';
+  const wh37 = (soc / 100 * 37).toFixed(1);
+  const wh5  = (soc / 100 * 37 * 0.9).toFixed(1);
 
   return (
     <section id="power-bank" className="sec">
@@ -151,77 +376,154 @@ export default function PowerBank() {
         <span className="sh-icon">🔋</span>
         <div className="sh-tag">Stage 3 · Small Appliance · Power Bank</div>
         <h2 className="sh-title" style={{ color: ACC }}>充电宝电路设计</h2>
-        <p className="sh-sub">锂电池组管理、升压 Boost 变换器、CC/CV 充电控制与 USB PD 快充协议——充电宝的完整电路链路。</p>
+        <p className="sh-sub">
+          锂电芯 → BMS 保护 → Boost 升压 → USB 输出，完整电路链路可视化；CC/CV 充电曲线、Boost 工作原理与快充协议全解析。
+        </p>
         <div className="divider" style={{ background: `linear-gradient(90deg,transparent,${ACC},transparent)` }} />
       </div>
 
-      <div className="grid2">
-        <div className="anim-box reveal" style={{ borderColor: 'rgba(0,188,212,.2)', flexDirection: 'column', gap: 14 }}>
-          <PowerBankCanvas charging={charging} outputting={outputting} soc={soc} />
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ font: '11px "Courier New",monospace', color: 'var(--dim)', width: 38 }}>电量:</span>
-            <input type="range" min={0} max={100} value={soc} onChange={e => setSoc(+e.target.value)} style={{ flex: 1, accentColor: ACC }} />
-            <span style={{ font: '12px "Courier New",monospace', color: ACC, width: 36 }}>{soc}%</span>
-          </div>
-          <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
-            <button onClick={() => setCharging(c => !c)} style={{
-              padding: '8px 18px', borderRadius: 10, cursor: 'pointer',
-              border: `1px solid ${charging ? '#00e676' : 'rgba(0,230,118,.25)'}`,
-              background: charging ? 'rgba(0,230,118,.12)' : 'transparent',
-              color: charging ? '#00e676' : 'var(--dim)', font: '13px/1 inherit', transition: 'all .2s',
-            }}>🔌 {charging ? '断开充电' : '接入充电'}</button>
-            <button onClick={() => setOutputting(o => !o)} style={{
-              padding: '8px 18px', borderRadius: 10, cursor: 'pointer',
-              border: `1px solid ${outputting ? ACC : 'rgba(0,188,212,.25)'}`,
-              background: outputting ? 'rgba(0,188,212,.12)' : 'transparent',
-              color: outputting ? ACC : 'var(--dim)', font: '13px/1 inherit', transition: 'all .2s',
-            }}>📱 {outputting ? '断开输出' : '接入手机'}</button>
-          </div>
-        </div>
-
-        <div className="reveal" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {[
-            { name: '电芯组', color: ACC, d: '通常为 1~4 节 18650 锂电芯串联或并联。3.7V 标称，需要升压才能给 USB 5V 输出。常见 10000mAh 充电宝含 2~3 节 18650' },
-            { name: 'BMS 保护电路', color: '#00e676', d: '电池管理系统：过充（4.25V）/过放（2.5V）/过流/短路四重保护，平衡多节电芯电量，防止最弱电芯先耗尽' },
-            { name: 'Boost 升压电路', color: '#ffab00', d: '将电芯 3.7V 升压到 USB 5V 输出。常用 IC：IP5328、MT3608、SY7208，升压效率约 88~93%。大功率型支持 9V/12V 快充输出' },
-            { name: '充电管理 IC', color: '#9c7dff', d: '负责 CC/CV 充电曲线，通过 Type-C 接口的 CC 引脚识别 QC/PD 协议，与充电器协商快充电压（5V/9V/12V/20V）' },
-            { name: 'MCU 控制器', color: '#e040fb', d: '智能充电宝的大脑：管理电量指示 LED、入出功率计算（显示屏）、双向快充调度、低电量自动关闭等逻辑' },
-          ].map(s => (
-            <div key={s.name} style={{ display: 'flex', gap: 10, padding: '10px 14px', background: 'rgba(6,12,28,.7)', borderRadius: 10, border: `1px solid ${s.color}22` }}>
-              <div style={{ width: 4, borderRadius: 2, background: s.color, flexShrink: 0 }} />
-              <div>
-                <div style={{ fontWeight: 700, color: s.color, fontSize: 13, marginBottom: 3 }}>{s.name}</div>
-                <div style={{ fontSize: 12.5, color: '#8aacb8', lineHeight: 1.55 }}>{s.d}</div>
-              </div>
+      {/* ── 快充协议选择器 ── */}
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 20 }}>
+        {PROTOCOLS.map(p => (
+          <button key={p.id} onClick={() => setProtocol(p.id)} style={{
+            flex: 1, minWidth: 100, padding: '10px 12px', borderRadius: 12, cursor: 'pointer',
+            border: `1px solid ${protocol === p.id ? p.color : p.color + '30'}`,
+            background: protocol === p.id ? p.color + '16' : 'rgba(6,12,28,.6)',
+            transition: 'all .2s',
+          }}>
+            <div style={{ fontWeight: 700, color: protocol === p.id ? p.color : 'var(--dim)', fontSize: 13 }}>{p.label}</div>
+            <div style={{ font: '10px "Courier New",monospace', color: protocol === p.id ? p.color + 'cc' : 'rgba(130,150,170,.5)', marginTop: 3 }}>
+              {p.v} · {p.w}W
             </div>
-          ))}
+          </button>
+        ))}
+      </div>
+
+      {/* ── 主电路图 ── */}
+      <div className="reveal" style={{ background: 'rgba(6,12,28,.8)', border: `1px solid ${proto.color}22`, borderRadius: 14, padding: '14px 8px 10px', marginBottom: 20 }}>
+        <div style={{ font: '10px "Courier New",monospace', color: 'var(--dim)', textAlign: 'center', marginBottom: 6, letterSpacing: 2 }}>
+          ⚡ 实时电路拓扑图
+        </div>
+        <CircuitCanvas charging={charging} outputting={outputting} soc={Math.round(soc)} protocol={protocol} />
+        <div style={{ display: 'flex', gap: 10, justifyContent: 'center', marginTop: 12 }}>
+          <button onClick={() => setCharging(c => !c)} style={{
+            padding: '8px 22px', borderRadius: 10, cursor: 'pointer',
+            border: `1px solid ${charging ? '#00e676' : 'rgba(0,230,118,.22)'}`,
+            background: charging ? 'rgba(0,230,118,.12)' : 'transparent',
+            color: charging ? '#00e676' : 'var(--dim)', font: '13px/1 inherit', transition: 'all .2s',
+          }}>🔌 {charging ? '断开充电' : '接入充电器'}</button>
+          <button onClick={() => setOutputting(o => !o)} style={{
+            padding: '8px 22px', borderRadius: 10, cursor: 'pointer',
+            border: `1px solid ${outputting ? proto.color : proto.color + '30'}`,
+            background: outputting ? proto.color + '14' : 'transparent',
+            color: outputting ? proto.color : 'var(--dim)', font: '13px/1 inherit', transition: 'all .2s',
+          }}>📱 {outputting ? '断开手机' : '接入手机'}</button>
         </div>
       </div>
 
-      <div style={{ marginTop: 32, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 14 }}>
+      {/* ── SOC 实时状态卡 ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(130px,1fr))', gap: 12, marginBottom: 28 }}>
         {[
-          { title: '⚡ 快充协议对比', color: ACC, items: [['普通 5W','5V/1A','所有设备均支持'],['QC 3.0','5/9/12V','安卓旗舰主流'],['PD 3.0','5~20V','iPhone 15+ / 笔记本'],['SCP 华为','5/10V','华为专属 40W+'],['AFC 三星','5/9V','三星 Galaxy 系列']] },
-          { title: '🔢 容量与实际输出', color: '#ffab00', items: [['标称 10000mAh','实际约 6000mAh','升压损耗约 40%'],['标称 20000mAh','实际约 13000mAh','转换效率 ~90%时'],['虚标判断','铭牌 Wh 可靠','10000mAh×3.7V=37Wh']] },
-        ].map(card => (
-          <div key={card.title} className="glass reveal" style={{ borderColor: card.color + '22' }}>
-            <div style={{ fontWeight: 700, color: card.color, marginBottom: 10 }}>{card.title}</div>
-            {card.items.map(row => (
-              <div key={row[0]} style={{ display: 'flex', gap: 6, fontSize: 12, padding: '4px 0', borderBottom: '1px solid rgba(255,255,255,.05)', flexWrap: 'wrap' }}>
-                <span style={{ color: card.color, font: '11px "Courier New",monospace', minWidth: 80 }}>{row[0]}</span>
-                <span style={{ color: '#8aacb8' }}>{row[1]}</span>
-                {row[2] && <span style={{ color: 'var(--dim)', fontSize: 11 }}>{row[2]}</span>}
+          { label: '当前电量', val: `${Math.round(soc)}%`, sub: `${(2.8 + soc/100*1.4).toFixed(2)}V / 节`, color: fc },
+          { label: '可用能量', val: `${wh5} Wh`, sub: '（3.7V侧→5V后约90%效率）', color: ACC },
+          { label: '协议功率', val: `${proto.w}W`, sub: `${proto.v} × ${proto.i}`, color: proto.color },
+          { label: '充满剩余', val: soc >= 100 ? '已满' : `约 ${Math.round((100-soc)/100*37/proto.w*60)} 分钟`, sub: '以当前协议速率估算', color: '#ffab00' },
+        ].map(c => (
+          <div key={c.label} className="glass" style={{ borderColor: c.color + '25', padding: '12px 14px' }}>
+            <div style={{ font: '10px "Courier New",monospace', color: 'var(--dim)', marginBottom: 5 }}>{c.label}</div>
+            <div style={{ fontWeight: 700, color: c.color, fontSize: 18 }}>{c.val}</div>
+            <div style={{ fontSize: 10.5, color: 'var(--dim)', marginTop: 3 }}>{c.sub}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid2">
+        {/* CC/CV 曲线 */}
+        <div className="reveal" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div style={{ fontWeight: 700, color: ACC, fontSize: 15 }}>📈 CC/CV 充电曲线</div>
+          <div style={{ background: 'rgba(6,12,28,.8)', border: '1px solid rgba(0,188,212,.14)', borderRadius: 12, padding: '12px 8px 6px' }}>
+            <ChargeCurveCanvas soc={Math.round(soc)} />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+            {[
+              { p: '预充（< 10%）', c: '#ff6b35', d: '小电流（0.1C）激活亏电电芯，防损伤' },
+              { p: '恒流 CC（10~70%）', c: '#00bcd4', d: '最大电流快速充入，电压线性上升' },
+              { p: '恒压 CV（70~100%）', c: '#00e676', d: '4.2V 恒压，电流渐降至截止值' },
+              { p: '截止', c: '#ffab00', d: '电流 ≤ 0.05C 自动断电，防过充' },
+            ].map(item => (
+              <div key={item.p} style={{ padding: '8px 10px', background: 'rgba(6,12,28,.6)', borderRadius: 8, borderLeft: `3px solid ${item.c}` }}>
+                <div style={{ fontWeight: 700, color: item.c, fontSize: 11, marginBottom: 3 }}>{item.p}</div>
+                <div style={{ fontSize: 11.5, color: '#8aacb8' }}>{item.d}</div>
               </div>
             ))}
           </div>
-        ))}
+        </div>
+
+        {/* Boost 原理 */}
+        <div className="reveal" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div style={{ fontWeight: 700, color: '#ffab00', fontSize: 15 }}>⚙️ Boost 升压工作原理</div>
+          <div style={{ background: 'rgba(6,12,28,.8)', border: '1px solid rgba(255,171,0,.14)', borderRadius: 12, padding: '10px 8px 6px' }}>
+            <BoostCanvas />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+            {[
+              { s: '阶段一：开关闭合', c: '#00bcd4', d: 'MOSFET 导通，电流流过电感 L，电感积累磁能（3.7V 输入）' },
+              { s: '阶段二：开关断开', c: '#ffab00', d: '电感反向释能，叠加输入电压，通过二极管向电容充电（输出 5V）' },
+              { s: '高频切换', c: '#00e676', d: '典型频率 300kHz~1MHz，输出电压 = Vin×(1÷(1-占空比))，效率 88~94%' },
+            ].map(item => (
+              <div key={item.s} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                <div style={{ width: 3, height: 40, background: item.c, borderRadius: 2, flexShrink: 0, marginTop: 2 }} />
+                <div>
+                  <div style={{ fontWeight: 700, color: item.c, fontSize: 12 }}>{item.s}</div>
+                  <div style={{ fontSize: 12, color: '#8aacb8', lineHeight: 1.55 }}>{item.d}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* 容量计算 + 快充对比 + 安全 */}
+      <div style={{ marginTop: 28, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 14 }}>
+        <div className="glass reveal" style={{ borderColor: 'rgba(0,188,212,.18)' }}>
+          <div style={{ fontWeight: 700, color: ACC, marginBottom: 10 }}>🔢 容量虚标识别</div>
+          <div className="fbox"><div className="fbox-f">37 Wh</div><div className="fbox-desc">10000mAh × 3.7V（可靠指标）</div></div>
+          <div style={{ fontSize: 12.5, color: '#8aacb8', lineHeight: 1.65, marginTop: 10 }}>
+            商家标注的 mAh 是电芯在 <strong style={{color:'var(--white)'}}>3.7V</strong> 下的容量。
+            经 Boost 升压到 5V 后，5V 侧实际可输出约 <strong style={{color:ACC}}>37Wh ÷ 5V × 0.9 ≈ 6660mAh</strong>，
+            并非标称的 10000mAh。<br/><br/>
+            <span style={{color:'#ffab00'}}>查铭牌 Wh 才是最诚实的指标！</span>
+          </div>
+        </div>
+
+        <div className="glass reveal" style={{ borderColor: 'rgba(255,171,0,.18)' }}>
+          <div style={{ fontWeight: 700, color: '#ffab00', marginBottom: 10 }}>⚡ 快充协议对比</div>
+          {PROTOCOLS.map(p => (
+            <div key={p.id} onClick={() => setProtocol(p.id)} style={{
+              display: 'flex', gap: 8, padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,.05)',
+              cursor: 'pointer', alignItems: 'center',
+              background: protocol === p.id ? p.color + '0a' : 'transparent',
+              borderRadius: 4, paddingLeft: 4,
+            }}>
+              <div style={{ width: 3, height: 28, background: p.color, borderRadius: 2, flexShrink: 0 }} />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 700, color: p.color, fontSize: 12 }}>{p.label}</div>
+                <div style={{ fontSize: 11, color: 'var(--dim)' }}>{p.note}</div>
+              </div>
+              <div style={{ font: 'bold 13px "Courier New",monospace', color: p.color }}>{p.w}W</div>
+            </div>
+          ))}
+        </div>
+
         <div className="glass reveal" style={{ borderColor: 'rgba(255,23,68,.18)' }}>
           <div style={{ fontWeight: 700, color: '#ff1744', marginBottom: 8 }}>⚠️ 安全与寿命</div>
-          <div style={{ fontSize: 12.5, color: '#8aacb8', lineHeight: 1.75 }}>
-            ▸ 不要放在高温环境充电（车内曝晒 ≥ 60°C）<br/>
-            ▸ 膨胀鼓包立即停用，有爆炸风险<br/>
-            ▸ 坐飞机：&gt;100Wh 需申报，&gt;160Wh 禁止携带<br/>
-            ▸ 建议 20~80% 区间使用，延长寿命<br/>
-            ▸ 3~6 个月不用时，保持 50% 电量存放
+          <div style={{ fontSize: 12.5, color: '#8aacb8', lineHeight: 1.8 }}>
+            ▸ 车内高温曝晒（≥ 60°C）会加速析锂，引发热失控<br/>
+            ▸ 鼓包变形立即停用，不可刺穿/挤压<br/>
+            ▸ 飞机规定：&gt; 100Wh 需申报；&gt; 160Wh 禁带<br/>
+            ▸ 保持 20~80% 使用区间，延长循环寿命<br/>
+            ▸ 闲置 3 个月+请保存在 50% 电量<br/>
+            ▸ 边充边用（直通模式）发热，长期损伤电芯
           </div>
         </div>
       </div>
