@@ -11,13 +11,18 @@ const DONE = [
   { id: 'outlet',       icon: '🔧', label: '开关插座 Switch & Outlet' },
   { id: 'safety',       icon: '🛡️', label: '安全用电 Safety' },
   { id: 'troubleshoot', icon: '🔍', label: '故障排查 Troubleshoot' },
+  { id: 'bldc-fan',     icon: '🌀', label: '无刷电机风扇 BLDC Fan' },
 ];
 
 const COMING = [
-  '电感 Inductor', '二极管 Diode', '三极管 Transistor',
-  '继电器 Relay', '电机驱动 Motor', '逻辑门 Logic Gates',
-  '示波器 Oscilloscope', '焊接技术 Soldering', 'PCB 设计基础', 'Arduino 入门',
+  // 基础知识
+  '电感 Inductor', '二极管 Diode', '三极管 Transistor', '逻辑门 Logic Gates',
+  // 家用电路
   '弱电布线 Structured Cabling', '光伏发电 Solar PV', '智能家居布线',
+  // 小电器电路
+  'LED 灯具驱动电路', 'USB 充电器电路拆解', '继电器控制电路',
+  '步进电机驱动', '温控电路设计', 'Arduino 入门实战',
+  '示波器 Oscilloscope', '焊接技术 Soldering',
 ];
 
 const goTo = id =>
