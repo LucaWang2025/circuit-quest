@@ -242,12 +242,12 @@ export default function BTSpeaker() {
 
       <div style={{ marginTop: 30, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(210px,1fr))', gap: 14 }}>
         <div className="glass reveal" style={{ borderColor: 'rgba(121,134,203,.18)' }}>
-          <div style={{ fontWeight: 700, color: '#7986cb', marginBottom: 10 }}>📡 蓝牙版本与音质</div>
+          <div style={{ fontWeight: 700, color: '#7986cb', marginBottom: 10 }}>📡 蓝牙音频编解码</div>
           <div style={{ fontSize: 12, color: '#8aacb8' }}>
             {[
-              { v: 'BT 4.2', d: 'SBC编码，约192kbps，延迟200ms+', col: '#78909c' },
-              { v: 'BT 5.0', d: 'aptX，352kbps，延迟70ms', col: '#7986cb' },
-              { v: 'BT 5.3', d: 'LDAC 990kbps，接近无损', col: ACC },
+              { v: 'SBC', d: '所有蓝牙设备支持，约192kbps，延迟200ms+', col: '#78909c' },
+              { v: 'aptX', d: 'Qualcomm 编解码，352kbps，延迟70ms', col: '#7986cb' },
+              { v: 'LDAC', d: 'Sony 编解码，最高990kbps，接近无损', col: ACC },
             ].map(r => (
               <div key={r.v} style={{ display: 'flex', gap: 10, marginBottom: 8, lineHeight: 1.5 }}>
                 <span style={{ color: r.col, fontWeight: 700, minWidth: 50, fontFamily: 'monospace' }}>{r.v}</span>

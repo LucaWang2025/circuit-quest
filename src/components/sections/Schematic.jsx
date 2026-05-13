@@ -90,7 +90,7 @@ function SchematicCanvas({ highlight }) {
       ctx.beginPath(); ctx.roundRect(phys.resistor.x, phys.resistor.y, phys.resistor.w, phys.resistor.h, 3); ctx.fill();
       ctx.strokeStyle = isR ? '#ff6b35' : 'rgba(255,107,53,.35)'; ctx.lineWidth = 1.5; ctx.stroke();
       // Color bands
-      [['#ffd700', 14], ['#7B00B4', 30], ['#7B3F00', 46], ['#ffd700', 58]].forEach(([c, x]) => {
+      [['#CCCC00', 14], ['#7B00B4', 30], ['#7B3F00', 46], ['#ffd700', 58]].forEach(([c, x]) => {
         ctx.fillStyle = c;
         ctx.fillRect(phys.resistor.x + x, phys.resistor.y, 8, phys.resistor.h);
       });

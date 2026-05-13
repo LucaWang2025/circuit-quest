@@ -144,7 +144,7 @@ function SafetyCanvas({ mode }) {
         ctx.fillText(`IN = ${(0.5 - diff).toFixed(2)} A`, rcdX + 20, rcdY + 85);
         ctx.fillText(`差值: ${(diff * 1000).toFixed(0)} mA`, rcdX, rcdY + 103);
 
-        if (diff * 1000 > 20) {
+        if (diff * 1000 > 30) {
           // Trip!
           ctx.fillStyle = '#ff1744'; ctx.shadowColor = '#ff1744'; ctx.shadowBlur = 20;
           ctx.font = 'bold 13px "Courier New",monospace'; ctx.textAlign = 'center';

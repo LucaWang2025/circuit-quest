@@ -1,5 +1,13 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import styles from './Voltage.module.css';
+import Quiz from '../Quiz';
+
+const QUIZ_DATA = [
+  { question: '家用插座的电压是多少伏？', options: ['12V', '110V', '220V', '380V'], answer: 2, explain: '中国家用标准电压为交流 220V/50Hz' },
+  { question: '电压的单位是什么？', options: ['安培(A)', '欧姆(Ω)', '伏特(V)', '瓦特(W)'], answer: 2, explain: '电压单位为伏特(V)，以物理学家 Volta 命名' },
+  { question: '两点之间没有电压差，电流会如何？', options: ['正常流动', '不会流动', '反向流动', '加速流动'], answer: 1, explain: '电压差是驱动电流流动的"动力"，没有电压差就没有电流' },
+  { question: '一节干电池的电压约为？', options: ['0.7V', '1.5V', '3.7V', '5V'], answer: 1, explain: '普通碱性干电池标称电压为 1.5V' },
+];
 
 export default function Voltage() {
   const [volt, setVolt] = useState(9);
@@ -52,7 +60,7 @@ export default function Voltage() {
           <div className={styles.sliderWrap}>
             <div className={styles.sliderHint}>▸ 拖动滑块改变电压</div>
             <input
-              type="range" min={0} max={24} value={volt}
+              type="range" min={1} max={24} value={volt}
               onChange={e => setVolt(+e.target.value)}
               style={{ width: '100%', accentColor: 'var(--gold)', cursor: 'pointer' }}
             />
@@ -90,6 +98,8 @@ export default function Voltage() {
           </ICard>
         </div>
       </div>
+
+      <Quiz questions={QUIZ_DATA} accentColor="var(--gold)" title="电压小测验" />
     </section>
   );
 }

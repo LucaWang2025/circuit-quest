@@ -14,7 +14,7 @@ function LowVoltageCanvas({ activeNode }) {
     cv.style.width = W + 'px'; cv.style.height = H + 'px';
     const ctx = cv.getContext('2d'); ctx.scale(dpr, dpr);
 
-    let t = 0, rafId;
+    let rafId;
 
     // 节点定义
     const NODES = {
@@ -50,7 +50,6 @@ function LowVoltageCanvas({ activeNode }) {
     function drawNode(node, isActive) {
       const { x, y, color, label, icon } = node;
       const r = 20;
-      const glow = isActive ? 12 : 0;
 
       ctx.shadowColor = color; ctx.shadowBlur = isActive ? 18 : 8;
       const grad = ctx.createRadialGradient(x - 4, y - 4, 0, x, y, r);
@@ -87,7 +86,6 @@ function LowVoltageCanvas({ activeNode }) {
 
     function draw() {
       ctx.clearRect(0, 0, W, H);
-      t += 0.02;
 
       // 背景
       const bg = ctx.createLinearGradient(0, 0, W, H);

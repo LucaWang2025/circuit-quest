@@ -1,10 +1,17 @@
 import { useEffect, useRef } from 'react';
 import { setupHiDpi } from '../../utils/canvas';
+import Quiz from '../Quiz';
+
+const QUIZ_DATA = [
+  { question: '一个四色环电阻：棕-绿-棕-金，其阻值是？', options: ['15Ω', '150Ω', '1.5kΩ', '100Ω'], answer: 1, explain: '棕(1)绿(5)棕(×10) = 150Ω，金表示±5%容差' },
+  { question: '导体电阻与下列哪个因素无关？', options: ['长度', '横截面积', '材料', '电压'], answer: 3, explain: '电阻取决于材料电阻率、长度和截面积（R=ρL/A），与施加的电压无关' },
+  { question: '温度升高时，普通金属导体的电阻会？', options: ['减小', '增大', '不变', '先增后减'], answer: 1, explain: '金属导体温度升高→原子振动加剧→电子碰撞增多→电阻增大' },
+];
 
 const COLOR_BANDS = [
   ['#111','黑',0,'×1 Ω','—'],['#7B3F00','棕',1,'×10','±1%'],['#cc0000','红',2,'×100','±2%'],
-  ['#ff8c00','橙',3,'×1 kΩ','—'],['#ffd700','黄',4,'×10 kΩ','—'],['#007a00','绿',5,'×100 kΩ','±0.5%'],
-  ['#0000bb','蓝',6,'×1 MΩ','±0.25%'],['#888','灰',8,'×100 MΩ','—'],['#ddd','白',9,'×1 GΩ','—'],
+  ['#ff8c00','橙',3,'×1 kΩ','—'],['#CCCC00','黄',4,'×10 kΩ','—'],['#007a00','绿',5,'×100 kΩ','±0.5%'],
+  ['#0000bb','蓝',6,'×1 MΩ','±0.25%'],['#7B00B4','紫',7,'×10 MΩ','±0.1%'],['#888','灰',8,'×100 MΩ','—'],['#ddd','白',9,'×1 GΩ','—'],
   ['#ffd700','金','—','×0.1','±5%'],
 ];
 
@@ -51,7 +58,7 @@ export default function Resistance() {
       // Body
       cx.fillStyle = '#8B5A2B'; cx.beginPath(); cx.rect(R1, WY - 15, R2 - R1, 30); cx.fill();
       cx.strokeStyle = 'rgba(255,107,53,.45)'; cx.lineWidth = 1.5; cx.stroke();
-      [{ c: '#ffd700', x: R1 + 18 }, { c: '#7B00B4', x: R1 + 38 }, { c: '#7B3F00', x: R1 + 58 }, { c: '#ffd700', x: R2 - 26 }].forEach(b => {
+      [{ c: '#CCCC00', x: R1 + 18 }, { c: '#7B00B4', x: R1 + 38 }, { c: '#7B3F00', x: R1 + 58 }, { c: '#ffd700', x: R2 - 26 }].forEach(b => {
         cx.fillStyle = b.c; cx.fillRect(b.x, WY - 15, 13, 30);
         cx.strokeStyle = 'rgba(0,0,0,.3)'; cx.lineWidth = .5; cx.strokeRect(b.x, WY - 15, 13, 30);
       });
@@ -165,6 +172,8 @@ export default function Resistance() {
           ))}
         </div>
       </div>
+
+      <Quiz questions={QUIZ_DATA} accentColor="#ff6b35" title="电阻小测验" />
     </section>
   );
 }

@@ -117,7 +117,7 @@ function KettleCanvas({ tempRef, heatingRef }) {
       ctx.beginPath(); ctx.roundRect(barX, barY + barH - fillH, 12, fillH, 6); ctx.fill();
       ctx.shadowBlur = 0;
       ctx.fillStyle = barColor; ctx.font = 'bold 13px "Courier New",monospace'; ctx.textAlign = 'center';
-      ctx.fillText(`${temp}°`, barX + 6, barY + barH - fillH - 6);
+      ctx.fillText(`${Math.round(temp)}°`, barX + 6, barY + barH - fillH - 6);
       // Scale marks
       [0, 40, 60, 80, 100].forEach(v => {
         const y = barY + barH - (v / 100) * barH;
@@ -156,8 +156,9 @@ export default function Kettle() {
   useEffect(() => {
     const timer = setInterval(() => {
       setTemp(t => {
-        if (heating && t < 100) return Math.min(100, t + 1.2);
-        if (!heating && t > 20) return Math.max(20, t - 0.4);
+        if (heating && t < 100) return Math.min(100, Math.round((t + 1.2) * 10) / 10);
+        if (heating && t >= 100) { setHeating(false); return 100; }
+        if (!heating && t > 20) return Math.max(20, Math.round((t - 0.4) * 10) / 10);
         return t;
       });
     }, 200);

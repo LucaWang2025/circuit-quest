@@ -31,10 +31,6 @@ function WashingCanvas({ cycleIdx, speed }) {
       vy: (Math.random() - 0.5) * 0.3, alpha: 0.4 + Math.random() * 0.4,
     }));
 
-    function drawRoundedRect(x, y, w, h, r) {
-      ctx.beginPath(); ctx.roundRect(x, y, w, h, r); ctx.fill();
-    }
-
     function draw() {
       ctx.clearRect(0, 0, W, H);
       t += 0.03;
@@ -126,10 +122,10 @@ function WashingCanvas({ cycleIdx, speed }) {
         const cols = ['#ff7043', '#42a5f5', '#66bb6a', '#ffca28'];
         cols.forEach((c, i) => {
           const a = (i / cols.length) * Math.PI * 2 + t * 0.2;
-          const r2 = 40 + Math.random() * 10;
+          const r2 = 40 + (i * 7.3 % 10);
           ctx.fillStyle = c + '88';
           ctx.beginPath();
-          ctx.ellipse(Math.cos(a) * r2, Math.sin(a) * r2, 10 + Math.random() * 5, 6, a, 0, Math.PI * 2);
+          ctx.ellipse(Math.cos(a) * r2, Math.sin(a) * r2, 10 + (i * 3.7 % 5), 6, a, 0, Math.PI * 2);
           ctx.fill();
         });
       }
@@ -197,7 +193,7 @@ function WashingCanvas({ cycleIdx, speed }) {
         ctx.fillStyle = `rgba(171,71,188,${0.7 + 0.3 * Math.sin(t * 4)})`;
         ctx.font = 'bold 11px monospace'; ctx.textAlign = 'center';
         ctx.shadowColor = '#ab47bc'; ctx.shadowBlur = 10;
-        ctx.fillText(`⚡ 甩干 ~${Math.round(800 + 200 * Math.sin(t * 2))} rpm`, cx, H - 10);
+        ctx.fillText(`⚡ 甩干 ~1200 rpm`, cx, H - 10);
         ctx.shadowBlur = 0;
       }
 

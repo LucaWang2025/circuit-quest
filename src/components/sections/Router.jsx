@@ -86,7 +86,7 @@ function RouterCanvas({ activePort }) {
         ctx.fillStyle = isActive ? p.color + '30' : '#333';
         ctx.strokeStyle = isActive ? p.color : '#555'; ctx.lineWidth = 1;
         ctx.beginPath(); ctx.roundRect(px - 8, py, 16, 10, 2); ctx.fill(); ctx.stroke();
-        ctx.fillStyle = isActive ? p.color : 'var(--dim)'; ctx.font = '7px "Courier New",monospace'; ctx.textAlign = 'center';
+        ctx.fillStyle = isActive ? p.color : '#607a90'; ctx.font = '7px "Courier New",monospace'; ctx.textAlign = 'center';
         ctx.fillText(p.label, px, py + 20);
         // Data flow
         if (isActive) {

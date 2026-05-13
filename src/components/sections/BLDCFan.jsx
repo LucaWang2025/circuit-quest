@@ -123,8 +123,8 @@ function BLDCCanvas({ pwm, step: extStep }) {
       ctx.strokeStyle = 'rgba(224,64,251,.5)'; ctx.lineWidth = 1.5;
       ctx.beginPath();
       for (let x = 0; x <= wW; x++) {
-        const phase = (x / wW) * Math.PI * 8 + t * 4;
-        const high = Math.sin(phase) > (1 - pwm / 50);
+        const phase = ((x / wW) * 8 + t * 0.64) % 1;
+        const high = phase < (pwm / 100);
         const y = wY + (high ? 0 : 16);
         x === 0 ? ctx.moveTo(wX0 + x, y) : ctx.lineTo(wX0 + x, y);
       }
@@ -160,61 +160,51 @@ function CircuitDiagram() {
     const cv = ref.current; if (!cv) return;
     const ctx = setupHiDpi(cv, 470, 260);
     const W = 470, H = 260;
-    let t = 0, rafId;
 
-    function draw() {
-      ctx.clearRect(0, 0, W, H);
-      t += 0.02;
+    ctx.clearRect(0, 0, W, H);
 
-      // Blocks
-      const blocks = [
-        { x: 20,  y: 110, w: 60, h: 80, label: '直流\n电源', sub: 'DC Bus\n12~48V', color: '#ffab00' },
-        { x: 110, y: 90,  w: 65, h: 120, label: '控制\nMCU', sub: 'Arduino\nSTM32', color: '#00bcd4' },
-        { x: 205, y: 90,  w: 65, h: 120, label: '驱动\nIC', sub: 'DRV8313\nL6234', color: '#9c7dff' },
-        { x: 300, y: 60,  w: 65, h: 180, label: '三相\nMOSFET', sub: '全桥\n6管', color: '#ff6b35' },
-        { x: 395, y: 110, w: 60, h: 80, label: 'BLDC\n电机', sub: 'U/V/W\n三相', color: ACC },
-      ];
+    // Blocks
+    const blocks = [
+      { x: 20,  y: 110, w: 60, h: 80, label: '直流\n电源', sub: 'DC Bus\n12~48V', color: '#ffab00' },
+      { x: 110, y: 90,  w: 65, h: 120, label: '控制\nMCU', sub: 'Arduino\nSTM32', color: '#00bcd4' },
+      { x: 205, y: 90,  w: 65, h: 120, label: '驱动\nIC', sub: 'DRV8313\nL6234', color: '#9c7dff' },
+      { x: 300, y: 60,  w: 65, h: 180, label: '三相\nMOSFET', sub: '全桥\n6管', color: '#ff6b35' },
+      { x: 395, y: 110, w: 60, h: 80, label: 'BLDC\n电机', sub: 'U/V/W\n三相', color: ACC },
+    ];
 
-      blocks.forEach(b => {
-        ctx.fillStyle = b.color + '18'; ctx.strokeStyle = b.color + '55'; ctx.lineWidth = 1.5;
-        ctx.beginPath(); ctx.roundRect(b.x, b.y, b.w, b.h, 8); ctx.fill(); ctx.stroke();
-        // Label
-        ctx.fillStyle = b.color; ctx.font = 'bold 11px "Courier New",monospace'; ctx.textAlign = 'center';
-        b.label.split('\n').forEach((line, i) => ctx.fillText(line, b.x + b.w / 2, b.y + 22 + i * 14));
-        ctx.fillStyle = b.color + 'aa'; ctx.font = '9px "Courier New",monospace';
-        b.sub.split('\n').forEach((line, i) => ctx.fillText(line, b.x + b.w / 2, b.y + b.h - 22 + i * 12));
-      });
+    blocks.forEach(b => {
+      ctx.fillStyle = b.color + '18'; ctx.strokeStyle = b.color + '55'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.roundRect(b.x, b.y, b.w, b.h, 8); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = b.color; ctx.font = 'bold 11px "Courier New",monospace'; ctx.textAlign = 'center';
+      b.label.split('\n').forEach((line, i) => ctx.fillText(line, b.x + b.w / 2, b.y + 22 + i * 14));
+      ctx.fillStyle = b.color + 'aa'; ctx.font = '9px "Courier New",monospace';
+      b.sub.split('\n').forEach((line, i) => ctx.fillText(line, b.x + b.w / 2, b.y + b.h - 22 + i * 12));
+    });
 
-      // Connecting arrows
-      const arrows = [
-        { x1: 80, y1: 150, x2: 110, y2: 150, label: 'Vcc', color: '#ffab00' },
-        { x1: 175, y1: 150, x2: 205, y2: 150, label: 'PWM\n信号', color: '#00bcd4' },
-        { x1: 270, y1: 150, x2: 300, y2: 150, label: '栅极\n驱动', color: '#9c7dff' },
-        { x1: 365, y1: 150, x2: 395, y2: 150, label: 'UVW', color: '#ff6b35' },
-      ];
-      arrows.forEach(a => {
-        ctx.strokeStyle = a.color; ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(a.x1, a.y1); ctx.lineTo(a.x2 - 8, a.y1); ctx.stroke();
-        // Arrowhead
-        ctx.fillStyle = a.color;
-        ctx.beginPath(); ctx.moveTo(a.x2 - 8, a.y1 - 4); ctx.lineTo(a.x2, a.y1); ctx.lineTo(a.x2 - 8, a.y1 + 4); ctx.fill();
-        ctx.fillStyle = a.color + 'cc'; ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'center';
-        a.label.split('\n').forEach((line, i) => ctx.fillText(line, (a.x1 + a.x2) / 2, a.y1 - 8 + i * 10));
-      });
+    // Connecting arrows
+    const arrows = [
+      { x1: 80, y1: 150, x2: 110, y2: 150, label: 'Vcc', color: '#ffab00' },
+      { x1: 175, y1: 150, x2: 205, y2: 150, label: 'PWM\n信号', color: '#00bcd4' },
+      { x1: 270, y1: 150, x2: 300, y2: 150, label: '栅极\n驱动', color: '#9c7dff' },
+      { x1: 365, y1: 150, x2: 395, y2: 150, label: 'UVW', color: '#ff6b35' },
+    ];
+    arrows.forEach(a => {
+      ctx.strokeStyle = a.color; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(a.x1, a.y1); ctx.lineTo(a.x2 - 8, a.y1); ctx.stroke();
+      ctx.fillStyle = a.color;
+      ctx.beginPath(); ctx.moveTo(a.x2 - 8, a.y1 - 4); ctx.lineTo(a.x2, a.y1); ctx.lineTo(a.x2 - 8, a.y1 + 4); ctx.fill();
+      ctx.fillStyle = a.color + 'cc'; ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'center';
+      a.label.split('\n').forEach((line, i) => ctx.fillText(line, (a.x1 + a.x2) / 2, a.y1 - 8 + i * 10));
+    });
 
-      // Hall sensor feedback arrow (curved back)
-      ctx.strokeStyle = 'rgba(0,230,118,.5)'; ctx.lineWidth = 1.5; ctx.setLineDash([3, 3]);
-      ctx.beginPath(); ctx.moveTo(427, 60); ctx.bezierCurveTo(427, 20, 142, 20, 142, 90); ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.fillStyle = 'rgba(0,230,118,.5)';
-      ctx.beginPath(); ctx.moveTo(138, 90); ctx.lineTo(142, 82); ctx.lineTo(146, 90); ctx.fill();
-      ctx.fillStyle = 'rgba(0,230,118,.6)'; ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'center';
-      ctx.fillText('霍尔传感器反馈', 280, 14);
-
-      rafId = requestAnimationFrame(draw);
-    }
-    draw();
-    return () => cancelAnimationFrame(rafId);
+    // Hall sensor feedback arrow (curved back)
+    ctx.strokeStyle = 'rgba(0,230,118,.5)'; ctx.lineWidth = 1.5; ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(427, 60); ctx.bezierCurveTo(427, 20, 142, 20, 142, 90); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(0,230,118,.5)';
+    ctx.beginPath(); ctx.moveTo(138, 90); ctx.lineTo(142, 82); ctx.lineTo(146, 90); ctx.fill();
+    ctx.fillStyle = 'rgba(0,230,118,.6)'; ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'center';
+    ctx.fillText('霍尔传感器反馈', 280, 14);
   }, []);
   return <canvas ref={ref} width={470} height={260} style={{ maxWidth: '100%' }} />;
 }

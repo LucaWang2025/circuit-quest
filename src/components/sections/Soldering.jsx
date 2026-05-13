@@ -57,11 +57,6 @@ export default function Soldering() {
       x: 0, y: 0, vx: 0, vy: 0, life: 0, maxLife: 1, size: 2,
     }));
 
-    // Tin flow particles
-    const tinParticles = Array.from({ length: 15 }, () => ({
-      x: 0, y: 0, progress: 0, speed: 0, active: false,
-    }));
-
     let frame = 0;
     let phase = 0; // 0=approach, 1=heat, 2=tin, 3=done
     let phaseProg = 0;
@@ -233,7 +228,7 @@ export default function Soldering() {
           c.strokeStyle = '#666'; c.lineWidth = 1;
           for (let a = 0; a < 5; a++) {
             const angle = a * 1.2 + 0.3;
-            const r = 5 + Math.random() * 4;
+            const r = 5 + ((Math.sin(a * 127.1) * 0.5 + 0.5) * 4);
             c.beginPath();
             c.moveTo(x + Math.cos(angle) * r, y + Math.sin(angle) * r);
             c.lineTo(x + Math.cos(angle + 0.4) * (r + 2), y + Math.sin(angle + 0.4) * (r + 2));

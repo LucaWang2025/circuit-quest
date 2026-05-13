@@ -78,8 +78,7 @@ function FloorHeatCanvas({ targetTempRef, curTempRef }) {
       });
       // 连接弯道
       for (let i = 0; i < rows - 1; i++) {
-        const [x1, y1] = paths[i];
-        const [x2, y2] = paths[i + 1];
+        const y1 = paths[i][1];
         const ex = (i % 2 === 0) ? paths[i][2] : paths[i][0];
         ctx.strokeStyle = heating ? tempColor(curTemp, 0.4) : 'rgba(80,60,40,.3)';
         ctx.lineWidth = heating ? 3 : 2;

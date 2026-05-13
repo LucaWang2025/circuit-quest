@@ -31,7 +31,6 @@ function CircuitCanvas({ charging, outputting, soc, protocol }) {
     start();
 
     function run(ctx, W, H) {
-    let t = 0;
 
     // Particle pools
     const chargeParticles  = Array.from({ length: 12 }, (_, i) => ({ p: i / 12 }));
@@ -92,7 +91,6 @@ function CircuitCanvas({ charging, outputting, soc, protocol }) {
 
     function draw() {
       ctx.clearRect(0, 0, W, H);
-      t += 0.025;
 
       // ─── Responsive layout ───
       const Y = H / 2;
@@ -146,7 +144,7 @@ function CircuitCanvas({ charging, outputting, soc, protocol }) {
         ctx.fillText('⚡', BLK[4], Y - 4);
         ctx.shadowBlur = 0;
       }
-      ctx.fillStyle = phOn ? pColor : 'var(--dim)'; ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'center';
+      ctx.fillStyle = phOn ? pColor : '#607a90'; ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'center';
       ctx.fillText('手机', BLK[4], Y + 28);
 
       // ─── Particles ───
@@ -292,9 +290,9 @@ function BoostCanvas() {
 
       // Circuit elements positions
       const VIN_X = 38, VOUT_X = W - 38, MID_Y = H / 2 + 8;
-      const IND_X = W / 2 - 10, IND_Y = MID_Y - 2;
-      const SW_X = W / 2 + 40, SW_Y = MID_Y + 40;
-      const CAP_X = VOUT_X - 10, CAP_Y = MID_Y;
+      const IND_X = W / 2 - 10;
+      const SW_X = W / 2 + 40;
+      const CAP_X = VOUT_X - 10;
 
       // Wires
       ctx.strokeStyle = 'rgba(200,220,232,.25)'; ctx.lineWidth = 1.5;
@@ -396,7 +394,6 @@ export default function PowerBank() {
 
   const proto = PROTOCOLS.find(p => p.id === protocol);
   const fc = soc > 60 ? '#00e676' : soc > 25 ? '#ffab00' : '#ff1744';
-  const wh37 = (soc / 100 * 37).toFixed(1);
   const wh5  = (soc / 100 * 37 * 0.9).toFixed(1);
 
   return (

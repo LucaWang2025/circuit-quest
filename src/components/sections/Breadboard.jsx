@@ -214,8 +214,8 @@ export default function Breadboard() {
       ctx.beginPath(); ctx.roundRect(x - 14, y - 5, 28, 10, 3); ctx.fill();
       ctx.strokeStyle = '#a07030'; ctx.lineWidth = 1; ctx.stroke();
 
-      // Color bands (brown-black-brown = 100Ω)
-      const bands = ['#8b4513', '#111111', '#8b4513', '#d4af37'];
+      // Color bands (brown-green-brown-gold = 150Ω)
+      const bands = ['#8b4513', '#007a00', '#8b4513', '#d4af37'];
       bands.forEach((color, i) => {
         ctx.fillStyle = color;
         ctx.fillRect(x - 10 + i * 6, y - 5, 4, 10);
@@ -359,7 +359,7 @@ export default function Breadboard() {
 
         {/* Step controls */}
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
-          {CIRCUIT_STEPS.map((s, i) => {
+          {CIRCUIT_STEPS.map((s) => {
             const stepIdx = stepOrder.indexOf(step);
             const sIdx = stepOrder.indexOf(s.id);
             const isActive = s.id === step;

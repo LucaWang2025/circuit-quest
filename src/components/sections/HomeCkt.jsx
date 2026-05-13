@@ -44,16 +44,6 @@ function HouseCktCanvas({ activeBreaker }) {
       ctx.shadowBlur = 0;
     }
 
-    function drawComponent(x, y, label, color, active) {
-      ctx.fillStyle = active ? `rgba(${color},0.22)` : 'rgba(255,255,255,0.05)';
-      ctx.strokeStyle = active ? `rgba(${color},0.8)` : 'rgba(255,255,255,0.15)';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.roundRect(x - 28, y - 18, 56, 36, 6); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = active ? `rgba(${color},1)` : 'rgba(200,220,232,0.4)';
-      ctx.font = '11px "Courier New",monospace'; ctx.textAlign = 'center';
-      ctx.fillText(label, x, y + 5);
-    }
-
     function draw() {
       ctx.clearRect(0, 0, W, H);
       t += 0.04;
@@ -144,7 +134,7 @@ function HouseCktCanvas({ activeBreaker }) {
       // Legend
       ctx.textAlign = 'left';
       const legend = [['─', LIVE, '火线 L（棕/红）'], ['─', NEUT, '零线 N（蓝）'], ['─', GND, '地线 PE（黄绿）']];
-      legend.forEach(([sym, c, text], i) => {
+      legend.forEach(([, c, text], i) => {
         ctx.strokeStyle = c; ctx.lineWidth = 2;
         ctx.beginPath(); ctx.moveTo(18, H - 55 + i * 17); ctx.lineTo(36, H - 55 + i * 17); ctx.stroke();
         ctx.fillStyle = 'rgba(200,220,232,0.55)'; ctx.font = '10.5px "Courier New",monospace';

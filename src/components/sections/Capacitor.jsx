@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { setupHiDpi } from '../../utils/canvas';
+import Quiz from '../Quiz';
+
+const CAP_QUIZ = [
+  { question: '电容器的基本功能是？', options: ['储存电荷（能量）', '放大电流', '产生电磁波', '降低电压'], answer: 0, explain: '电容器通过在两极板间积累电荷来储存电能，E = ½CV²' },
+  { question: 'RC 电路中，时间常数 τ = ?', options: ['R + C', 'R × C', 'R / C', 'C / R'], answer: 1, explain: 'τ = R×C，表示充电到63.2%或放电到36.8%所需的时间' },
+  { question: '电容器充电到约 5τ 时，电压达到最终值的约百分之多少？', options: ['63%', '86%', '95%', '99%'], answer: 3, explain: '1τ≈63%，2τ≈86%，3τ≈95%，4τ≈98%，5τ≈99%' },
+];
 
 const ACC = '#00bcd4';
 
@@ -41,7 +48,6 @@ function RCCanvas({ charging, R, C }) {
 
       // Capacitor plates
       const capX = cx + 70, capY = cy + 50;
-      const vcRatio = Math.min(t / (3 * tau), 1);
       const vc = charging ? 5 * (1 - Math.exp(-t / tau)) : 5 * Math.exp(-t / tau);
       const vcPct = Math.min(vc / 5, 1);
 
@@ -306,6 +312,8 @@ export default function Capacitor() {
           ))}
         </div>
       </div>
+
+      <Quiz questions={CAP_QUIZ} accentColor="#00bcd4" title="电容小测验" />
     </section>
   );
 }

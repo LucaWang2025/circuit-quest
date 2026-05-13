@@ -93,7 +93,7 @@ export default function PCB() {
         ctx.lineWidth = 1.5;
         ctx.globalAlpha = alpha * 0.8;
         // Draw traces
-        [[20, 0.4], [60, 0.25], [100, 0.5], [140, 0.3], [165, 0.45]].forEach(([lx, t]) => {
+        [[20, 0.4], [60, 0.25], [100, 0.5], [140, 0.3], [165, 0.45]].forEach(([lx]) => {
           ctx.beginPath();
           ctx.moveTo(x + lx, y + 1);
           ctx.lineTo(x + lx + 25, y + 1);

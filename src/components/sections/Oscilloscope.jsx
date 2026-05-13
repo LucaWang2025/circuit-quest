@@ -36,9 +36,7 @@ export default function Oscilloscope() {
     const DIVS_X = 10, DIVS_Y = 8;
     const CELL_W = SCREEN.w / DIVS_X;
     const CELL_H = SCREEN.h / DIVS_Y;
-    const AMP_PX = SCREEN.h / 2 * 0.8; // 80% of half height
-
-    let frame = 0, phase = 0;
+    let phase = 0;
     let rafId;
 
     function getSample(t, type, pwmDuty = 0.3) {
@@ -121,7 +119,7 @@ export default function Oscilloscope() {
         for (let px = 0; px <= w; px++) {
           const t = (px / w) * cycles + phase;
           const sample = getSample(t, type);
-          const py = midY - sample * AMP_PX * (CELL_H / pixPerVolt) / CELL_H * pixPerVolt;
+          const py = midY - sample * pixPerVolt * (DIVS_Y / 2) * 0.8;
           if (px === 0) ctx.moveTo(x + px, py);
           else ctx.lineTo(x + px, py);
         }
@@ -198,7 +196,6 @@ export default function Oscilloscope() {
       ctx.strokeStyle = 'rgba(255,200,0,0.7)';
       ctx.lineWidth = 1.5;
       const tx = SCREEN.x + SCREEN.w * 0.5;
-      const ty = SCREEN.y + SCREEN.h * 0.5 - AMP_PX * 0.3;
       ctx.beginPath(); ctx.moveTo(tx, SCREEN.y + 4); ctx.lineTo(tx, SCREEN.y + SCREEN.h - 4); ctx.stroke();
       ctx.font = '10px monospace';
       ctx.fillStyle = 'rgba(255,200,0,0.8)';
@@ -221,7 +218,6 @@ export default function Oscilloscope() {
 
     function draw() {
       rafId = requestAnimationFrame(draw);
-      frame++;
       phase += freqRef.current * 0.015;
 
       ctx.clearRect(0, 0, W, H);

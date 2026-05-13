@@ -3,7 +3,7 @@ import { setupHiDpi } from '../../utils/canvas';
 
 const ACC = '#ffe066';
 
-function LampCanvas({ brightness, mode }) {
+function LampCanvas({ brightness, mode, colorTemp }) {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
@@ -11,7 +11,11 @@ function LampCanvas({ brightness, mode }) {
     const W = 320, H = 300;
     let t = 0, raf;
 
-    const pwmFreq = 0.18;  // visual PWM cycle speed
+    // Color temperature to RGB
+    const warmth = 1 - (colorTemp - 2700) / 3800; // 1.0 at 2700K, 0.0 at 6500K
+    const ctR = 255;
+    const ctG = Math.round(200 + warmth * 45);
+    const ctB = Math.round(120 + (1 - warmth) * 80);
 
     function draw() {
       ctx.clearRect(0, 0, W, H);
@@ -63,10 +67,10 @@ function LampCanvas({ brightness, mode }) {
       if (brightness > 0) {
         const glowR = brightness * 0.5;
         const gGrad = ctx.createRadialGradient(hx, hy + 14, 0, hx, hy + 14, 28 + glowR);
-        gGrad.addColorStop(0, `rgba(255,245,180,${0.95 * brightness / 100})`);
-        gGrad.addColorStop(0.4, `rgba(255,224,102,${0.6 * brightness / 100})`);
-        gGrad.addColorStop(1, 'rgba(255,200,50,0)');
-        ctx.shadowColor = ACC; ctx.shadowBlur = brightness * 0.4;
+        gGrad.addColorStop(0, `rgba(${ctR},${ctG},${ctB},${0.95 * brightness / 100})`);
+        gGrad.addColorStop(0.4, `rgba(${ctR},${ctG - 20},${ctB - 40},${0.6 * brightness / 100})`);
+        gGrad.addColorStop(1, `rgba(${ctR},${ctG - 40},${ctB - 60},0)`);
+        ctx.shadowColor = `rgb(${ctR},${ctG},${ctB})`; ctx.shadowBlur = brightness * 0.4;
         ctx.fillStyle = gGrad;
         ctx.beginPath(); ctx.ellipse(hx, hy + 14, 28 + glowR * 0.3, 10 + glowR * 0.15, -0.2, 0, Math.PI * 2); ctx.fill();
         ctx.shadowBlur = 0;
@@ -74,8 +78,8 @@ function LampCanvas({ brightness, mode }) {
         // Cone beam
         const bLen = brightness * 1.5;
         const bGrad = ctx.createRadialGradient(hx, hy + 20, 5, hx + 20, hy + 60 + bLen, bLen);
-        bGrad.addColorStop(0, `rgba(255,240,150,${brightness / 100 * 0.3})`);
-        bGrad.addColorStop(1, 'rgba(255,220,80,0)');
+        bGrad.addColorStop(0, `rgba(${ctR},${ctG},${ctB},${brightness / 100 * 0.3})`);
+        bGrad.addColorStop(1, `rgba(${ctR},${ctG - 20},${ctB - 40},0)`);
         ctx.fillStyle = bGrad;
         ctx.beginPath();
         ctx.moveTo(hx - 26, hy + 20); ctx.lineTo(hx + 50 + bLen * 0.4, hy + 30 + bLen);
@@ -98,7 +102,7 @@ function LampCanvas({ brightness, mode }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, [brightness, mode]);
+  }, [brightness, mode, colorTemp]);
   return <canvas ref={ref} width={320} height={300} style={{ maxWidth: '100%' }} />;
 }
 
@@ -137,7 +141,7 @@ export default function DeskLamp() {
 
       <div className="grid2">
         <div className="anim-box reveal" style={{ borderColor: 'rgba(255,224,102,.2)', flexDirection: 'column', gap: 14 }}>
-          <LampCanvas brightness={brightness} mode={mode} />
+          <LampCanvas brightness={brightness} mode={mode} colorTemp={colorTemp} />
           <div style={{ width: '90%', display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ font: '11px "Courier New",monospace', color: 'var(--dim)', width: 40 }}>亮度:</span>

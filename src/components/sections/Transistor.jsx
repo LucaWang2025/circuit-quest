@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 const ACC = '#9c7dff';
 
 // ── Transistor Canvas ─────────────────────────────────────
-function TransistorCanvas({ mode, ibLevel }) {
+function TransistorCanvas({ ibLevel, icLevel }) {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;

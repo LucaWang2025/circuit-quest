@@ -29,6 +29,7 @@ const CARD_GROUPS = [
       { id: 'wiring',      icon: '🔌', title: '导线与接线',   en: 'WIRING',          color: '#00e676', desc: '线径选择、颜色规范、Wago/端子接线实操' },
       { id: 'outlet',      icon: '🔧', title: '开关插座安装', en: 'SWITCH & OUTLET', color: '#00bcd4', desc: '7步完整流程，断电验电到通电测试一步不漏' },
       { id: 'break-panel', icon: '🗂️', title: '配电箱详解',  en: 'PANEL BOARD',     color: '#00e676', desc: '回路规划、断路器选型、上下级保护配合要点' },
+      { id: 'relay',       icon: '⚙️', title: '继电器',      en: 'RELAY',           color: '#00e676', desc: '电磁继电器原理、触点类型、续流二极管与驱动电路' },
       { id: 'aircon',      icon: '❄️', title: '空调线路',    en: 'AIR CON',         color: '#00bcd4', desc: '专用回路、室内外机接线、变频故障码解读' },
       { id: 'low-voltage', icon: '📶', title: '弱电系统',    en: 'LOW VOLTAGE',     color: '#9c7dff', desc: '网络/监控/门禁/智能家居，布线规范与弱电箱' },
       { id: 'floor-heat',  icon: '🌡️', title: '地暖浴霸',   en: 'FLOOR HEAT',      color: '#ff9800', desc: '电地暖回路、温控器接线、浴霸多路开关配线' },

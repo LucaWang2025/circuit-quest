@@ -1,12 +1,12 @@
 import styles from './Nav.module.css';
 import { CATEGORIES, SEC_CATEGORY } from '../secs';
 
-export default function Nav({ theme, onToggleTheme, activeSection, onNavigate }) {
+export default function Nav({ theme, onToggleTheme, activeSection, onNavigate, children }) {
   const activeCat = SEC_CATEGORY[activeSection] ?? CATEGORIES[0];
 
   return (
     <nav className={styles.nav}>
-      {/* ── Row 1: Logo + Category tabs + Theme ── */}
+      {/* ── Row 1: Logo + Category tabs + Progress + Theme ── */}
       <div className={styles.row1}>
         <div className={styles.logo}>⚡ 电路<em>探索</em></div>
 
@@ -22,6 +22,8 @@ export default function Nav({ theme, onToggleTheme, activeSection, onNavigate })
             </button>
           ))}
         </div>
+
+        {children}
 
         <button className={styles.themeBtn} onClick={onToggleTheme} title="切换主题">
           {theme === 'dark' ? '☀️' : '🌙'}

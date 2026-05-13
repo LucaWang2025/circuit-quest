@@ -1,11 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTheme } from './hooks/useTheme';
+import { useProgress } from './hooks/useProgress';
 import { NavContext } from './NavContext';
 import { ALL_SECS, SEC_CATEGORY } from './secs';
 
 import CircuitBg from './components/CircuitBg';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
+import ProgressBar from './components/ProgressBar';
+import CompleteButton from './components/CompleteButton';
 
 import Home          from './components/sections/Home';
 import Voltage       from './components/sections/Voltage';
@@ -23,6 +26,7 @@ import HomeCkt       from './components/sections/HomeCkt';
 import Wiring        from './components/sections/Wiring';
 import Outlet        from './components/sections/Outlet';
 import BreakPanel    from './components/sections/BreakPanel';
+import Relay         from './components/sections/Relay';
 import AirCon        from './components/sections/AirCon';
 import LowVoltage    from './components/sections/LowVoltage';
 import FloorHeat     from './components/sections/FloorHeat';
@@ -64,6 +68,7 @@ const SECTION_MAP = {
   wiring:           Wiring,
   outlet:           Outlet,
   'break-panel':    BreakPanel,
+  relay:            Relay,
   aircon:           AirCon,
   'low-voltage':    LowVoltage,
   'floor-heat':     FloorHeat,
@@ -154,6 +159,7 @@ function BottomNav({ currentId, onNavigate }) {
 export default function App() {
   const { theme, toggle } = useTheme();
   const [activeSection, setActiveSection] = useState('home');
+  const { markCompleted, isCompleted, completedCount, totalCount } = useProgress(ALL_SECS);
 
   const navigate = useCallback(id => {
     setActiveSection(id);
@@ -176,10 +182,15 @@ export default function App() {
   return (
     <NavContext.Provider value={navigate}>
       <CircuitBg />
-      <Nav theme={theme} onToggleTheme={toggle} activeSection={activeSection} onNavigate={navigate} />
+      <Nav theme={theme} onToggleTheme={toggle} activeSection={activeSection} onNavigate={navigate}>
+        <ProgressBar completed={completedCount} total={totalCount} />
+      </Nav>
       <main>
         <div key={activeSection} className="sec-fade">
           <ActiveComponent />
+          {activeSection !== 'home' && (
+            <CompleteButton sectionId={activeSection} isCompleted={isCompleted} onComplete={markCompleted} />
+          )}
         </div>
         <BottomNav currentId={activeSection} onNavigate={navigate} />
         {activeSection === 'home' && <Footer onNavigate={navigate} />}

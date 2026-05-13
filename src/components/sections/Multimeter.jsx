@@ -49,11 +49,11 @@ export default function Multimeter() {
     if (!cv) return;
     const cx = setupHiDpi(cv, 300, 400);
     const W = 300, H = 400;
-    let fr = 0, dispVal = 0, targVal = 12.58, dialPhase = 0, rafId;
+    let dispVal = 0, targVal = 12.58, dialPhase = 0, rafId;
 
     function draw() {
       cx.clearRect(0, 0, W, H);
-      fr++; dialPhase += 0.018;
+      dialPhase += 0.018;
       dispVal += (targVal - dispVal) * 0.04;
       if (Math.abs(dispVal - targVal) < 0.01) targVal = 5 + Math.random() * 20;
 

@@ -27,6 +27,7 @@ export const CATEGORIES = [
       { id: 'wiring',      label: '导线接线', icon: '🔌' },
       { id: 'outlet',      label: '开关插座', icon: '🔧' },
       { id: 'break-panel', label: '配电箱',   icon: '🗂️' },
+      { id: 'relay',       label: '继电器',   icon: '⚙️' },
       { id: 'aircon',      label: '空调线路', icon: '❄️' },
       { id: 'low-voltage', label: '弱电系统', icon: '📶' },
       { id: 'floor-heat',  label: '地暖浴霸', icon: '🌡️' },

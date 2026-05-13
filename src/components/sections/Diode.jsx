@@ -15,14 +15,6 @@ function DiodeCanvas({ voltageRef }) {
 
     let t = 0, rafId;
 
-    // Shockley diode equation (simplified)
-    function diodeCurrent(v) {
-      const Is = 1e-9, Vt = 0.026;
-      if (v < -50) return -1;                      // Breakdown (Zener ~50V)
-      if (v < 0) return Is * (Math.exp(v / (40 * Vt)) - 1) * 1e3; // Reverse leakage (nA scale, scaled)
-      return Is * (Math.exp(v / Vt) - 1) * 1e-3;   // Forward: clamp for display
-    }
-
     function draw() {
       const voltage = voltageRef.current;
       ctx.clearRect(0, 0, W, H);

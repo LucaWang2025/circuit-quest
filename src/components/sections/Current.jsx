@@ -135,7 +135,7 @@ export default function Current() {
         <div className="anim-box reveal" style={{ borderColor: 'rgba(0,188,212,.18)', minHeight: 400 }}>
           <canvas ref={canvasRef} width={360} height={360} />
           <div style={{ font: '11px "Courier New",monospace', color: 'var(--dim)', marginTop: 10, textAlign: 'center' }}>
-            蓝色粒子 = 电子 · 流动方向 = 电流（逆时针）
+            蓝色粒子 = 电子（顺时针）· 传统电流方向相反（逆时针）
           </div>
         </div>
       </div>

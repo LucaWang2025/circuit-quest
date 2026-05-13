@@ -394,10 +394,10 @@ export default function RiceCooker() {
         <div className="glass reveal" style={{ borderColor: 'rgba(129,199,132,.18)' }}>
           <div style={{ fontWeight: 700, color: '#81c784', marginBottom: 10 }}>⚡ 保温半波整流</div>
           <div className="fbox"><div className="fbox-f">220V AC → D1（二极管）</div><div className="fbox-desc">仅通正半周，截断负半周</div></div>
-          <div className="fbox"><div className="fbox-f">有效值 ≈ 110V</div><div className="fbox-desc">等效降压约一半</div></div>
-          <div className="fbox"><div className="fbox-f">P = V²/R ≈ 40W</div><div className="fbox-desc">功率降至原来的 1/4</div></div>
+          <div className="fbox"><div className="fbox-f">有效值 ≈ 155V</div><div className="fbox-desc">有效值降为原来的约 70%</div></div>
+          <div className="fbox"><div className="fbox-f">P ∝ V² → 约 1/2 原功率</div><div className="fbox-desc">功率降至原来的约 1/2</div></div>
           <div style={{ fontSize: 12, color: 'var(--dim)', marginTop: 8 }}>
-            半波整流使电压有效值降为原来约70%，功率∝V²，故保温功率约为加热功率的 1/4。
+            半波整流使电压有效值降为原来约 70%，功率∝V²，(0.707)²≈0.5，故保温功率约为加热功率的 1/2。
           </div>
         </div>
 

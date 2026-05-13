@@ -319,10 +319,10 @@ export default function AirCon() {
       <div style={{ marginTop: 24, background: 'rgba(0,0,0,.4)', border: '1px solid rgba(0,188,212,.15)', borderRadius: 12, padding: '16px 20px' }}>
         <div style={{ fontWeight: 700, color: ACC, marginBottom: 12, fontSize: 14 }}>📐 匹数换算公式</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, fontFamily: '"Courier New",monospace', fontSize: 13 }}>
-          <div style={{ color: '#ffd740' }}>1匹 ≈ 735W 制冷量<br /><span style={{ color: '#8aacb8' }}>实际耗电约 600~800W</span></div>
-          <div style={{ color: '#ffd740' }}>1.5匹 ≈ 1100W<br /><span style={{ color: '#8aacb8' }}>适用 12~18m² 房间</span></div>
-          <div style={{ color: '#ffd740' }}>2匹 ≈ 1470W<br /><span style={{ color: '#8aacb8' }}>适用 18~25m² 房间</span></div>
-          <div style={{ color: '#ffd740' }}>3匹 ≈ 2200W<br /><span style={{ color: '#8aacb8' }}>适用客厅/大空间</span></div>
+          <div style={{ color: '#ffd740' }}>1匹 ≈ 2500W 制冷量<br /><span style={{ color: '#8aacb8' }}>输入功率约 800W</span></div>
+          <div style={{ color: '#ffd740' }}>1.5匹 ≈ 3500W<br /><span style={{ color: '#8aacb8' }}>适用 12~18m² 房间</span></div>
+          <div style={{ color: '#ffd740' }}>2匹 ≈ 5000W<br /><span style={{ color: '#8aacb8' }}>适用 18~25m² 房间</span></div>
+          <div style={{ color: '#ffd740' }}>3匹 ≈ 7200W<br /><span style={{ color: '#8aacb8' }}>适用客厅/大空间</span></div>
         </div>
       </div>
 

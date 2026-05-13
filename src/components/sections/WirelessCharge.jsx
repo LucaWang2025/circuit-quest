@@ -48,7 +48,6 @@ function WirelessChargeCanvas({ charging, power, hasForeign }) {
       if (charging && !hasForeign) {
         fieldLines.forEach(fl => {
           const progress = ((t * 1.5 + fl.phase) % (Math.PI * 2)) / (Math.PI * 2);
-          const rx = fl.r * (1 + 0.3 * Math.sin(fl.angle * 2));
           const ry = (padY - phoneY - 20) * (0.2 + progress * 0.8);
           const fx = padX + Math.cos(fl.angle) * fl.r * Math.sin(progress * Math.PI);
           const fy = padY - ry;

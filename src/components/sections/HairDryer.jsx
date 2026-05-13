@@ -106,7 +106,7 @@ function HairDryerCanvas({ speed, heat }) {
 
       // Speed / temp labels
       ctx.textAlign = 'center'; ctx.font = '11px "Courier New",monospace';
-      ctx.fillStyle = motorOn ? ACC : 'var(--dim)';
+      ctx.fillStyle = motorOn ? ACC : '#607a90';
       ctx.fillText(`档位: ${speed === 'off' ? '关' : speed === 'low' ? '低速' : '高速'}  热风: ${{ cold: '冷风', low: '温热', high: '高温' }[heat]}`, W / 2, H - 14);
 
       raf = requestAnimationFrame(draw);
