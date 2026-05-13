@@ -1,40 +1,45 @@
 const DONE = [
-  { id: 'voltage',    icon: '⚡', label: '电压 Voltage' },
-  { id: 'current',    icon: '〜', label: '电流 Current' },
-  { id: 'resistance', icon: 'Ω',  label: '电阻 Resistance' },
-  { id: 'multimeter', icon: '📟', label: '万用表 Multimeter' },
-  { id: 'power',      icon: '💡', label: '功率与电能 Power' },
-  { id: 'home-ckt',   icon: '🏠', label: '家用电路 Home Circuit' },
-  { id: 'capacitor',    icon: '⚡', label: '电容 Capacitor' },
-  { id: 'transformer',  icon: '🔄', label: '变压器 Transformer' },
-  { id: 'wiring',       icon: '🔌', label: '导线接线 Wiring' },
-  { id: 'outlet',       icon: '🔧', label: '开关插座 Switch & Outlet' },
-  { id: 'safety',       icon: '🛡️', label: '安全用电 Safety' },
-  { id: 'troubleshoot', icon: '🔍', label: '故障排查 Troubleshoot' },
-  { id: 'bldc-fan',   icon: '🌀', label: '无刷电机风扇 BLDC Fan' },
-  { id: 'flashlight', icon: '🔦', label: '手电筒电路 Flashlight' },
-  { id: 'desk-lamp',  icon: '🪔', label: '台灯电路 Desk Lamp' },
-  { id: 'kettle',     icon: '☕', label: '热水壶电路 Kettle' },
-  { id: 'hair-dryer', icon: '💨', label: '电吹风电路 Hair Dryer' },
-  { id: 'power-bank', icon: '🔋', label: '充电宝电路 Power Bank' },
-  { id: 'router',     icon: '📡', label: 'WiFi路由器 Router' },
+  { id: 'voltage',         icon: '⚡', label: '电压 Voltage' },
+  { id: 'current',         icon: '〜', label: '电流 Current' },
+  { id: 'resistance',      icon: 'Ω',  label: '电阻 Resistance' },
+  { id: 'multimeter',      icon: '📟', label: '万用表 Multimeter' },
+  { id: 'power',           icon: '💡', label: '功率与电能 Power' },
+  { id: 'capacitor',       icon: '⚙️', label: '电容 Capacitor' },
+  { id: 'inductor',        icon: '🌀', label: '电感 Inductor' },
+  { id: 'diode',           icon: '▷',  label: '二极管 Diode' },
+  { id: 'transistor',      icon: '🔺', label: '三极管 Transistor' },
+  { id: 'transformer',     icon: '🔄', label: '变压器 Transformer' },
+  { id: 'schematic',       icon: '📐', label: '如何读电路图 Schematics' },
+  { id: 'home-ckt',        icon: '🏠', label: '家用电路 Home Circuit' },
+  { id: 'wiring',          icon: '🔌', label: '导线接线 Wiring' },
+  { id: 'outlet',          icon: '🔧', label: '开关插座 Switch & Outlet' },
+  { id: 'break-panel',     icon: '🗂️', label: '配电箱 Panel Board' },
+  { id: 'aircon',          icon: '❄️', label: '空调线路 Air Con' },
+  { id: 'low-voltage',     icon: '📶', label: '弱电系统 Low Voltage' },
+  { id: 'floor-heat',      icon: '🌡️', label: '地暖浴霸 Floor Heat' },
+  { id: 'safety',          icon: '🛡️', label: '安全用电 Safety' },
+  { id: 'troubleshoot',    icon: '🔍', label: '故障排查 Troubleshoot' },
+  { id: 'bldc-fan',        icon: '🌀', label: '无刷电机 BLDC Fan' },
+  { id: 'flashlight',      icon: '🔦', label: '手电筒 Flashlight' },
+  { id: 'desk-lamp',       icon: '🪔', label: '台灯 Desk Lamp' },
+  { id: 'kettle',          icon: '☕', label: '热水壶 Kettle' },
+  { id: 'hair-dryer',      icon: '💨', label: '电吹风 Hair Dryer' },
+  { id: 'power-bank',      icon: '🔋', label: '充电宝 Power Bank' },
+  { id: 'router',          icon: '📡', label: 'WiFi路由器 Router' },
+  { id: 'rice-cooker',     icon: '🍚', label: '电饭锅 Rice Cooker' },
+  { id: 'washing-machine', icon: '🫧', label: '洗衣机 Washing Machine' },
+  { id: 'bt-speaker',      icon: '🔊', label: '蓝牙音箱 BT Speaker' },
+  { id: 'wireless-charge', icon: '📳', label: '无线充电 Wireless Charge' },
+  { id: 'e-toothbrush',    icon: '🪥', label: '电动牙刷 E-Toothbrush' },
+  { id: 'robot-vacuum',    icon: '🤖', label: '扫地机器人 Robot Vacuum' },
+  { id: 'soldering',       icon: '🔩', label: '焊接技术 Soldering' },
+  { id: 'oscilloscope',    icon: '📊', label: '示波器 Oscilloscope' },
+  { id: 'breadboard',      icon: '🧩', label: '面包板 Breadboard' },
+  { id: 'pcb',             icon: '🖥️', label: 'PCB设计 PCB Design' },
+  { id: 'arduino',         icon: '⚡', label: 'Arduino入门 Arduino' },
 ];
 
-const COMING = [
-  // 基础知识
-  '电感 Inductor', '二极管 Diode', '三极管 Transistor', '逻辑门 Logic Gates',
-  // 家用电路
-  '弱电布线 Structured Cabling', '光伏发电 Solar PV', '智能家居布线',
-  // 小电器电路
-  'LED 灯具驱动电路', 'USB 充电器电路拆解', '继电器控制电路',
-  '步进电机驱动', '温控电路设计', 'Arduino 入门实战',
-  '示波器 Oscilloscope', '焊接技术 Soldering',
-];
-
-const goTo = id =>
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-export default function Footer() {
+export default function Footer({ onNavigate }) {
   return (
     <footer style={{
       textAlign: 'center', padding: '64px 24px 80px',
@@ -42,14 +47,13 @@ export default function Footer() {
       borderTop: '1px solid rgba(0,229,255,.07)',
       position: 'relative', zIndex: 1,
     }}>
-      {/* Completed modules */}
-      <div style={{ maxWidth: 800, margin: '0 auto' }}>
+      <div style={{ maxWidth: 900, margin: '0 auto' }}>
         <div style={{ font: '11px "Courier New",monospace', color: 'rgba(96,122,144,.55)', letterSpacing: 3, marginBottom: 18 }}>
-          ✅ 已完成章节
+          ✅ 已完成章节 ({DONE.length})
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 10, marginBottom: 40 }}>
           {DONE.map(d => (
-            <button key={d.id} onClick={() => goTo(d.id)} style={{
+            <button key={d.id} onClick={() => onNavigate && onNavigate(d.id)} style={{
               padding: '6px 16px', borderRadius: 20, cursor: 'pointer',
               border: '1px solid rgba(0,229,255,.22)',
               background: 'rgba(0,229,255,.06)',
@@ -62,25 +66,8 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Coming soon */}
-        <div style={{ fontSize: 36, marginBottom: 10 }}>🔭</div>
-        <h3 style={{ fontSize: 20, color: 'var(--white)', margin: '0 0 8px' }}>更多知识模块，持续上线中</h3>
-        <p style={{ maxWidth: 420, margin: '8px auto 22px', fontSize: 13.5, lineHeight: 1.7 }}>
-          本门户目标是系统培养家庭电力维修工程师所需的全部知识，从基础概念到实操技能，逐步完善。
-        </p>
-        <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 8, maxWidth: 720, margin: '0 auto 36px' }}>
-          {COMING.map(t => (
-            <span key={t} style={{
-              padding: '5px 14px', borderRadius: 20,
-              border: '1px solid rgba(255,255,255,.07)',
-              font: '11.5px "Courier New",monospace', color: '#3d5060',
-              cursor: 'default',
-            }}>{t}</span>
-          ))}
-        </div>
-
         <p style={{ color: 'rgba(96,122,144,.35)', font: '11px "Courier New",monospace', letterSpacing: 2 }}>
-          ⚡ ElecEngineer · 电力工程师培养门户 v2.0
+          ⚡ ElecEngineer · 电力工程师培养门户 v3.0 · 四阶段 · {DONE.length} 章节
         </p>
       </div>
     </footer>

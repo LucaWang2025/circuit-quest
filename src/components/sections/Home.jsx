@@ -7,13 +7,17 @@ const CARD_GROUPS = [
     tag: 'FUNDAMENTALS',
     color: '#ffab00',
     cards: [
-      { id: 'voltage',     icon: '⚡', title: '电压',     en: 'VOLTAGE',     color: '#ffab00', desc: '电路推动力，了解伏特、电位差与欧姆定律' },
-      { id: 'current',     icon: '〜', title: '电流',     en: 'CURRENT',     color: '#00bcd4', desc: '电荷有序流动，安培、串并联与电流分配' },
-      { id: 'resistance',  icon: 'Ω',  title: '电阻',     en: 'RESISTANCE',  color: '#ff6b35', desc: '阻碍电流，色环识别、串并联计算' },
-      { id: 'multimeter',  icon: '📟', title: '万用表',   en: 'MULTIMETER',  color: '#9c7dff', desc: '一表测三量，表笔使用与安全操作全流程' },
-      { id: 'power',       icon: '💡', title: '功率与电能', en: 'POWER',     color: '#ff6b35', desc: '瓦特、度数、电费计算器，能耗一目了然' },
-      { id: 'capacitor',   icon: '⚡', title: '电容',     en: 'CAPACITOR',   color: '#00bcd4', desc: '充放电特性、四大类型、滤波与维修应用' },
-      { id: 'transformer', icon: '🔄', title: '变压器',   en: 'TRANSFORMER', color: '#9c7dff', desc: '电磁感应、匝数比、开关电源工作流程' },
+      { id: 'voltage',     icon: '⚡', title: '电压',       en: 'VOLTAGE',       color: '#ffab00', desc: '电路推动力，了解伏特、电位差与欧姆定律' },
+      { id: 'current',     icon: '〜', title: '电流',       en: 'CURRENT',       color: '#00bcd4', desc: '电荷有序流动，安培、串并联与电流分配' },
+      { id: 'resistance',  icon: 'Ω',  title: '电阻',       en: 'RESISTANCE',    color: '#ff6b35', desc: '阻碍电流，色环识别、串并联计算' },
+      { id: 'multimeter',  icon: '📟', title: '万用表',     en: 'MULTIMETER',    color: '#9c7dff', desc: '一表测三量，表笔使用与安全操作全流程' },
+      { id: 'power',       icon: '💡', title: '功率与电能', en: 'POWER',         color: '#ff6b35', desc: '瓦特、度数、电费计算器，能耗一目了然' },
+      { id: 'capacitor',   icon: '⚙️', title: '电容',       en: 'CAPACITOR',     color: '#00bcd4', desc: '充放电特性、四大类型、滤波与维修应用' },
+      { id: 'inductor',    icon: '🌀', title: '电感',       en: 'INDUCTOR',      color: '#00bcd4', desc: 'L=N²μA/l，磁场储能、阻抗特性与开关电源应用' },
+      { id: 'diode',       icon: '▷',  title: '二极管',     en: 'DIODE',         color: '#ff6b35', desc: 'PN结单向导通、整流电路、稳压管与LED原理' },
+      { id: 'transistor',  icon: '🔺', title: '三极管/MOSFET', en: 'TRANSISTOR', color: '#9c7dff', desc: 'BJT放大、MOSFET开关，驱动家电的核心元器件' },
+      { id: 'transformer', icon: '🔄', title: '变压器',     en: 'TRANSFORMER',   color: '#9c7dff', desc: '电磁感应、匝数比、开关电源工作流程' },
+      { id: 'schematic',   icon: '📐', title: '如何读电路图', en: 'SCHEMATICS',  color: '#ffab00', desc: '元件符号大全、导线规则、阅读步骤与实战练习' },
     ],
   },
   {
@@ -21,11 +25,15 @@ const CARD_GROUPS = [
     tag: 'HOME ELECTRICAL',
     color: '#00e676',
     cards: [
-      { id: 'home-ckt',    icon: '🏠', title: '家用电路基础', en: 'HOME CIRCUIT', color: '#ffab00', desc: '火零地线、断路器、回路划分，配电箱全解析' },
-      { id: 'wiring',      icon: '🔌', title: '导线与接线',   en: 'WIRING',       color: '#00e676', desc: '线径选择、颜色规范、Wago/端子接线实操' },
+      { id: 'home-ckt',    icon: '🏠', title: '家用电路基础', en: 'HOME CIRCUIT',    color: '#ffab00', desc: '火零地线、断路器、回路划分，配电箱全解析' },
+      { id: 'wiring',      icon: '🔌', title: '导线与接线',   en: 'WIRING',          color: '#00e676', desc: '线径选择、颜色规范、Wago/端子接线实操' },
       { id: 'outlet',      icon: '🔧', title: '开关插座安装', en: 'SWITCH & OUTLET', color: '#00bcd4', desc: '7步完整流程，断电验电到通电测试一步不漏' },
-      { id: 'safety',      icon: '🛡️', title: '安全用电',   en: 'SAFETY',       color: '#ff1744', desc: '接地原理、漏电保护器、触电急救五步法' },
-      { id: 'troubleshoot',icon: '🔍', title: '故障排查',   en: 'TROUBLESHOOT', color: '#ff6b35', desc: '交互决策树：断路器/插座/灯具/家电四大场景' },
+      { id: 'break-panel', icon: '🗂️', title: '配电箱详解',  en: 'PANEL BOARD',     color: '#00e676', desc: '回路规划、断路器选型、上下级保护配合要点' },
+      { id: 'aircon',      icon: '❄️', title: '空调线路',    en: 'AIR CON',         color: '#00bcd4', desc: '专用回路、室内外机接线、变频故障码解读' },
+      { id: 'low-voltage', icon: '📶', title: '弱电系统',    en: 'LOW VOLTAGE',     color: '#9c7dff', desc: '网络/监控/门禁/智能家居，布线规范与弱电箱' },
+      { id: 'floor-heat',  icon: '🌡️', title: '地暖浴霸',   en: 'FLOOR HEAT',      color: '#ff9800', desc: '电地暖回路、温控器接线、浴霸多路开关配线' },
+      { id: 'safety',      icon: '🛡️', title: '安全用电',   en: 'SAFETY',          color: '#ff1744', desc: '接地原理、漏电保护器、触电急救五步法' },
+      { id: 'troubleshoot',icon: '🔍', title: '故障排查',   en: 'TROUBLESHOOT',    color: '#ff6b35', desc: '交互决策树：断路器/插座/灯具/家电四大场景' },
     ],
   },
   {
@@ -33,13 +41,31 @@ const CARD_GROUPS = [
     tag: 'APPLIANCE CIRCUITS',
     color: '#e040fb',
     cards: [
-      { id: 'bldc-fan',   icon: '🌀', title: '无刷电机风扇', en: 'BLDC FAN',   color: '#e040fb', desc: '三相绕组、六步换相、MOSFET全桥、PWM调速全解析' },
-      { id: 'flashlight', icon: '🔦', title: '手电筒电路',   en: 'FLASHLIGHT', color: '#ffd740', desc: '18650/21700电池、Type-C充电IC、恒流LED驱动设计' },
-      { id: 'desk-lamp',  icon: '🪔', title: '台灯电路',     en: 'DESK LAMP',  color: '#ffe066', desc: 'AC-DC驱动、恒流LED、PWM调光与色温调节全流程' },
-      { id: 'kettle',     icon: '☕', title: '热水壶电路',   en: 'KETTLE',     color: '#ff6b35', desc: '发热管、双金属片温控、防干烧保护，220V家电拆解' },
-      { id: 'hair-dryer', icon: '💨', title: '电吹风电路',   en: 'HAIR DRYER', color: '#ff9800', desc: '串励电机调速、Ni-Cr发热丝、档位切换与过热保护' },
-      { id: 'power-bank', icon: '🔋', title: '充电宝电路',   en: 'POWER BANK', color: '#00bcd4', desc: '锂电BMS、Boost升压、快充协议PD/QC实现原理' },
-      { id: 'router',     icon: '📡', title: 'WiFi路由器',   en: 'WIFI ROUTER', color: '#00e676', desc: 'SMPS供电链路、SoC架构、RF前端与散热设计' },
+      { id: 'bldc-fan',        icon: '🌀', title: '无刷电机风扇', en: 'BLDC FAN',        color: '#e040fb', desc: '三相绕组、六步换相、MOSFET全桥、PWM调速全解析' },
+      { id: 'flashlight',      icon: '🔦', title: '手电筒电路',   en: 'FLASHLIGHT',      color: '#ffd740', desc: '18650/21700电池、Type-C充电IC、恒流LED驱动设计' },
+      { id: 'desk-lamp',       icon: '🪔', title: '台灯电路',     en: 'DESK LAMP',       color: '#ffe066', desc: 'AC-DC驱动、恒流LED、PWM调光与色温调节全流程' },
+      { id: 'kettle',          icon: '☕', title: '热水壶电路',   en: 'KETTLE',          color: '#ff6b35', desc: '发热管、双金属片温控、防干烧保护，220V家电拆解' },
+      { id: 'hair-dryer',      icon: '💨', title: '电吹风电路',   en: 'HAIR DRYER',      color: '#ff9800', desc: '串励电机调速、Ni-Cr发热丝、档位切换与过热保护' },
+      { id: 'power-bank',      icon: '🔋', title: '充电宝电路',   en: 'POWER BANK',      color: '#00bcd4', desc: '锂电BMS、Boost升压、快充协议PD/QC实现原理' },
+      { id: 'router',          icon: '📡', title: 'WiFi路由器',   en: 'WIFI ROUTER',     color: '#00e676', desc: 'SMPS供电链路、SoC架构、RF前端与散热设计' },
+      { id: 'rice-cooker',     icon: '🍚', title: '电饭锅电路',   en: 'RICE COOKER',     color: '#ff9800', desc: '磁钢温控原理、保温半波整流、IH电磁加热升级' },
+      { id: 'washing-machine', icon: '🫧', title: '洗衣机电路',   en: 'WASHING MACHINE', color: '#00bcd4', desc: '电容运转电机、正反转切换、变频BLDC与故障码' },
+      { id: 'bt-speaker',      icon: '🔊', title: '蓝牙音箱',     en: 'BT SPEAKER',      color: '#e040fb', desc: 'Class D功放PWM原理、BT5.0编解码、锂电BMS' },
+      { id: 'wireless-charge', icon: '📳', title: '无线充电',     en: 'WIRELESS CHARGE', color: '#00e676', desc: 'Qi标准、电磁感应谐振、异物检测FOD与MagSafe' },
+      { id: 'e-toothbrush',    icon: '🪥', title: '电动牙刷',     en: 'E-TOOTHBRUSH',    color: '#00bcd4', desc: '感应隔离充电、声波马达振动、IPX7防水电路设计' },
+      { id: 'robot-vacuum',    icon: '🤖', title: '扫地机器人',   en: 'ROBOT VACUUM',    color: '#ffab00', desc: 'LiDAR测距建图、多电机PWM驱动、传感器融合架构' },
+    ],
+  },
+  {
+    label: '第四阶段 · 进阶动手',
+    tag: 'HANDS-ON ADVANCED',
+    color: '#00e5ff',
+    cards: [
+      { id: 'soldering',    icon: '🔩', title: '焊接技术',    en: 'SOLDERING',    color: '#ff6b35', desc: '无铅焊接步骤、焊点缺陷识别、SMD贴片与拆焊技巧' },
+      { id: 'oscilloscope', icon: '📊', title: '示波器使用',  en: 'OSCILLOSCOPE', color: '#00e676', desc: '时基/V档设置、触发稳波、PWM测量与纹波分析实战' },
+      { id: 'breadboard',   icon: '🧩', title: '面包板实验',  en: 'BREADBOARD',   color: '#9c7dff', desc: '内部连接规律、LED限流电路搭建、从原型到洞洞板' },
+      { id: 'pcb',          icon: '🖥️', title: 'PCB设计基础', en: 'PCB DESIGN',  color: '#00e5ff', desc: 'FR4材料、层结构、线宽计算、KiCad免费设计与嘉立创打样' },
+      { id: 'arduino',      icon: '⚡', title: 'Arduino入门', en: 'ARDUINO',      color: '#ffab00', desc: 'ATmega328P引脚、PWM调光、ADC采集、继电器控220V实战' },
     ],
   },
 ];
@@ -48,7 +74,7 @@ export default function Home() {
   const navigate = useNav();
   return (
     <section id="home" className={`sec ${styles.home}`}>
-      <div className={styles.badge}>⚡ 电力工程师培养门户 · 三阶段系统学习路径</div>
+      <div className={styles.badge}>⚡ 电力工程师培养门户 · 四阶段系统学习路径</div>
 
       <div className={styles.titleWrap}>
         <div className={styles.t1}>成为你家的</div>
@@ -56,7 +82,7 @@ export default function Home() {
       </div>
 
       <p className={styles.desc}>
-        从基础概念到家用维修，再到小电器电路拆解——三个阶段循序渐进，
+        从基础概念到家用维修，再到小电器电路拆解，最终进阶动手实战——四个阶段循序渐进，
         让你能安全、自信地理解和处理身边的每一个电气问题。
       </p>
 

@@ -11,7 +11,11 @@ export const CATEGORIES = [
       { id: 'multimeter',  label: '万用表', icon: '📟' },
       { id: 'power',       label: '功率',   icon: '💡' },
       { id: 'capacitor',   label: '电容',   icon: '⚙️' },
+      { id: 'inductor',    label: '电感',   icon: '🌀' },
+      { id: 'diode',       label: '二极管', icon: '▷'  },
+      { id: 'transistor',  label: '三极管', icon: '🔺' },
       { id: 'transformer', label: '变压器', icon: '🔄' },
+      { id: 'schematic',   label: '读电路图', icon: '📐' },
     ],
   },
   {
@@ -22,6 +26,10 @@ export const CATEGORIES = [
       { id: 'home-ckt',    label: '家用电路', icon: '🏠' },
       { id: 'wiring',      label: '导线接线', icon: '🔌' },
       { id: 'outlet',      label: '开关插座', icon: '🔧' },
+      { id: 'break-panel', label: '配电箱',   icon: '🗂️' },
+      { id: 'aircon',      label: '空调线路', icon: '❄️' },
+      { id: 'low-voltage', label: '弱电系统', icon: '📶' },
+      { id: 'floor-heat',  label: '地暖浴霸', icon: '🌡️' },
       { id: 'safety',      label: '安全用电', icon: '🛡️' },
       { id: 'troubleshoot',label: '故障排查', icon: '🔍' },
     ],
@@ -31,19 +39,36 @@ export const CATEGORIES = [
     label: '小电器',
     color: '#e040fb',
     sections: [
-      { id: 'bldc-fan',   label: '无刷电机', icon: '🌀' },
-      { id: 'flashlight', label: '手电筒',   icon: '🔦' },
-      { id: 'desk-lamp',  label: '台灯',     icon: '🪔' },
-      { id: 'kettle',     label: '热水壶',   icon: '☕' },
-      { id: 'hair-dryer', label: '电吹风',   icon: '💨' },
-      { id: 'power-bank', label: '充电宝',   icon: '🔋' },
-      { id: 'router',     label: 'WiFi路由', icon: '📡' },
+      { id: 'bldc-fan',        label: '无刷电机', icon: '🌀' },
+      { id: 'flashlight',      label: '手电筒',   icon: '🔦' },
+      { id: 'desk-lamp',       label: '台灯',     icon: '🪔' },
+      { id: 'kettle',          label: '热水壶',   icon: '☕' },
+      { id: 'hair-dryer',      label: '电吹风',   icon: '💨' },
+      { id: 'power-bank',      label: '充电宝',   icon: '🔋' },
+      { id: 'router',          label: 'WiFi路由', icon: '📡' },
+      { id: 'rice-cooker',     label: '电饭锅',   icon: '🍚' },
+      { id: 'washing-machine', label: '洗衣机',   icon: '🫧' },
+      { id: 'bt-speaker',      label: '蓝牙音箱', icon: '🔊' },
+      { id: 'wireless-charge', label: '无线充电', icon: '📳' },
+      { id: 'e-toothbrush',    label: '电动牙刷', icon: '🪥' },
+      { id: 'robot-vacuum',    label: '扫地机器人', icon: '🤖' },
+    ],
+  },
+  {
+    id: 'advanced',
+    label: '进阶动手',
+    color: '#00e5ff',
+    sections: [
+      { id: 'soldering',    label: '焊接技术', icon: '🔩' },
+      { id: 'oscilloscope', label: '示波器',   icon: '📊' },
+      { id: 'breadboard',   label: '面包板',   icon: '🧩' },
+      { id: 'pcb',          label: 'PCB设计',  icon: '🖥️' },
+      { id: 'arduino',      label: 'Arduino',  icon: '⚡' },
     ],
   },
 ];
 
 export const ALL_SECS = CATEGORIES.flatMap(c => c.sections);
-
 export const SEC_LABEL    = Object.fromEntries(ALL_SECS.map(s => [s.id, s.label]));
 export const SEC_CATEGORY = {};
 CATEGORIES.forEach(c => c.sections.forEach(s => { SEC_CATEGORY[s.id] = c; }));

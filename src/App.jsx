@@ -7,36 +7,86 @@ import CircuitBg from './components/CircuitBg';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
 
-import Home from './components/sections/Home';
-import Voltage from './components/sections/Voltage';
-import Current from './components/sections/Current';
-import Resistance from './components/sections/Resistance';
-import Multimeter from './components/sections/Multimeter';
-import Power from './components/sections/Power';
-import HomeCkt from './components/sections/HomeCkt';
-import Capacitor from './components/sections/Capacitor';
-import Transformer from './components/sections/Transformer';
-import Wiring from './components/sections/Wiring';
-import Outlet from './components/sections/Outlet';
-import Safety from './components/sections/Safety';
-import Troubleshoot from './components/sections/Troubleshoot';
-import BLDCFan from './components/sections/BLDCFan';
-import Flashlight from './components/sections/Flashlight';
-import DeskLamp from './components/sections/DeskLamp';
-import Kettle from './components/sections/Kettle';
-import HairDryer from './components/sections/HairDryer';
-import PowerBank from './components/sections/PowerBank';
-import Router from './components/sections/Router';
+import Home          from './components/sections/Home';
+import Voltage       from './components/sections/Voltage';
+import Current       from './components/sections/Current';
+import Resistance    from './components/sections/Resistance';
+import Multimeter    from './components/sections/Multimeter';
+import Power         from './components/sections/Power';
+import Capacitor     from './components/sections/Capacitor';
+import Inductor      from './components/sections/Inductor';
+import Diode         from './components/sections/Diode';
+import Transistor    from './components/sections/Transistor';
+import Transformer   from './components/sections/Transformer';
+import Schematic     from './components/sections/Schematic';
+import HomeCkt       from './components/sections/HomeCkt';
+import Wiring        from './components/sections/Wiring';
+import Outlet        from './components/sections/Outlet';
+import BreakPanel    from './components/sections/BreakPanel';
+import AirCon        from './components/sections/AirCon';
+import LowVoltage    from './components/sections/LowVoltage';
+import FloorHeat     from './components/sections/FloorHeat';
+import Safety        from './components/sections/Safety';
+import Troubleshoot  from './components/sections/Troubleshoot';
+import BLDCFan       from './components/sections/BLDCFan';
+import Flashlight    from './components/sections/Flashlight';
+import DeskLamp      from './components/sections/DeskLamp';
+import Kettle        from './components/sections/Kettle';
+import HairDryer     from './components/sections/HairDryer';
+import PowerBank     from './components/sections/PowerBank';
+import Router        from './components/sections/Router';
+import RiceCooker    from './components/sections/RiceCooker';
+import WashingMachine from './components/sections/WashingMachine';
+import BTSpeaker     from './components/sections/BTSpeaker';
+import WirelessCharge from './components/sections/WirelessCharge';
+import EToothbrush   from './components/sections/EToothbrush';
+import RobotVacuum   from './components/sections/RobotVacuum';
+import Soldering     from './components/sections/Soldering';
+import Oscilloscope  from './components/sections/Oscilloscope';
+import Breadboard    from './components/sections/Breadboard';
+import PCB           from './components/sections/PCB';
+import Arduino       from './components/sections/Arduino';
 
 const SECTION_MAP = {
-  home: Home, voltage: Voltage, current: Current,
-  resistance: Resistance, multimeter: Multimeter, power: Power,
-  capacitor: Capacitor, transformer: Transformer,
-  'home-ckt': HomeCkt, wiring: Wiring, outlet: Outlet,
-  safety: Safety, troubleshoot: Troubleshoot,
-  'bldc-fan': BLDCFan, flashlight: Flashlight,
-  'desk-lamp': DeskLamp, kettle: Kettle,
-  'hair-dryer': HairDryer, 'power-bank': PowerBank, router: Router,
+  home:             Home,
+  voltage:          Voltage,
+  current:          Current,
+  resistance:       Resistance,
+  multimeter:       Multimeter,
+  power:            Power,
+  capacitor:        Capacitor,
+  inductor:         Inductor,
+  diode:            Diode,
+  transistor:       Transistor,
+  transformer:      Transformer,
+  schematic:        Schematic,
+  'home-ckt':       HomeCkt,
+  wiring:           Wiring,
+  outlet:           Outlet,
+  'break-panel':    BreakPanel,
+  aircon:           AirCon,
+  'low-voltage':    LowVoltage,
+  'floor-heat':     FloorHeat,
+  safety:           Safety,
+  troubleshoot:     Troubleshoot,
+  'bldc-fan':       BLDCFan,
+  flashlight:       Flashlight,
+  'desk-lamp':      DeskLamp,
+  kettle:           Kettle,
+  'hair-dryer':     HairDryer,
+  'power-bank':     PowerBank,
+  router:           Router,
+  'rice-cooker':    RiceCooker,
+  'washing-machine': WashingMachine,
+  'bt-speaker':     BTSpeaker,
+  'wireless-charge': WirelessCharge,
+  'e-toothbrush':   EToothbrush,
+  'robot-vacuum':   RobotVacuum,
+  soldering:        Soldering,
+  oscilloscope:     Oscilloscope,
+  breadboard:       Breadboard,
+  pcb:              PCB,
+  arduino:          Arduino,
 };
 
 function BottomNav({ currentId, onNavigate }) {
