@@ -3,7 +3,7 @@ import { setupHiDpi } from '../../utils/canvas';
 
 const ACC = '#ff6b35';
 
-function KettleCanvas({ temp, heating }) {
+function KettleCanvas({ tempRef, heatingRef }) {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
@@ -16,6 +16,8 @@ function KettleCanvas({ temp, heating }) {
     }));
 
     function draw() {
+      const temp = tempRef.current;
+      const heating = heatingRef.current;
       ctx.clearRect(0, 0, W, H);
       t += 0.035;
 
@@ -137,13 +139,18 @@ function KettleCanvas({ temp, heating }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, [temp, heating]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return <canvas ref={ref} width={320} height={300} style={{ maxWidth: '100%' }} />;
 }
 
 export default function Kettle() {
   const [temp, setTemp] = useState(25);
   const [heating, setHeating] = useState(false);
+  const tempRef = useRef(temp);
+  const heatingRef = useRef(heating);
+  useEffect(() => { tempRef.current = temp; }, [temp]);
+  useEffect(() => { heatingRef.current = heating; }, [heating]);
 
   // Auto heat / cool simulation
   useEffect(() => {
@@ -161,15 +168,18 @@ export default function Kettle() {
     <section id="kettle" className="sec">
       <div className="sh">
         <span className="sh-icon">☕</span>
-        <div className="sh-tag">Stage 3 · Small Appliance · Electric Kettle</div>
-        <h2 className="sh-title" style={{ color: ACC }}>热水壶电路设计</h2>
-        <p className="sh-sub">发热管工作原理、双金属片温控开关、防干烧保护、220V 安全规范——掌握热水壶的完整电路逻辑。</p>
-        <div className="divider" style={{ background: `linear-gradient(90deg,transparent,${ACC},transparent)` }} />
+        <div>
+          <div className="sh-title" style={{ color: ACC }}>热水壶电路设计</div>
+          <div className="sh-tag">Stage 3 · Small Appliance · Electric Kettle</div>
+          <div className="sh-sub">发热管工作原理、双金属片温控开关、防干烧保护、220V 安全规范——掌握热水壶的完整电路逻辑。</div>
+        </div>
       </div>
+
+      <div className="divider" style={{ background: `linear-gradient(90deg,transparent,${ACC},transparent)` }} />
 
       <div className="grid2">
         <div className="anim-box reveal" style={{ borderColor: 'rgba(255,107,53,.2)', flexDirection: 'column', gap: 16 }}>
-          <KettleCanvas temp={Math.round(temp)} heating={heating} />
+          <KettleCanvas tempRef={tempRef} heatingRef={heatingRef} />
           <button onClick={() => setHeating(h => !h)} style={{
             padding: '10px 32px', borderRadius: 12, cursor: 'pointer',
             border: `1px solid ${heating ? '#ff1744' : 'rgba(255,107,53,.4)'}`,

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 const ACC = '#ff6b35';
 
 // ── Diode IV-Curve Canvas ─────────────────────────────────
-function DiodeCanvas({ voltage }) {
+function DiodeCanvas({ voltageRef }) {
   const ref = useRef(null);
   useEffect(() => {
     const cv = ref.current; if (!cv) return;
@@ -24,6 +24,7 @@ function DiodeCanvas({ voltage }) {
     }
 
     function draw() {
+      const voltage = voltageRef.current;
       ctx.clearRect(0, 0, W, H);
       t += 0.025;
 
@@ -200,7 +201,8 @@ function DiodeCanvas({ voltage }) {
     }
     draw();
     return () => cancelAnimationFrame(rafId);
-  }, [voltage]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return <canvas ref={ref} style={{ maxWidth: '100%' }} />;
 }
 
@@ -242,6 +244,8 @@ const APPS = [
 
 export default function Diode() {
   const [voltage, setVoltage] = useState(0.8);
+  const voltageRef = useRef(voltage);
+  useEffect(() => { voltageRef.current = voltage; }, [voltage]);
 
   const isForward = voltage > 0.5;
   const isBreakdown = voltage < -45;
@@ -252,20 +256,23 @@ export default function Diode() {
     <section id="diode" className="sec">
       <div className="sh">
         <span className="sh-icon">↗</span>
-        <div className="sh-tag">Stage 4 · Components · Diode</div>
-        <h2 className="sh-title" style={{ color: ACC, textShadow: `0 0 35px rgba(255,107,53,.4)` }}>
-          二极管基础
-        </h2>
-        <p className="sh-sub">
-          二极管是最基础的半导体器件，只允许电流单向流动。PN结的单向导电性是所有半导体器件的基础。
-        </p>
-        <div className="divider" style={{ background: `linear-gradient(90deg,transparent,${ACC},transparent)` }} />
+        <div>
+          <div className="sh-title" style={{ color: ACC, textShadow: `0 0 35px rgba(255,107,53,.4)` }}>
+            二极管基础
+          </div>
+          <div className="sh-tag">Stage 4 · Components · Diode</div>
+          <div className="sh-sub">
+            二极管是最基础的半导体器件，只允许电流单向流动。PN结的单向导电性是所有半导体器件的基础。
+          </div>
+        </div>
       </div>
+
+      <div className="divider" style={{ background: `linear-gradient(90deg,transparent,${ACC},transparent)` }} />
 
       {/* Canvas + Formulas */}
       <div className="grid2">
         <div className="anim-box reveal" style={{ borderColor: 'rgba(255,107,53,.2)', flexDirection: 'column', gap: 16 }}>
-          <DiodeCanvas voltage={voltage} />
+          <DiodeCanvas voltageRef={voltageRef} />
 
           {/* Voltage slider */}
           <div style={{ width: '90%', display: 'flex', flexDirection: 'column', gap: 10 }}>

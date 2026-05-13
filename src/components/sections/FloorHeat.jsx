@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 const ACC = '#ff9800';
 
 // ── 地暖+温控电路 Canvas ──────────────────────────────────────
-function FloorHeatCanvas({ heating, setTemp, curTemp }) {
+function FloorHeatCanvas({ targetTempRef, curTempRef }) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -25,6 +25,10 @@ function FloorHeatCanvas({ heating, setTemp, curTemp }) {
     }
 
     function draw() {
+      const curTemp = curTempRef.current;
+      const targetTemp = targetTempRef.current;
+      const heating = curTemp < targetTemp;
+
       ctx.clearRect(0, 0, W, H);
       t += 0.022;
 
@@ -121,7 +125,7 @@ function FloorHeatCanvas({ heating, setTemp, curTemp }) {
       ctx.strokeStyle = `rgba(156,125,255,${0.4 + 0.2 * Math.sin(t * 3)})`; ctx.lineWidth = 1;
       ctx.stroke();
       ctx.fillStyle = ACC; ctx.font = '9px "Courier New",monospace'; ctx.textAlign = 'center';
-      ctx.fillText(`比较器 Vref=${setTemp}°C`, RX + 74, cmpY + 11);
+      ctx.fillText(`比较器 Vref=${Math.round(targetTemp)}°C`, RX + 74, cmpY + 11);
       ctx.fillStyle = heating ? '#66bb6a' : '#f44336'; ctx.font = '8px inherit';
       ctx.fillText(heating ? '输出 HIGH' : '输出 LOW', RX + 74, cmpY + 24);
 
@@ -167,7 +171,8 @@ function FloorHeatCanvas({ heating, setTemp, curTemp }) {
     }
     draw();
     return () => cancelAnimationFrame(rafId);
-  }, [heating, setTemp, curTemp]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return <canvas ref={ref} style={{ maxWidth: '100%', borderRadius: 10 }} />;
 }
@@ -199,44 +204,52 @@ const FLOOR_HEAT_COMPARE = [
 ];
 
 export default function FloorHeat() {
-  const [setTemp, setSetTemp] = useState(25);
+  const [targetTemp, setTargetTemp] = useState(25);
   const [curTemp, setCurTemp] = useState(18);
-  const heating = curTemp < setTemp;
+  const heating = curTemp < targetTemp;
+
+  const targetTempRef = useRef(targetTemp);
+  const curTempRef = useRef(curTemp);
+  useEffect(() => { targetTempRef.current = targetTemp; }, [targetTemp]);
+  useEffect(() => { curTempRef.current = curTemp; }, [curTemp]);
 
   // 模拟温度缓慢上升/下降
   useEffect(() => {
     const interval = setInterval(() => {
       setCurTemp(prev => {
-        if (heating && prev < setTemp) return Math.min(prev + 0.3, setTemp + 1);
+        if (heating && prev < targetTemp) return Math.min(prev + 0.3, targetTemp + 1);
         if (!heating && prev > 15) return Math.max(prev - 0.15, 15);
         return prev;
       });
     }, 500);
     return () => clearInterval(interval);
-  }, [heating, setTemp]);
+  }, [heating, targetTemp]);
 
   return (
     <section id="floor-heat" className="sec">
       <div className="sh">
         <span className="sh-icon">🔥</span>
-        <div className="sh-tag">Stage 9 · Floor Heating</div>
-        <h2 className="sh-title" style={{ color: ACC, textShadow: `0 0 35px rgba(255,152,0,.4)` }}>
-          地暖与浴室加热系统
-        </h2>
-        <p className="sh-sub">电地暖、温控器电路和浴霸接线，掌握家庭供暖系统的电气原理与规范。</p>
-        <div className="divider" style={{ background: `linear-gradient(90deg,transparent,${ACC},transparent)` }} />
+        <div>
+          <div className="sh-title" style={{ color: ACC, textShadow: `0 0 35px rgba(255,152,0,.4)` }}>
+            地暖与浴室加热系统
+          </div>
+          <div className="sh-tag">Stage 9 · Floor Heating</div>
+          <div className="sh-sub">电地暖、温控器电路和浴霸接线，掌握家庭供暖系统的电气原理与规范。</div>
+        </div>
       </div>
+
+      <div className="divider" style={{ background: `linear-gradient(90deg,transparent,${ACC},transparent)` }} />
 
       {/* Canvas + 控制面板 */}
       <div className="grid2">
         <div className="anim-box reveal" style={{ borderColor: 'rgba(255,152,0,.2)', flexDirection: 'column', gap: 14, alignItems: 'center' }}>
-          <FloorHeatCanvas heating={heating} setTemp={setTemp} curTemp={Math.round(curTemp * 10) / 10} />
+          <FloorHeatCanvas targetTempRef={targetTempRef} curTempRef={curTempRef} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', maxWidth: 300 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontSize: 12, color: 'var(--dim)' }}>设定温度：</span>
-              <span style={{ color: ACC, fontWeight: 700, fontFamily: 'monospace' }}>{setTemp}°C</span>
+              <span style={{ color: ACC, fontWeight: 700, fontFamily: 'monospace' }}>{targetTemp}°C</span>
             </div>
-            <input type="range" min={16} max={32} value={setTemp} onChange={e => setSetTemp(Number(e.target.value))} style={{
+            <input type="range" min={16} max={32} value={targetTemp} onChange={e => setTargetTemp(Number(e.target.value))} style={{
               width: '100%', accentColor: ACC, cursor: 'pointer',
             }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
