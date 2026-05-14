@@ -32,7 +32,19 @@ function RiceCookerCanvas({ phaseRef, tempRef }) {
 
       const heating  = phase === 'cooking';
       const keepWarm = phase === 'warm';
+      const idle     = phase === 'idle';
       const boiling  = temp >= 100;
+
+      // 顶部模式条（仅依赖 phase，避免与温控视觉混淆）
+      const modeLabel = idle ? '待机 · 主回路断开' : heating ? '煮饭 · 主加热 ON' : keepWarm ? '保温 · 半波整流 ON' : `模式: ${phase}`;
+      const modeBg    = idle ? 'rgba(80,90,110,.35)' : heating ? 'rgba(255,152,0,.45)' : 'rgba(255,87,34,.35)';
+      const modeFg    = idle ? '#b0b8c8' : '#fff';
+      ctx.fillStyle = modeBg;
+      ctx.beginPath(); ctx.roundRect(8, 8, W - 16, 26, 8); ctx.fill();
+      ctx.strokeStyle = idle ? 'rgba(255,255,255,.12)' : 'rgba(255,255,255,.25)'; ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.fillStyle = modeFg; ctx.font = 'bold 12px "Courier New",monospace'; ctx.textAlign = 'center';
+      ctx.fillText(modeLabel, W / 2, 26);
       const heatI    = heating ? (0.45 + 0.35 * Math.abs(Math.sin(t * 5))) : 0;
       const warmI    = keepWarm ? (0.18 + 0.1 * Math.abs(Math.sin(t * 2))) : 0;
 
@@ -187,20 +199,24 @@ function RiceCookerCanvas({ phaseRef, tempRef }) {
       ctx.fillStyle = '#7788aa'; ctx.font = 'bold 9px "Courier New",monospace'; ctx.textAlign = 'center';
       ctx.fillText('磁钢温控', swX - 1, swY - 30);
 
-      // 磁钢块（吸合/断开）
-      const magOn = temp < 103;
-      ctx.fillStyle = magOn ? '#ff9800' : '#334';
-      ctx.shadowColor = magOn ? '#ff9800' : 'transparent';
-      ctx.shadowBlur = magOn ? 10 : 0;
+      // 磁钢块：煮饭主加热时吸合；保温为辅助回路（示意：主磁释放）；待机断开
+      const magMainOn = heating && !boiling;
+      ctx.fillStyle = magMainOn ? '#ff9800' : '#334';
+      ctx.shadowColor = magMainOn ? '#ff9800' : 'transparent';
+      ctx.shadowBlur = magMainOn ? 10 : 0;
       ctx.beginPath(); ctx.roundRect(swX - 16, swY - 20, 30, 12, 4); ctx.fill();
       ctx.shadowBlur = 0;
-      ctx.fillStyle = magOn ? '#ffcc66' : '#556'; ctx.font = '8px monospace'; ctx.textAlign = 'center';
-      ctx.fillText(magOn ? '● 磁吸合' : '○ 失磁', swX - 1, swY - 10);
+      ctx.fillStyle = magMainOn ? '#ffcc66' : '#556'; ctx.font = '8px monospace'; ctx.textAlign = 'center';
+      let magTxt = '○ 主磁释放';
+      if (magMainOn) magTxt = '● 主磁吸合';
+      else if (heating && boiling) magTxt = '○ 失磁(103°C)';
+      else if (keepWarm) magTxt = '○ 保温辅热';
+      ctx.fillText(magTxt, swX - 1, swY - 10);
 
       // 双金属片（弯曲动画）
       const bendAmt = boiling ? 10 : keepWarm ? 2 : 0;
       ctx.lineWidth = 3.5; ctx.lineCap = 'round';
-      ctx.strokeStyle = boiling ? '#ff5722' : keepWarm ? '#ff9800' : '#00bcd4';
+      ctx.strokeStyle = boiling ? '#ff5722' : keepWarm ? '#ff9800' : idle ? '#607d8b' : '#00bcd4';
       ctx.shadowColor = boiling ? '#ff5722' : keepWarm ? '#ff9800cc' : 'transparent';
       ctx.shadowBlur = boiling ? 8 : 0;
       ctx.beginPath();
@@ -208,9 +224,9 @@ function RiceCookerCanvas({ phaseRef, tempRef }) {
       ctx.quadraticCurveTo(swX - 1, swY + 8 - bendAmt, swX + 20, swY + 8 + bendAmt * 0.8);
       ctx.stroke();
       ctx.shadowBlur = 0;
-      ctx.fillStyle = boiling ? '#ff572299' : keepWarm ? '#ff980099' : '#00bcd488';
+      ctx.fillStyle = boiling ? '#ff572299' : keepWarm ? '#ff980099' : idle ? '#78909c' : '#00bcd488';
       ctx.font = '8px monospace'; ctx.textAlign = 'center';
-      ctx.fillText(boiling ? '↑ 弯曲断路' : keepWarm ? '微弯保温' : '平直导通', swX - 1, swY + 24);
+      ctx.fillText(boiling ? '↑ 弯曲断路' : keepWarm ? '微弯保温' : idle ? '待机' : '平直导通', swX - 1, swY + 24);
 
       // 按键（煮饭键）
       const btnPushed = heating || keepWarm;
@@ -300,8 +316,9 @@ export default function RiceCooker() {
   // 用 ref 把最新值传入 RAF 循环，避免重建 canvas
   const phaseRef = useRef(phase);
   const tempRef  = useRef(temp);
-  useEffect(() => { phaseRef.current = phase; }, [phase]);
-  useEffect(() => { tempRef.current  = temp;  }, [temp]);
+  // 每次渲染同步 ref，保证 RAF 不会读到「上一帧」的 phase（仅用 useEffect 会晚一拍）
+  phaseRef.current = phase;
+  tempRef.current = temp;
 
   // 温度模拟：仅做纯计算，不在 updater 里调用 setPhase
   useEffect(() => {
