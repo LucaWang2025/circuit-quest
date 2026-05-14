@@ -303,20 +303,26 @@ export default function RiceCooker() {
   useEffect(() => { phaseRef.current = phase; }, [phase]);
   useEffect(() => { tempRef.current  = temp;  }, [temp]);
 
+  // 温度模拟：仅做纯计算，不在 updater 里调用 setPhase
   useEffect(() => {
     const id = setInterval(() => {
       setTemp(prev => {
         const p = phaseRef.current;
-        if (p === 'cooking') {
-          if (prev >= 103) { setPhase('warm'); return 74; }
-          return Math.min(103, prev + 1.5);
-        }
-        if (p === 'warm') return 72 + 3 * Math.sin(Date.now() / 8000);
-        return Math.max(25, prev - 0.5);
+        if (p === 'cooking') return prev >= 103 ? 74 : Math.min(103, prev + 1.5);
+        if (p === 'warm')    return 71 + 4 * Math.sin(Date.now() / 9000);
+        return Math.max(25, prev - 0.4);
       });
     }, 160);
     return () => clearInterval(id);
   }, []);
+
+  // 单独监听：煮饭到 103°C 后自动切保温
+  useEffect(() => {
+    if (phase === 'cooking' && temp >= 103) {
+      setPhase('warm');
+      setTemp(74);
+    }
+  }, [temp, phase]);
 
   const btnStyle = (active, col) => ({
     padding: '9px 22px', borderRadius: 10, cursor: 'pointer',
@@ -346,15 +352,15 @@ export default function RiceCooker() {
             <button style={btnStyle(phase === 'cooking', '#ff9800')}
               onClick={() => { setPhase('cooking'); setTemp(25); }}>🔥 开始煮饭</button>
             <button style={btnStyle(phase === 'warm', '#ff5722')}
-              onClick={() => setPhase('warm')}>♨ 切换保温</button>
+              onClick={() => { setPhase('warm'); setTemp(74); }}>♨ 切换保温</button>
             <button style={btnStyle(phase === 'idle', '#78909c')}
               onClick={() => { setPhase('idle'); setTemp(25); }}>⏹ 断电</button>
           </div>
           <div style={{ font: '12px "Courier New",monospace', color: 'var(--dim)', textAlign: 'center', lineHeight: 1.6, minHeight: 18 }}>
-            {phase === 'cooking' && temp < 103 && `⚡ 加热中… ${Math.round(temp)}°C | 发热盘全功率开启`}
-            {phase === 'cooking' && temp >= 103 && '✅ 103°C → 磁钢失磁 → 弹起断路 → 自动保温'}
-            {phase === 'warm'    && `♨ 保温中 ~${Math.round(temp)}°C | 二极管半波整流约 40W`}
-            {phase === 'idle'    && '○ 断电待机，温度自然冷却'}
+            {phase === 'cooking' && temp < 103  ? `⚡ 加热中… ${Math.round(temp)}°C | 发热盘全功率开启`
+             : phase === 'cooking'              ? '✅ 103°C → 磁钢失磁 → 弹起断路 → 自动保温'
+             : phase === 'warm'                 ? `♨ 保温中 ~${Math.round(temp)}°C | 半波整流约 40W`
+             :                                   '○ 断电待机，温度自然冷却'}
           </div>
         </div>
 
