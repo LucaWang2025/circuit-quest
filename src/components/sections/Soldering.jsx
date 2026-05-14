@@ -314,6 +314,7 @@ export default function Soldering() {
       particles.forEach(p => {
         if (p.life <= 0) return;
         p.life -= 0.015;
+        if (p.life <= 0) return;
         p.x += p.vx; p.y += p.vy;
         p.vx *= 0.98;
         const alpha = p.life * 0.4;

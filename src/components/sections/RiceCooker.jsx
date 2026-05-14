@@ -10,7 +10,6 @@ function RiceCookerCanvas({ phaseRef, tempRef }) {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const W = 480, H = 320;
     cv.width = W * dpr; cv.height = H * dpr;
-    cv.style.width = W + 'px'; cv.style.height = H + 'px';
     const ctx = cv.getContext('2d'); ctx.scale(dpr, dpr);
 
     let t = 0, raf;
@@ -106,10 +105,10 @@ function RiceCookerCanvas({ phaseRef, tempRef }) {
       if (heating || keepWarm) {
         const ca = heating ? heatI : warmI;
         ctx.lineWidth = 2.2; ctx.lineCap = 'round';
-        for (let i = -2; i <= 2; i++) {
+        for (let i = 0; i <= 4; i++) {
           ctx.strokeStyle = `rgba(255,${heating ? 90 + Math.round(90 * heatI) : 155},0,${ca * 0.9})`;
           ctx.beginPath();
-          ctx.arc(potX, baseY + 6, 10 + i * 9, 0.15, Math.PI - 0.15, i % 2 === 0);
+          ctx.arc(potX, baseY + 6, 6 + i * 9, 0.15, Math.PI - 0.15, i % 2 === 0);
           ctx.stroke();
         }
       }
@@ -312,7 +311,7 @@ function RiceCookerCanvas({ phaseRef, tempRef }) {
   return (
     <canvas
       ref={ref}
-      style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }}
+      style={{ width: '100%', maxWidth: 480, height: 'auto', aspectRatio: '480/320', flexShrink: 0, display: 'block' }}
     />
   );
 }
