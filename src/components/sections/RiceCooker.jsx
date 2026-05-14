@@ -18,11 +18,43 @@ function RiceCookerCanvas({ phaseRef, tempRef }) {
       x: 0, y: 0, r: Math.random() * 3.5 + 1, vy: Math.random() * 0.7 + 0.3, init: false,
     }));
     const steamPuffs = Array.from({ length: 6 }, (_, i) => ({
-      x: 188 + i * 11, y: 85, alpha: Math.random() * 0.8, vy: Math.random() * 0.5 + 0.25,
+      x: 175 + i * 12, y: 50, alpha: Math.random() * 0.8, vy: Math.random() * 0.5 + 0.25,
     }));
 
-    // 锅体参数
-    const potX = 200, potTop = 85, potBot = 240, potW = 72;
+    // ── 锅体几何参数 ──
+    const potX = 205;          // 锅中心 X
+    const potTop = 55;         // 锅口顶端 Y
+    const potBot = 238;        // 锅底椭圆中心 Y
+    const potW   = 80;         // 半宽
+    const potRy  = 14;         // 底部椭圆纵半径
+
+    // 左底 / 右底（贝塞尔终点 = 椭圆两端）
+    const bLx = potX - potW + 14, bLy = potBot;  // ≈ (139, 238)
+    const bRx = potX + potW - 14, bRy = potBot;  // ≈ (271, 238)
+    const eRx  = potW - 14;                       // 底部椭圆横半径 ≈ 66
+
+    /**
+     * 绘制锅体路径：
+     *   左侧贝塞尔 → 底部椭圆(π→0顺时针) → 右侧贝塞尔 → 闭合
+     * 使用 anticlockwise=false，从 Math.PI(左端)顺时针到 0(右端)，经过最低点。
+     */
+    function potPath() {
+      ctx.beginPath();
+      ctx.moveTo(potX - potW, potTop + 14);                          // 左口沿
+      ctx.bezierCurveTo(
+        potX - potW - 10, potTop + 80,
+        bLx - 10, bLy - 30,
+        bLx, bLy                                                      // 左底
+      );
+      // 碗底弧：从左(π)顺时针到右(0)，途经最低点
+      ctx.ellipse(potX, potBot, eRx, potRy, 0, Math.PI, 0, false);
+      ctx.bezierCurveTo(
+        bRx + 10, bRy - 30,
+        potX + potW + 10, potTop + 80,
+        potX + potW, potTop + 14                                      // 右口沿
+      );
+      ctx.closePath();
+    }
 
     function draw() {
       const phase = phaseRef.current;
@@ -34,80 +66,73 @@ function RiceCookerCanvas({ phaseRef, tempRef }) {
       const keepWarm = phase === 'warm';
       const idle     = phase === 'idle';
       const boiling  = temp >= 100;
+      const heatI    = heating  ? (0.45 + 0.35 * Math.abs(Math.sin(t * 5))) : 0;
+      const warmI    = keepWarm ? (0.20 + 0.10 * Math.abs(Math.sin(t * 2))) : 0;
 
-      // 顶部模式条（仅依赖 phase，避免与温控视觉混淆）
-      const modeLabel = idle ? '待机 · 主回路断开' : heating ? '煮饭 · 主加热 ON' : keepWarm ? '保温 · 半波整流 ON' : `模式: ${phase}`;
-      const modeBg    = idle ? 'rgba(80,90,110,.35)' : heating ? 'rgba(255,152,0,.45)' : 'rgba(255,87,34,.35)';
-      const modeFg    = idle ? '#b0b8c8' : '#fff';
-      ctx.fillStyle = modeBg;
-      ctx.beginPath(); ctx.roundRect(8, 8, W - 16, 26, 8); ctx.fill();
-      ctx.strokeStyle = idle ? 'rgba(255,255,255,.12)' : 'rgba(255,255,255,.25)'; ctx.lineWidth = 1;
-      ctx.stroke();
-      ctx.fillStyle = modeFg; ctx.font = 'bold 12px "Courier New",monospace'; ctx.textAlign = 'center';
-      ctx.fillText(modeLabel, W / 2, 26);
-      const heatI    = heating ? (0.45 + 0.35 * Math.abs(Math.sin(t * 5))) : 0;
-      const warmI    = keepWarm ? (0.18 + 0.1 * Math.abs(Math.sin(t * 2))) : 0;
+      // ── 顶部模式条 ──
+      const modeLabel = idle     ? '待机 · 主回路断开'
+                      : heating  ? '煮饭 · 主加热 ON'
+                      :            '保温 · 半波整流 ON';
+      ctx.fillStyle = idle ? 'rgba(70,80,100,.40)' : heating ? 'rgba(255,152,0,.55)' : 'rgba(255,87,34,.45)';
+      ctx.beginPath(); ctx.roundRect(10, 8, W - 20, 28, 8); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,.25)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 13px "Courier New",monospace'; ctx.textAlign = 'center';
+      ctx.fillText(modeLabel, W / 2, 27);
 
       // ── 外壳底座 ──
-      const baseY = 248, baseW = 90, baseH = 22;
-      const baseGrd = ctx.createLinearGradient(potX - baseW, baseY, potX + baseW, baseY);
-      baseGrd.addColorStop(0, '#1c1c2a'); baseGrd.addColorStop(0.5, '#2e2e40'); baseGrd.addColorStop(1, '#1c1c2a');
-      ctx.fillStyle = baseGrd;
+      const baseY = 250, baseW = 95, baseH = 22;
+      ctx.fillStyle = '#252535';
       ctx.beginPath(); ctx.roundRect(potX - baseW, baseY, baseW * 2, baseH, [0, 0, 10, 10]); ctx.fill();
-      ctx.strokeStyle = '#3a3a50'; ctx.lineWidth = 1;
+      ctx.strokeStyle = '#3a3a52'; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.roundRect(potX - baseW, baseY, baseW * 2, baseH, [0, 0, 10, 10]); ctx.stroke();
 
       // ── 发热盘辉光 ──
       if (heating || keepWarm) {
-        const glowI = heating ? heatI : warmI * 0.6;
-        const grd = ctx.createRadialGradient(potX, baseY + 5, 0, potX, baseY + 5, 75);
-        grd.addColorStop(0, `rgba(255,${heating ? 80 : 140},0,${glowI})`);
-        grd.addColorStop(0.5, `rgba(255,${heating ? 60 : 120},0,${glowI * 0.4})`);
+        const gi = heating ? heatI : warmI * 0.6;
+        const grd = ctx.createRadialGradient(potX, baseY + 4, 0, potX, baseY + 4, 82);
+        grd.addColorStop(0, `rgba(255,${heating ? 70 : 130},0,${gi})`);
+        grd.addColorStop(0.5, `rgba(255,${heating ? 50 : 110},0,${gi * 0.4})`);
         grd.addColorStop(1, 'transparent');
         ctx.fillStyle = grd;
-        ctx.fillRect(potX - 80, baseY - 30, 160, 70);
+        ctx.fillRect(potX - 90, baseY - 35, 180, 75);
       }
 
-      // ── 发热盘 ──
-      const diskColor = heating ? `rgba(${200 + Math.round(55 * heatI)},${50 - Math.round(30 * heatI)},0,1)` : keepWarm ? '#883300' : '#444';
-      ctx.fillStyle = diskColor;
-      ctx.beginPath(); ctx.ellipse(potX, baseY + 6, 56, 9, 0, 0, Math.PI * 2); ctx.fill();
-      // 发热线圈纹
+      // ── 发热盘本体 ──
+      const diskCol = heating
+        ? `rgba(${200 + Math.round(55 * heatI)},${Math.max(0, 50 - Math.round(30 * heatI))},0,1)`
+        : keepWarm ? '#7a2e00' : '#444';
+      ctx.fillStyle = diskCol;
+      ctx.beginPath(); ctx.ellipse(potX, baseY + 6, 60, 10, 0, 0, Math.PI * 2); ctx.fill();
       if (heating || keepWarm) {
-        const coilAlpha = heating ? heatI : warmI;
+        const ca = heating ? heatI : warmI;
         ctx.lineWidth = 2.2; ctx.lineCap = 'round';
         for (let i = -2; i <= 2; i++) {
-          ctx.strokeStyle = `rgba(255,${heating ? 100 + Math.round(80*heatI) : 160},0,${coilAlpha * 0.9})`;
+          ctx.strokeStyle = `rgba(255,${heating ? 90 + Math.round(90 * heatI) : 155},0,${ca * 0.9})`;
           ctx.beginPath();
-          ctx.arc(potX, baseY + 6, 10 + i * 8, 0.15, Math.PI - 0.15, i % 2 === 0);
+          ctx.arc(potX, baseY + 6, 10 + i * 9, 0.15, Math.PI - 0.15, i % 2 === 0);
           ctx.stroke();
         }
       }
-      ctx.fillStyle = '#2a2a36';
-      ctx.beginPath(); ctx.ellipse(potX, baseY + 6, 40, 6, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#252530';
+      ctx.beginPath(); ctx.ellipse(potX, baseY + 6, 43, 6, 0, 0, Math.PI * 2); ctx.fill();
 
-      // ── 内胆（clip） ──
+      // ── 内胆填色（正确 clip 路径）──
       ctx.save();
-      ctx.beginPath();
-      ctx.moveTo(potX - potW, potTop + 12);
-      ctx.bezierCurveTo(potX - potW - 10, potTop + 70, potX - potW - 10, potBot - 25, potX - potW + 10, potBot);
-      ctx.ellipse(potX, potBot, potW - 10, 13, 0, 0, Math.PI);
-      ctx.bezierCurveTo(potX + potW + 10, potBot - 25, potX + potW + 10, potTop + 70, potX + potW, potTop + 12);
-      ctx.closePath(); ctx.clip();
+      potPath();
+      ctx.clip();
 
-      // 内胆背景
-      const innerGrd = ctx.createLinearGradient(potX - potW, potTop, potX + potW, potTop);
-      innerGrd.addColorStop(0, '#1a2030'); innerGrd.addColorStop(0.5, '#232d40'); innerGrd.addColorStop(1, '#1a2030');
-      ctx.fillStyle = innerGrd; ctx.fillRect(potX - potW, potTop, potW * 2, potBot - potTop + 15);
+      // 内壁背景
+      ctx.fillStyle = '#1c2438';
+      ctx.fillRect(potX - potW - 4, potTop, potW * 2 + 8, potBot - potTop + 20);
 
       // 米层
-      const riceY = potBot - 72;
-      ctx.fillStyle = boiling ? '#c0a870' : keepWarm ? '#c8b588' : '#d4c5a9';
-      ctx.fillRect(potX - potW, riceY, potW * 2, potBot - riceY + 10);
+      const riceY = potBot - 82;
+      ctx.fillStyle = boiling ? '#b89a5a' : keepWarm ? '#c8b878' : '#d8c8a0';
+      ctx.fillRect(potX - potW, riceY, potW * 2, potBot - riceY + 12);
       if (!boiling) {
         for (let rx = potX - potW + 5; rx < potX + potW - 5; rx += 6) {
-          for (let ry = riceY + 3; ry < potBot - 4; ry += 5) {
-            ctx.fillStyle = 'rgba(200,185,160,0.5)';
+          for (let ry = riceY + 4; ry < potBot - 5; ry += 5) {
+            ctx.fillStyle = 'rgba(200,182,148,0.55)';
             ctx.beginPath();
             ctx.ellipse(rx + Math.sin(ry) * 1.5, ry, 2.2, 1.3, Math.PI / 4, 0, Math.PI * 2);
             ctx.fill();
@@ -116,27 +141,26 @@ function RiceCookerCanvas({ phaseRef, tempRef }) {
       }
 
       // 水层
-      const waterY = riceY - 24;
+      const waterY = riceY - 28;
       if (temp < 100) {
-        const waterAlpha = 0.28 + 0.1 * Math.sin(t * 2);
-        ctx.fillStyle = `rgba(100,165,230,${waterAlpha})`;
+        ctx.fillStyle = `rgba(100,165,232,${0.30 + 0.10 * Math.sin(t * 2)})`;
         ctx.fillRect(potX - potW, waterY, potW * 2, riceY - waterY);
-        if (heating && temp > 20) {
+        if (heating && temp > 18) {
           ctx.beginPath(); ctx.moveTo(potX - potW, waterY);
           for (let x = potX - potW; x <= potX + potW; x++) {
-            ctx.lineTo(x, waterY + Math.sin((x + t * 55) * 0.14) * Math.min(4, temp / 22));
+            ctx.lineTo(x, waterY + Math.sin((x + t * 55) * 0.14) * Math.min(5, temp / 18));
           }
           ctx.lineTo(potX + potW, waterY); ctx.closePath();
-          ctx.fillStyle = 'rgba(130,200,248,0.16)'; ctx.fill();
+          ctx.fillStyle = 'rgba(130,200,250,0.18)'; ctx.fill();
         }
       }
 
       // 气泡
       if ((heating || keepWarm) && temp > 55) {
-        const d = Math.min(1, (temp - 55) / 45) * (keepWarm ? 0.3 : 1);
+        const d = Math.min(1, (temp - 55) / 45) * (keepWarm ? 0.35 : 1);
         bubbles.forEach(b => {
           if (!b.init || b.y < waterY - 6) {
-            b.y = potBot - 8; b.x = potX - 45 + Math.random() * 90; b.init = true;
+            b.y = potBot - 10; b.x = potX - 52 + Math.random() * 104; b.init = true;
           }
           b.y -= b.vy * d * 1.8;
           ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
@@ -145,42 +169,36 @@ function RiceCookerCanvas({ phaseRef, tempRef }) {
       }
       ctx.restore();
 
-      // ── 外锅轮廓 ──
-      ctx.strokeStyle = '#606070'; ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(potX - potW, potTop + 12);
-      ctx.bezierCurveTo(potX - potW - 10, potTop + 70, potX - potW - 10, potBot - 25, potX - potW + 10, potBot);
-      ctx.ellipse(potX, potBot, potW - 10, 13, 0, 0, Math.PI);
-      ctx.bezierCurveTo(potX + potW + 10, potBot - 25, potX + potW + 10, potTop + 70, potX + potW, potTop + 12);
-      ctx.stroke();
-      // 锅沿椭圆
-      ctx.strokeStyle = '#505060'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.ellipse(potX, potTop + 12, potW, 13, 0, 0, Math.PI * 2); ctx.stroke();
+      // ── 外锅轮廓（画在内容之上）──
+      potPath();
+      ctx.strokeStyle = '#787888'; ctx.lineWidth = 3; ctx.stroke();
+      // 口沿椭圆
+      ctx.strokeStyle = '#606070'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.ellipse(potX, potTop + 14, potW, 13, 0, 0, Math.PI * 2); ctx.stroke();
 
       // ── 锅盖 ──
-      ctx.fillStyle = '#3e3e50';
-      ctx.beginPath(); ctx.ellipse(potX, potTop + 10, potW + 5, 15, 0, Math.PI, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = '#5a5a6e'; ctx.lineWidth = 1.5; ctx.stroke();
-      ctx.fillStyle = '#2a2a38';
-      ctx.beginPath(); ctx.roundRect(potX - 14, potTop - 17, 28, 17, 7); ctx.fill();
-      ctx.strokeStyle = '#444456'; ctx.lineWidth = 1; ctx.stroke();
-      // 排气孔
-      if (heating && temp > 85) {
-        const vAlpha = Math.min(1, (temp - 85) / 15) * (0.4 + 0.3 * Math.sin(t * 8));
-        ctx.fillStyle = `rgba(255,255,255,${vAlpha})`;
-        ctx.beginPath(); ctx.ellipse(potX, potTop + 10, 5, 2, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#404052';
+      ctx.beginPath(); ctx.ellipse(potX, potTop + 12, potW + 5, 15, 0, Math.PI, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = '#5c5c72'; ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.fillStyle = '#2c2c3c';
+      ctx.beginPath(); ctx.roundRect(potX - 16, potTop - 20, 32, 20, 8); ctx.fill();
+      ctx.strokeStyle = '#46465a'; ctx.lineWidth = 1; ctx.stroke();
+      if (heating && temp > 83) {
+        const va = Math.min(1, (temp - 83) / 17) * (0.4 + 0.3 * Math.sin(t * 8));
+        ctx.fillStyle = `rgba(255,255,255,${va})`;
+        ctx.beginPath(); ctx.ellipse(potX, potTop + 12, 5, 2, 0, 0, Math.PI * 2); ctx.fill();
       }
 
       // ── 蒸汽 ──
-      if ((heating && temp > 78) || (keepWarm && temp > 70)) {
-        const steamA = heating
-          ? Math.min(1, (temp - 78) / 22)
-          : Math.min(0.5, (temp - 70) / 10) * 0.5;
+      if ((heating && temp > 76) || (keepWarm && temp > 68)) {
+        const sa = heating
+          ? Math.min(1, (temp - 76) / 24)
+          : Math.min(0.45, (temp - 68) / 10) * 0.45;
         steamPuffs.forEach(p => {
           p.y -= p.vy;
-          if (p.y < potTop - 60) { p.y = potTop; p.alpha = 0.6 + Math.random() * 0.3; }
+          if (p.y < potTop - 65) { p.y = potTop; p.alpha = 0.6 + Math.random() * 0.3; }
           p.alpha = Math.max(0, p.alpha - 0.006);
-          ctx.strokeStyle = `rgba(210,215,225,${p.alpha * steamA})`;
+          ctx.strokeStyle = `rgba(210,215,225,${p.alpha * sa})`;
           ctx.lineWidth = 2.2; ctx.lineCap = 'round';
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
@@ -189,114 +207,99 @@ function RiceCookerCanvas({ phaseRef, tempRef }) {
         });
       }
 
-      // ── 磁钢温控开关（右侧，更大更清晰） ──
-      const swX = 385, swY = 165;
-      // 背景框
+      // ── 磁钢温控开关（右侧）──
+      const swX = 395, swY = 165;
       ctx.fillStyle = '#13131f';
       ctx.strokeStyle = '#333345'; ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.roundRect(swX - 36, swY - 45, 70, 95, 8); ctx.fill(); ctx.stroke();
-      // 标题
+      ctx.beginPath(); ctx.roundRect(swX - 38, swY - 48, 74, 100, 8); ctx.fill(); ctx.stroke();
       ctx.fillStyle = '#7788aa'; ctx.font = 'bold 9px "Courier New",monospace'; ctx.textAlign = 'center';
-      ctx.fillText('磁钢温控', swX - 1, swY - 30);
+      ctx.fillText('磁钢温控', swX, swY - 33);
 
-      // 磁钢块：煮饭主加热时吸合；保温为辅助回路（示意：主磁释放）；待机断开
-      const magMainOn = heating && !boiling;
-      ctx.fillStyle = magMainOn ? '#ff9800' : '#334';
-      ctx.shadowColor = magMainOn ? '#ff9800' : 'transparent';
-      ctx.shadowBlur = magMainOn ? 10 : 0;
-      ctx.beginPath(); ctx.roundRect(swX - 16, swY - 20, 30, 12, 4); ctx.fill();
+      // 磁钢
+      const magOn = heating && !boiling;
+      ctx.fillStyle = magOn ? '#ff9800' : '#334';
+      ctx.shadowColor = magOn ? '#ff9800' : 'transparent'; ctx.shadowBlur = magOn ? 10 : 0;
+      ctx.beginPath(); ctx.roundRect(swX - 16, swY - 22, 30, 12, 4); ctx.fill();
       ctx.shadowBlur = 0;
-      ctx.fillStyle = magMainOn ? '#ffcc66' : '#556'; ctx.font = '8px monospace'; ctx.textAlign = 'center';
-      let magTxt = '○ 主磁释放';
-      if (magMainOn) magTxt = '● 主磁吸合';
-      else if (heating && boiling) magTxt = '○ 失磁(103°C)';
-      else if (keepWarm) magTxt = '○ 保温辅热';
-      ctx.fillText(magTxt, swX - 1, swY - 10);
+      ctx.fillStyle = magOn ? '#ffcc66' : '#667';
+      ctx.font = '8px monospace'; ctx.textAlign = 'center';
+      const magTxt = magOn ? '● 磁吸合' : (heating && boiling) ? '○ 失磁' : keepWarm ? '○ 辅热' : '○ 释放';
+      ctx.fillText(magTxt, swX, swY - 11);
 
-      // 双金属片（弯曲动画）
-      const bendAmt = boiling ? 10 : keepWarm ? 2 : 0;
+      // 双金属片
+      const bend = boiling ? 10 : keepWarm ? 2 : 0;
       ctx.lineWidth = 3.5; ctx.lineCap = 'round';
       ctx.strokeStyle = boiling ? '#ff5722' : keepWarm ? '#ff9800' : idle ? '#607d8b' : '#00bcd4';
-      ctx.shadowColor = boiling ? '#ff5722' : keepWarm ? '#ff9800cc' : 'transparent';
-      ctx.shadowBlur = boiling ? 8 : 0;
+      ctx.shadowColor = boiling ? '#ff5722' : 'transparent'; ctx.shadowBlur = boiling ? 8 : 0;
       ctx.beginPath();
-      ctx.moveTo(swX - 20, swY + 8);
-      ctx.quadraticCurveTo(swX - 1, swY + 8 - bendAmt, swX + 20, swY + 8 + bendAmt * 0.8);
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-      ctx.fillStyle = boiling ? '#ff572299' : keepWarm ? '#ff980099' : idle ? '#78909c' : '#00bcd488';
+      ctx.moveTo(swX - 22, swY + 6);
+      ctx.quadraticCurveTo(swX, swY + 6 - bend, swX + 22, swY + 6 + bend * 0.8);
+      ctx.stroke(); ctx.shadowBlur = 0;
+      ctx.fillStyle = boiling ? '#ff572299' : keepWarm ? '#ff980099' : '#00bcd488';
       ctx.font = '8px monospace'; ctx.textAlign = 'center';
-      ctx.fillText(boiling ? '↑ 弯曲断路' : keepWarm ? '微弯保温' : idle ? '待机' : '平直导通', swX - 1, swY + 24);
+      ctx.fillText(boiling ? '↑ 弯曲断路' : keepWarm ? '微弯保温' : '平直导通', swX, swY + 22);
 
-      // 按键（煮饭键）
-      const btnPushed = heating || keepWarm;
-      ctx.fillStyle = btnPushed ? '#ff9800' : '#334';
+      // 按键
+      const btnOn = heating || keepWarm;
+      ctx.fillStyle = btnOn ? '#ff9800' : '#334';
       ctx.strokeStyle = '#556'; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.roundRect(swX - 14, swY + 33, 26, 14, 5); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = btnPushed ? '#fff' : '#88a'; ctx.font = '8px monospace'; ctx.textAlign = 'center';
-      ctx.fillText(btnPushed ? '↓按下' : '弹起', swX - 1, swY + 44);
+      ctx.fillStyle = btnOn ? '#fff' : '#88a';
+      ctx.font = '8px monospace'; ctx.textAlign = 'center';
+      ctx.fillText(btnOn ? '↓按下' : '弹起', swX, swY + 44);
 
-      // 连线：锅底 → 温控开关
-      const lineColor = (heating || keepWarm) ? `rgba(255,152,0,${0.3 + 0.2 * Math.sin(t * 3)})` : 'rgba(80,80,100,0.3)';
-      ctx.strokeStyle = lineColor; ctx.lineWidth = 1.5; ctx.setLineDash([4, 5]);
+      // 连线 锅体→温控
+      const lc = (heating || keepWarm)
+        ? `rgba(255,152,0,${0.30 + 0.20 * Math.sin(t * 3)})`
+        : 'rgba(80,80,100,0.28)';
+      ctx.strokeStyle = lc; ctx.lineWidth = 1.5; ctx.setLineDash([4, 5]);
       ctx.beginPath();
-      ctx.moveTo(potX + potW + 10, potBot - 30);
-      ctx.bezierCurveTo(potX + potW + 30, potBot - 30, swX - 36, swY + 10, swX - 36, swY + 8);
-      ctx.stroke();
-      ctx.setLineDash([]);
-      // 箭头
+      ctx.moveTo(potX + potW + 8, potBot - 30);
+      ctx.bezierCurveTo(potX + potW + 28, potBot - 30, swX - 38, swY + 10, swX - 38, swY + 6);
+      ctx.stroke(); ctx.setLineDash([]);
       if (heating || keepWarm) {
-        ctx.fillStyle = lineColor;
-        ctx.beginPath(); ctx.arc(swX - 36, swY + 8, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = lc;
+        ctx.beginPath(); ctx.arc(swX - 38, swY + 6, 3, 0, Math.PI * 2); ctx.fill();
       }
 
-      // ── 温度计（左侧，更宽显示区） ──
-      const tmX = 45, tmY = 60, tmH = 155;
-      // 外管
+      // ── 温度计（左侧）──
+      const tmX = 42, tmY = 58, tmH = 158;
       ctx.fillStyle = 'rgba(255,255,255,.05)';
       ctx.beginPath(); ctx.roundRect(tmX - 7, tmY, 14, tmH, 7); ctx.fill();
       ctx.strokeStyle = 'rgba(255,255,255,.12)'; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.roundRect(tmX - 7, tmY, 14, tmH, 7); ctx.stroke();
-      // 球泡
-      ctx.fillStyle = '#c00'; ctx.beginPath(); ctx.arc(tmX, tmY + tmH + 5, 9, 0, Math.PI * 2); ctx.fill();
-
-      // 液柱
-      const fillH = Math.min(tmH, (temp / 112) * tmH);
-      const col = temp < 55 ? '#00bcd4' : temp < 88 ? '#ff9800' : '#ff1744';
-      ctx.fillStyle = col;
-      ctx.shadowColor = col; ctx.shadowBlur = 6;
-      ctx.beginPath(); ctx.roundRect(tmX - 5, tmY + tmH - fillH, 10, fillH + 14, 5); ctx.fill();
+      ctx.fillStyle = '#bb0000'; ctx.beginPath(); ctx.arc(tmX, tmY + tmH + 6, 9, 0, Math.PI * 2); ctx.fill();
+      const fH = Math.min(tmH, (temp / 112) * tmH);
+      const tcol = temp < 55 ? '#00bcd4' : temp < 88 ? '#ff9800' : '#ff1744';
+      ctx.fillStyle = tcol; ctx.shadowColor = tcol; ctx.shadowBlur = 6;
+      ctx.beginPath(); ctx.roundRect(tmX - 5, tmY + tmH - fH, 10, fH + 14, 5); ctx.fill();
       ctx.shadowBlur = 0;
-
-      // 温度数字
       ctx.fillStyle = '#fff'; ctx.font = 'bold 12px "Courier New",monospace'; ctx.textAlign = 'center';
-      ctx.fillText(`${Math.round(temp)}°`, tmX, tmY + tmH - fillH - 8);
-
-      // 刻度
+      ctx.fillText(`${Math.round(temp)}°`, tmX, tmY + tmH - fH - 8);
       [0, 40, 60, 80, 100, 103].forEach(v => {
         const y = tmY + tmH - (v / 112) * tmH;
-        const isMark = v === 103;
-        ctx.fillStyle = isMark ? '#ff9800' : 'rgba(255,255,255,.18)';
-        ctx.fillRect(tmX + 7, y, isMark ? 8 : 5, 1);
-        ctx.fillStyle = isMark ? '#ff9800' : 'rgba(200,215,230,.45)';
-        ctx.font = isMark ? 'bold 8px monospace' : '8px monospace'; ctx.textAlign = 'left';
-        ctx.fillText(isMark ? '103✦' : `${v}°`, tmX + 17, y + 3);
+        const mark = v === 103;
+        ctx.fillStyle = mark ? '#ff9800' : 'rgba(255,255,255,.18)';
+        ctx.fillRect(tmX + 7, y, mark ? 8 : 5, 1);
+        ctx.fillStyle = mark ? '#ff9800' : 'rgba(200,215,230,.45)';
+        ctx.font = mark ? 'bold 8px monospace' : '8px monospace'; ctx.textAlign = 'left';
+        ctx.fillText(mark ? '103✦' : `${v}°`, tmX + 17, y + 3);
       });
 
-      // ── 电路状态文字 ──
+      // ── 底部状态文字 ──
       ctx.textAlign = 'center'; ctx.font = 'bold 11px monospace';
       if (heating && !boiling) {
         ctx.fillStyle = `rgba(255,152,0,${0.75 + 0.25 * Math.sin(t * 4)})`;
-        ctx.fillText(`⚡ 主回路通电 · 全功率加热`, W / 2, H - 12);
+        ctx.fillText('⚡ 主回路通电 · 全功率加热', W / 2, H - 10);
       } else if (boiling && phase === 'cooking') {
         ctx.fillStyle = `rgba(255,87,34,${0.8 + 0.2 * Math.sin(t * 6)})`;
-        ctx.fillText('✓ 103°C 磁钢失磁 → 主路断开', W / 2, H - 12);
+        ctx.fillText('✓ 103°C 磁钢失磁 → 主路断开', W / 2, H - 10);
       } else if (keepWarm) {
         ctx.fillStyle = `rgba(255,152,0,${0.55 + 0.25 * Math.sin(t * 2)})`;
-        ctx.fillText(`♨ 保温回路 · 半波整流 ~40W · ${Math.round(temp)}°C`, W / 2, H - 12);
+        ctx.fillText(`♨ 保温回路 · 半波整流 ~40W · ${Math.round(temp)}°C`, W / 2, H - 10);
       } else {
         ctx.fillStyle = 'rgba(100,120,145,0.55)';
-        ctx.fillText('○ 断电待机', W / 2, H - 12);
+        ctx.fillText('○ 断电待机', W / 2, H - 10);
       }
 
       raf = requestAnimationFrame(draw);
@@ -309,12 +312,7 @@ function RiceCookerCanvas({ phaseRef, tempRef }) {
   return (
     <canvas
       ref={ref}
-      style={{
-        width: '100%',
-        maxWidth: 480,
-        flexShrink: 0,
-        display: 'block',
-      }}
+      style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }}
     />
   );
 }
@@ -323,14 +321,12 @@ export default function RiceCooker() {
   const [phase, setPhase] = useState('idle');
   const [temp, setTemp]   = useState(25);
 
-  // 用 ref 把最新值传入 RAF 循环，避免重建 canvas
   const phaseRef = useRef(phase);
   const tempRef  = useRef(temp);
-  // 每次渲染同步 ref，保证 RAF 不会读到「上一帧」的 phase（仅用 useEffect 会晚一拍）
+  // 在渲染期同步 ref，保证 RAF 每帧读到最新值
   phaseRef.current = phase;
-  tempRef.current = temp;
+  tempRef.current  = temp;
 
-  // 温度模拟：仅做纯计算，不在 updater 里调用 setPhase
   useEffect(() => {
     const id = setInterval(() => {
       setTemp(prev => {
@@ -343,7 +339,6 @@ export default function RiceCooker() {
     return () => clearInterval(id);
   }, []);
 
-  // 单独监听：煮饭到 103°C 后自动切保温
   useEffect(() => {
     if (phase === 'cooking' && temp >= 103) {
       setPhase('warm');
@@ -428,10 +423,7 @@ export default function RiceCooker() {
           <div style={{ fontWeight: 700, color: '#81c784', marginBottom: 10 }}>⚡ 保温半波整流</div>
           <div className="fbox"><div className="fbox-f">220V AC → D1（二极管）</div><div className="fbox-desc">仅通正半周，截断负半周</div></div>
           <div className="fbox"><div className="fbox-f">有效值 ≈ 155V</div><div className="fbox-desc">有效值降为原来的约 70%</div></div>
-          <div className="fbox"><div className="fbox-f">P ∝ V² → 约 1/2 原功率</div><div className="fbox-desc">功率降至原来的约 1/2</div></div>
-          <div style={{ fontSize: 12, color: 'var(--dim)', marginTop: 8 }}>
-            半波整流使电压有效值降为原来约 70%，功率∝V²，(0.707)²≈0.5，故保温功率约为加热功率的 1/2。
-          </div>
+          <div className="fbox"><div className="fbox-f">P ≈ 原功率的 1/2</div><div className="fbox-desc">功率∝V²，(0.707)²≈0.5</div></div>
         </div>
 
         <div className="glass reveal" style={{ borderColor: 'rgba(100,181,246,.18)' }}>
