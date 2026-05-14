@@ -137,6 +137,11 @@ main { position: relative; z-index: 1; padding-top: var(--nav-h); }
   min-height: 320px; padding: 24px;
   position: relative;
 }
+/* Canvas 在 flex 列里默认 flex-shrink:1，空间不足时会被压扁，整幅动画只剩一条「发热盘」 */
+.anim-box > canvas {
+  flex-shrink: 0;
+  display: block;
+}
 .anim-box::after {
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background: radial-gradient(ellipse at 50% 0%, rgba(0,229,255,.045) 0%, transparent 68%);

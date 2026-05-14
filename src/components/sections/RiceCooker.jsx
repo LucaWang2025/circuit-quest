@@ -306,7 +306,17 @@ function RiceCookerCanvas({ phaseRef, tempRef }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <canvas ref={ref} style={{ width: '100%', maxWidth: '480px' }} />;
+  return (
+    <canvas
+      ref={ref}
+      style={{
+        width: '100%',
+        maxWidth: 480,
+        flexShrink: 0,
+        display: 'block',
+      }}
+    />
+  );
 }
 
 export default function RiceCooker() {
