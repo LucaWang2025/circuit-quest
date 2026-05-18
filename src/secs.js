@@ -24,6 +24,18 @@ export const CATEGORIES = [
     ],
   },
   {
+    id: 'repair',
+    label: '维修工坊',
+    color: '#ff6b35',
+    sections: [
+      { id: 'mm-measure',  label: '万用表5式', icon: '📟' },
+      { id: 'light-fix',   label: '灯不亮',   icon: '💡' },
+      { id: 'outlet-fix',  label: '插座没电', icon: '🔌' },
+      { id: 'breaker-fix', label: '跳闸排查', icon: '⚡' },
+      { id: 'teardown',    label: '拆机十诫', icon: '🔧' },
+    ],
+  },
+  {
     id: 'home-elec',
     label: '家用电路',
     color: '#00e676',

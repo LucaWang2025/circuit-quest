@@ -26,6 +26,18 @@ const CARD_GROUPS = [
     ],
   },
   {
+    label: '维修工坊 · 实战排修',
+    tag: 'REPAIR WORKSHOP',
+    color: '#ff6b35',
+    cards: [
+      { id: 'mm-measure',  icon: '📟', title: '万用表 5 式',   en: '5 MEASURES',    color: '#ff6b35', desc: '电压/电流/电阻/通断/二极管——接线动画与档位要点' },
+      { id: 'light-fix',   icon: '💡', title: '灯不亮排查',   en: 'LIGHT FIX',     color: '#ffab00', desc: '交互决策树：灯泡→开关→线路逐步定位' },
+      { id: 'outlet-fix',  icon: '🔌', title: '插座没电',     en: 'OUTLET FIX',    color: '#00bcd4', desc: '单孔/区域/零线断——万用表步进诊断模拟' },
+      { id: 'breaker-fix', icon: '⚡', title: '跳闸排查',     en: 'BREAKER FIX',   color: '#ff6b35', desc: '漏电/过载/短路三路分支决策' },
+      { id: 'teardown',    icon: '🔧', title: '拆机十诫',     en: 'TEARDOWN',      color: '#ff9800', desc: '断电验电、防静电、放高压——安全拆修流程' },
+    ],
+  },
+  {
     label: '第二阶段 · 家用电路',
     tag: 'HOME ELECTRICAL',
     color: '#00e676',

@@ -37,6 +37,11 @@ import LowVoltage    from './components/sections/LowVoltage';
 import FloorHeat     from './components/sections/FloorHeat';
 import Safety        from './components/sections/Safety';
 import Troubleshoot  from './components/sections/Troubleshoot';
+import MmMeasure     from './components/sections/MmMeasure';
+import LightFix      from './components/sections/LightFix';
+import OutletFix     from './components/sections/OutletFix';
+import BreakerFix    from './components/sections/BreakerFix';
+import Teardown      from './components/sections/Teardown';
 import BLDCFan       from './components/sections/BLDCFan';
 import Flashlight    from './components/sections/Flashlight';
 import DeskLamp      from './components/sections/DeskLamp';
@@ -84,6 +89,11 @@ const SECTION_MAP = {
   'floor-heat':     FloorHeat,
   safety:           Safety,
   troubleshoot:     Troubleshoot,
+  'mm-measure':     MmMeasure,
+  'light-fix':      LightFix,
+  'outlet-fix':     OutletFix,
+  'breaker-fix':    BreakerFix,
+  teardown:         Teardown,
   'bldc-fan':       BLDCFan,
   flashlight:       Flashlight,
   'desk-lamp':      DeskLamp,
