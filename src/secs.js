@@ -36,6 +36,18 @@ export const CATEGORIES = [
     ],
   },
   {
+    id: 'practice',
+    label: '互动练习',
+    color: '#7c4dff',
+    sections: [
+      { id: 'calc-hub',     label: '计算器',   icon: '🧮' },
+      { id: 'fault-sim',    label: '故障模拟', icon: '🔍' },
+      { id: 'quiz-hub',     label: '小测验',   icon: '📝' },
+      { id: 'line-game',    label: '连线游戏', icon: '🎮' },
+      { id: 'repair-quest', label: '维修闯关', icon: '🏆' },
+    ],
+  },
+  {
     id: 'home-elec',
     label: '家用电路',
     color: '#00e676',
@@ -50,6 +62,11 @@ export const CATEGORIES = [
       { id: 'floor-heat',  label: '地暖浴霸', icon: '🌡️' },
       { id: 'safety',      label: '安全用电', icon: '🛡️' },
       { id: 'troubleshoot',label: '故障排查', icon: '🔍' },
+      { id: 'meter-entry', label: '入户电表', icon: '⚡' },
+      { id: 'ev-charger',  label: '充电桩',   icon: '🔌' },
+      { id: 'solar',       label: '光伏',     icon: '☀️' },
+      { id: 'lightning',   label: '防雷',     icon: '🌩️' },
+      { id: 'smart-switch',label: '智能开关', icon: '📱' },
     ],
   },
   {
@@ -70,6 +87,21 @@ export const CATEGORIES = [
       { id: 'wireless-charge', label: '无线充电', icon: '📳' },
       { id: 'e-toothbrush',    label: '电动牙刷', icon: '🪥' },
       { id: 'robot-vacuum',    label: '扫地机器人', icon: '🤖' },
+      { id: 'microwave',       label: '微波炉',     icon: '📻' },
+      { id: 'induction',       label: '电磁炉',     icon: '🍳' },
+      { id: 'fridge',          label: '冰箱',       icon: '🧊' },
+      { id: 'escooter',        label: '滑板车',     icon: '🛴' },
+    ],
+  },
+  {
+    id: 'energy',
+    label: '新能源',
+    color: '#00c853',
+    sections: [
+      { id: 'battery-tech',    label: '锂电池',   icon: '🔋' },
+      { id: 'fast-charge',     label: '快充协议', icon: '⚡' },
+      { id: 'ev-power',        label: '汽车三电', icon: '🚗' },
+      { id: 'energy-storage',  label: '储能',     icon: '🏠' },
     ],
   },
   {
@@ -82,6 +114,16 @@ export const CATEGORIES = [
       { id: 'breadboard',   label: '面包板',   icon: '🧩' },
       { id: 'pcb',          label: 'PCB设计',  icon: '🖥️' },
       { id: 'arduino',      label: 'Arduino',  icon: '⚡' },
+    ],
+  },
+  {
+    id: 'reference',
+    label: '速查手册',
+    color: '#607d8b',
+    sections: [
+      { id: 'wire-table',  label: '线径表',   icon: '📋' },
+      { id: 'symbol-ref',  label: '符号',     icon: '📐' },
+      { id: 'parts-ref',   label: '元件库',   icon: '🧰' },
     ],
   },
 ];

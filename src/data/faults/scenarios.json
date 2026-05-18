@@ -1,0 +1,32 @@
+[
+  {
+    "id": "f1",
+    "title": "插座完全无电",
+    "symptoms": ["插座两孔均无电", "验电笔不亮", "邻居有电"],
+    "options": [
+      { "text": "回路断路器跳闸", "correct": true, "feedback": "正确！先查配电箱对应回路是否跳闸，复位后恢复。" },
+      { "text": "灯泡烧坏", "correct": false, "feedback": "灯泡问题不影响插座供电。" },
+      { "text": "地线断路", "correct": false, "feedback": "地线断路通常插座仍有电，但失去漏电保护。" }
+    ]
+  },
+  {
+    "id": "f2",
+    "title": "一开灯就跳闸",
+    "symptoms": ["合上灯具开关立即跳闸", "其他回路正常"],
+    "options": [
+      { "text": "灯座或线路短路", "correct": true, "feedback": "正确！灯头接线短路或零火线碰线会导致瞬间大电流。" },
+      { "text": "电压过低", "correct": false, "feedback": "电压低不会导致跳闸。" },
+      { "text": "漏电保护器老化", "correct": false, "feedback": "单纯老化较少仅在开灯时触发。" }
+    ]
+  },
+  {
+    "id": "f3",
+    "title": "电饭锅不加热",
+    "symptoms": ["指示灯亮", "内胆不热", "插座有电"],
+    "options": [
+      { "text": "磁钢温控或发热盘故障", "correct": true, "feedback": "正确！检查磁钢是否吸合、发热盘是否断路。" },
+      { "text": "零线接错", "correct": false, "feedback": "零线问题多导致整机无电而非仅不加热。" },
+      { "text": "电池没电", "correct": false, "feedback": "电饭锅使用交流市电。" }
+    ]
+  }
+]

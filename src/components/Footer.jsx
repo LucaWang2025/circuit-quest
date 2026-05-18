@@ -1,43 +1,10 @@
-const DONE = [
-  { id: 'voltage',         icon: '⚡', label: '电压 Voltage' },
-  { id: 'current',         icon: '〜', label: '电流 Current' },
-  { id: 'resistance',      icon: 'Ω',  label: '电阻 Resistance' },
-  { id: 'multimeter',      icon: '📟', label: '万用表 Multimeter' },
-  { id: 'power',           icon: '💡', label: '功率与电能 Power' },
-  { id: 'capacitor',       icon: '⚙️', label: '电容 Capacitor' },
-  { id: 'inductor',        icon: '🌀', label: '电感 Inductor' },
-  { id: 'diode',           icon: '▷',  label: '二极管 Diode' },
-  { id: 'transistor',      icon: '🔺', label: '三极管 Transistor' },
-  { id: 'transformer',     icon: '🔄', label: '变压器 Transformer' },
-  { id: 'schematic',       icon: '📐', label: '如何读电路图 Schematics' },
-  { id: 'home-ckt',        icon: '🏠', label: '家用电路 Home Circuit' },
-  { id: 'wiring',          icon: '🔌', label: '导线接线 Wiring' },
-  { id: 'outlet',          icon: '🔧', label: '开关插座 Switch & Outlet' },
-  { id: 'break-panel',     icon: '🗂️', label: '配电箱 Panel Board' },
-  { id: 'aircon',          icon: '❄️', label: '空调线路 Air Con' },
-  { id: 'low-voltage',     icon: '📶', label: '弱电系统 Low Voltage' },
-  { id: 'floor-heat',      icon: '🌡️', label: '地暖浴霸 Floor Heat' },
-  { id: 'safety',          icon: '🛡️', label: '安全用电 Safety' },
-  { id: 'troubleshoot',    icon: '🔍', label: '故障排查 Troubleshoot' },
-  { id: 'bldc-fan',        icon: '🌀', label: '无刷电机 BLDC Fan' },
-  { id: 'flashlight',      icon: '🔦', label: '手电筒 Flashlight' },
-  { id: 'desk-lamp',       icon: '🪔', label: '台灯 Desk Lamp' },
-  { id: 'kettle',          icon: '☕', label: '热水壶 Kettle' },
-  { id: 'hair-dryer',      icon: '💨', label: '电吹风 Hair Dryer' },
-  { id: 'power-bank',      icon: '🔋', label: '充电宝 Power Bank' },
-  { id: 'router',          icon: '📡', label: 'WiFi路由器 Router' },
-  { id: 'rice-cooker',     icon: '🍚', label: '电饭锅 Rice Cooker' },
-  { id: 'washing-machine', icon: '🫧', label: '洗衣机 Washing Machine' },
-  { id: 'bt-speaker',      icon: '🔊', label: '蓝牙音箱 BT Speaker' },
-  { id: 'wireless-charge', icon: '📳', label: '无线充电 Wireless Charge' },
-  { id: 'e-toothbrush',    icon: '🪥', label: '电动牙刷 E-Toothbrush' },
-  { id: 'robot-vacuum',    icon: '🤖', label: '扫地机器人 Robot Vacuum' },
-  { id: 'soldering',       icon: '🔩', label: '焊接技术 Soldering' },
-  { id: 'oscilloscope',    icon: '📊', label: '示波器 Oscilloscope' },
-  { id: 'breadboard',      icon: '🧩', label: '面包板 Breadboard' },
-  { id: 'pcb',             icon: '🖥️', label: 'PCB设计 PCB Design' },
-  { id: 'arduino',         icon: '⚡', label: 'Arduino入门 Arduino' },
-];
+import { ALL_SECS } from '../secs';
+
+const DONE = ALL_SECS.filter(s => s.id !== 'home').map(s => ({
+  id: s.id,
+  icon: s.icon,
+  label: s.label,
+}));
 
 export default function Footer({ onNavigate }) {
   return (
@@ -67,7 +34,7 @@ export default function Footer({ onNavigate }) {
         </div>
 
         <p style={{ color: 'rgba(96,122,144,.35)', font: '11px "Courier New",monospace', letterSpacing: 2 }}>
-          ⚡ ElecEngineer · 电力工程师培养门户 v3.0 · 四阶段 · {DONE.length} 章节
+          ⚡ ElecEngineer · 电力工程师培养门户 v4.0 · 六阶段 · {DONE.length} 章节
         </p>
       </div>
     </footer>

@@ -60,6 +60,27 @@ import Oscilloscope  from './components/sections/Oscilloscope';
 import Breadboard    from './components/sections/Breadboard';
 import PCB           from './components/sections/PCB';
 import Arduino       from './components/sections/Arduino';
+import CalcHub       from './components/sections/CalcHub';
+import FaultSim      from './components/sections/FaultSim';
+import QuizHub       from './components/sections/QuizHub';
+import LineGameSec   from './components/sections/LineGameSec';
+import RepairQuest   from './components/sections/RepairQuest';
+import Microwave     from './components/sections/Microwave';
+import Induction     from './components/sections/Induction';
+import Fridge        from './components/sections/Fridge';
+import EScooter      from './components/sections/EScooter';
+import MeterEntry    from './components/sections/MeterEntry';
+import EvCharger     from './components/sections/EvCharger';
+import Solar         from './components/sections/Solar';
+import Lightning     from './components/sections/Lightning';
+import SmartSwitch   from './components/sections/SmartSwitch';
+import BatteryTech   from './components/sections/BatteryTech';
+import FastCharge    from './components/sections/FastCharge';
+import EvPower       from './components/sections/EvPower';
+import EnergyStorage from './components/sections/EnergyStorage';
+import WireTable     from './components/sections/WireTable';
+import SymbolRef     from './components/sections/SymbolRef';
+import PartsRef      from './components/sections/PartsRef';
 
 const SECTION_MAP = {
   home:             Home,
@@ -112,6 +133,27 @@ const SECTION_MAP = {
   breadboard:       Breadboard,
   pcb:              PCB,
   arduino:          Arduino,
+  'calc-hub':       CalcHub,
+  'fault-sim':      FaultSim,
+  'quiz-hub':       QuizHub,
+  'line-game':      LineGameSec,
+  'repair-quest':   RepairQuest,
+  microwave:        Microwave,
+  induction:        Induction,
+  fridge:           Fridge,
+  escooter:         EScooter,
+  'meter-entry':    MeterEntry,
+  'ev-charger':     EvCharger,
+  solar:            Solar,
+  lightning:        Lightning,
+  'smart-switch':   SmartSwitch,
+  'battery-tech':   BatteryTech,
+  'fast-charge':    FastCharge,
+  'ev-power':       EvPower,
+  'energy-storage': EnergyStorage,
+  'wire-table':     WireTable,
+  'symbol-ref':     SymbolRef,
+  'parts-ref':      PartsRef,
 };
 
 function BottomNav({ currentId, onNavigate }) {

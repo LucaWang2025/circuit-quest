@@ -52,6 +52,23 @@ const CARD_GROUPS = [
       { id: 'floor-heat',  icon: '🌡️', title: '地暖浴霸',   en: 'FLOOR HEAT',      color: '#ff9800', desc: '电地暖回路、温控器接线、浴霸多路开关配线' },
       { id: 'safety',      icon: '🛡️', title: '安全用电',   en: 'SAFETY',          color: '#ff1744', desc: '接地原理、漏电保护器、触电急救五步法' },
       { id: 'troubleshoot',icon: '🔍', title: '故障排查',   en: 'TROUBLESHOOT',    color: '#ff6b35', desc: '交互决策树：断路器/插座/灯具/家电四大场景' },
+      { id: 'meter-entry', icon: '⚡', title: '入户线与电表', en: 'METER ENTRY',   color: '#ffab00', desc: '家庭电力入口、电表、总开关与接地' },
+      { id: 'ev-charger',  icon: '🔌', title: '充电桩',     en: 'EV CHARGER',      color: '#00e676', desc: '7kW/11kW 交流桩接线与漏电保护' },
+      { id: 'solar',       icon: '☀️', title: '家用光伏',   en: 'SOLAR PV',        color: '#ffeb3b', desc: '组件、逆变器、并网与储能' },
+      { id: 'lightning',   icon: '🌩️', title: '防雷接地',   en: 'LIGHTNING',       color: '#64b5f6', desc: '避雷、等电位连接与接地电阻' },
+      { id: 'smart-switch',icon: '📱', title: '智能开关',   en: 'SMART SWITCH',    color: '#9c7dff', desc: '零火/单火接线、Wi-Fi 与继电器' },
+    ],
+  },
+  {
+    label: '互动练习 · 测练闯关',
+    tag: 'PRACTICE',
+    color: '#7c4dff',
+    cards: [
+      { id: 'calc-hub',     icon: '🧮', title: '电学计算器', en: 'CALCULATOR',  color: '#7c4dff', desc: '欧姆/功率/电费/并联电阻 五合一' },
+      { id: 'fault-sim',    icon: '🔍', title: '故障模拟',   en: 'SIMULATOR',   color: '#7c4dff', desc: '根据现象选原因，训练诊断判断力' },
+      { id: 'quiz-hub',     icon: '📝', title: '知识测验',   en: 'QUIZ',        color: '#7c4dff', desc: '综合选择题，错题解析' },
+      { id: 'line-game',    icon: '🎮', title: '连线游戏',   en: 'LINE GAME',   color: '#7c4dff', desc: '连接电池电阻 LED 构成闭合回路' },
+      { id: 'repair-quest', icon: '🏆', title: '维修闯关',   en: 'QUEST',       color: '#7c4dff', desc: '真实场景步骤打卡，进度本地保存' },
     ],
   },
   {
@@ -72,10 +89,25 @@ const CARD_GROUPS = [
       { id: 'wireless-charge', icon: '📳', title: '无线充电',     en: 'WIRELESS CHARGE', color: '#00e676', desc: 'Qi标准、电磁感应谐振、异物检测FOD与MagSafe' },
       { id: 'e-toothbrush',    icon: '🪥', title: '电动牙刷',     en: 'E-TOOTHBRUSH',    color: '#00bcd4', desc: '感应隔离充电、声波马达振动、IPX7防水电路设计' },
       { id: 'robot-vacuum',    icon: '🤖', title: '扫地机器人',   en: 'ROBOT VACUUM',    color: '#ffab00', desc: 'LiDAR测距建图、多电机PWM驱动、传感器融合架构' },
+      { id: 'microwave',       icon: '📻', title: '微波炉',       en: 'MICROWAVE',       color: '#ff6b35', desc: '磁控管、高压变压器 2kV 安全要点' },
+      { id: 'induction',       icon: '🍳', title: '电磁炉',       en: 'INDUCTION',       color: '#ff9800', desc: 'IH 涡流加热、锅具检测' },
+      { id: 'fridge',          icon: '🧊', title: '冰箱',         en: 'FRIDGE',          color: '#00bcd4', desc: '压缩机、启动电容、制冷循环' },
+      { id: 'escooter',        icon: '🛴', title: '电动滑板车',   en: 'E-SCOOTER',       color: '#e040fb', desc: 'BLDC、控制器、BMS 三电' },
     ],
   },
   {
-    label: '第四阶段 · 进阶动手',
+    label: '新能源专题',
+    tag: 'NEW ENERGY',
+    color: '#00c853',
+    cards: [
+      { id: 'battery-tech',   icon: '🔋', title: '锂电池',     en: 'BATTERY',    color: '#00c853', desc: '三元 vs 磷酸铁锂、BMS 保护' },
+      { id: 'fast-charge',    icon: '⚡', title: '快充协议',   en: 'FAST CHARGE', color: '#00c853', desc: 'PD/QC/UFCS 握手与安全' },
+      { id: 'ev-power',       icon: '🚗', title: '汽车三电',   en: 'EV POWER',   color: '#00c853', desc: '电池包、驱动电机、电控' },
+      { id: 'energy-storage', icon: '🏠', title: '储能电网',   en: 'STORAGE',    color: '#00c853', desc: '户储、削峰填谷、V2G' },
+    ],
+  },
+  {
+    label: '第五阶段 · 进阶动手',
     tag: 'HANDS-ON ADVANCED',
     color: '#00e5ff',
     cards: [
@@ -86,13 +118,23 @@ const CARD_GROUPS = [
       { id: 'arduino',      icon: '⚡', title: 'Arduino入门', en: 'ARDUINO',      color: '#ffab00', desc: 'ATmega328P引脚、PWM调光、ADC采集、继电器控220V实战' },
     ],
   },
+  {
+    label: '速查手册',
+    tag: 'REFERENCE',
+    color: '#607d8b',
+    cards: [
+      { id: 'wire-table', icon: '📋', title: '线径载流量', en: 'WIRE TABLE', color: '#607d8b', desc: '国标铜线载流量与安全选型' },
+      { id: 'symbol-ref', icon: '📐', title: '电气符号',   en: 'SYMBOLS',    color: '#607d8b', desc: '常用符号与实物对照' },
+      { id: 'parts-ref',  icon: '🧰', title: '元件库',     en: 'PARTS',      color: '#607d8b', desc: '色环电阻、电容标识、接线端子' },
+    ],
+  },
 ];
 
 export default function Home() {
   const navigate = useNav();
   return (
     <section id="home" className={`sec ${styles.home}`}>
-      <div className={styles.badge}>⚡ 电力工程师培养门户 · 四阶段系统学习路径</div>
+      <div className={styles.badge}>⚡ 电力工程师培养门户 · v4.0 六阶段学习路径</div>
 
       <div className={styles.titleWrap}>
         <div className={styles.t1}>成为你家的</div>
@@ -100,7 +142,7 @@ export default function Home() {
       </div>
 
       <p className={styles.desc}>
-        从基础概念到家用维修，再到小电器电路拆解，最终进阶动手实战——四个阶段循序渐进，
+        基础理论、维修工坊、互动练习、家用电路、小电器拆解、新能源与速查手册——六阶段 69 章循序渐进，
         让你能安全、自信地理解和处理身边的每一个电气问题。
       </p>
 
