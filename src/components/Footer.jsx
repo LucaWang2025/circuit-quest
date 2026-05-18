@@ -34,7 +34,18 @@ export default function Footer({ onNavigate }) {
         </div>
 
         <p style={{ color: 'rgba(96,122,144,.35)', font: '11px "Courier New",monospace', letterSpacing: 2 }}>
-          ⚡ ElecEngineer · 电力工程师培养门户 v4.0 · 六阶段 · {DONE.length} 章节
+          ⚡ CircuitQuest · {DONE.length} 章节
+        </p>
+        <p style={{
+          marginTop: 12,
+          font: '10px "Courier New",monospace',
+          color: 'rgba(96,122,144,.25)',
+          letterSpacing: 1,
+          userSelect: 'all',
+          cursor: 'text',
+          title: '版本信息，可复制对比线上是否最新',
+        }}>
+          build · {__BUILD_INFO__}
         </p>
       </div>
     </footer>
