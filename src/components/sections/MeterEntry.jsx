@@ -17,7 +17,6 @@ function MeterCanvas({ loadRef }) {
       t += 0.025;
       const A = load * 0.22;  // ~0-22A
       const P = load * 4.84;  // ~0-4840W
-      const kwhRate = P / 3600000 * 0.1; // 每帧 kWh，仅动画用
 
       ctx.fillStyle = 'rgba(255,167,38,.44)';
       ctx.beginPath(); ctx.roundRect(10, 8, W - 20, 28, 8); ctx.fill();
@@ -63,7 +62,6 @@ function MeterCanvas({ loadRef }) {
       ctx.beginPath(); ctx.roundRect(mX - 38, mY - 55, 76, 110, 8); ctx.fill(); ctx.stroke();
       ctx.fillStyle = '#334'; ctx.beginPath(); ctx.roundRect(mX - 28, mY - 45, 56, 30, 4); ctx.fill();
       ctx.fillStyle = ACC; ctx.font = 'bold 10px monospace'; ctx.textAlign = 'center';
-      const disp = ((t * kwhRate * 1e5) % 999999).toFixed(2).padStart(8, '0');
       ctx.fillText(load > 0 ? `${(t * 0.0008 * load).toFixed(3)}` : '000.000', mX, mY - 26);
       ctx.fillStyle = '#889'; ctx.font = '7px monospace'; ctx.fillText('kWh', mX, mY - 14);
       ctx.fillStyle = ACC; ctx.font = 'bold 9px monospace';
@@ -116,7 +114,7 @@ function MeterCanvas({ loadRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [loadRef]);
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
 
@@ -132,7 +130,7 @@ function ICard({ color, title, children }) {
 export default function MeterEntry() {
   const [load, setLoad] = useState(30);
   const loadRef = useRef(load);
-  loadRef.current = load;
+  useEffect(() => { loadRef.current = load; });
 
   return (
     <section id="meter-entry" className="sec">

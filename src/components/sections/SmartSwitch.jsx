@@ -118,7 +118,7 @@ function SmartCanvas({ stateRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [stateRef]);
 
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
@@ -135,7 +135,7 @@ function ICard({ color, title, children }) {
 export default function SmartSwitch() {
   const [state, setState] = useState('wifi');
   const stateRef = useRef(state);
-  stateRef.current = state;
+  useEffect(() => { stateRef.current = state; });
 
   const btn = (id, col, label) => (
     <button onClick={() => setState(id)} style={{

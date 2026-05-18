@@ -21,13 +21,12 @@ function TeardownCanvas({ stepRef }) {
     const cv = ref.current; if (!cv) return;
     const W = 480, H = 280;
     const ctx = setupHiDpi(cv, W, H);
-    let t = 0, raf;
+    let raf;
 
     function draw() {
       const step = stepRef.current;
       const s = STEPS[step] || STEPS[0];
       ctx.clearRect(0, 0, W, H);
-      t += 0.025;
 
       ctx.fillStyle = 'rgba(255,107,53,.4)';
       ctx.beginPath(); ctx.roundRect(10, 8, W - 20, 28, 8); ctx.fill();
@@ -56,7 +55,7 @@ function TeardownCanvas({ stepRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [stepRef]);
 
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
@@ -64,7 +63,7 @@ function TeardownCanvas({ stepRef }) {
 export default function Teardown() {
   const [step, setStep] = useState(0);
   const stepRef = useRef(step);
-  stepRef.current = step;
+  useEffect(() => { stepRef.current = step; });
 
   return (
     <section id="teardown" className="sec">

@@ -119,7 +119,7 @@ function MicrowaveCanvas({ stateRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [stateRef]);
 
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
@@ -136,7 +136,7 @@ function ICard({ color, title, children }) {
 export default function Microwave() {
   const [state, setState] = useState('off');
   const stateRef = useRef(state);
-  stateRef.current = state;
+  useEffect(() => { stateRef.current = state; });
 
   const btn = (active) => ({
     padding: '9px 22px', borderRadius: 10, cursor: 'pointer', fontWeight: 600,

@@ -139,7 +139,7 @@ function ScooterCanvas({ stateRef, throttleRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [stateRef, throttleRef]);
 
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
@@ -158,8 +158,7 @@ export default function EScooter() {
   const [throttle, setThrottle] = useState(50);
   const stateRef = useRef(state);
   const throttleRef = useRef(throttle);
-  stateRef.current = state;
-  throttleRef.current = throttle;
+  useEffect(() => { stateRef.current = state; throttleRef.current = throttle; });
 
   const btn = (id, col, label) => (
     <button onClick={() => setState(id)} style={{

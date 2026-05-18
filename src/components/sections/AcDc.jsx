@@ -69,7 +69,7 @@ function WaveCanvas({ modeRef, freqRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [modeRef, freqRef]);
 
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
@@ -88,8 +88,7 @@ export default function AcDc() {
   const [freq, setFreq] = useState(50);
   const modeRef = useRef(mode);
   const freqRef = useRef(freq);
-  modeRef.current = mode;
-  freqRef.current = freq;
+  useEffect(() => { modeRef.current = mode; freqRef.current = freq; });
 
   const btn = (active, col) => ({
     padding: '9px 20px', borderRadius: 10, cursor: 'pointer',

@@ -155,7 +155,7 @@ function FastChargeCanvas({ protoRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [protoRef]);
 
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
@@ -172,7 +172,7 @@ function ICard({ color, title, children }) {
 export default function FastCharge() {
   const [proto, setProto] = useState('pd');
   const protoRef = useRef(proto);
-  protoRef.current = proto;
+  useEffect(() => { protoRef.current = proto; });
 
   const protocols = [
     { id: 'pd', label: 'USB PD', col: '#2196f3' },

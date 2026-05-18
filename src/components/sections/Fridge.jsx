@@ -119,7 +119,7 @@ function FridgeCanvas({ stateRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [stateRef]);
 
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
@@ -136,7 +136,7 @@ function ICard({ color, title, children }) {
 export default function Fridge() {
   const [state, setState] = useState('idle');
   const stateRef = useRef(state);
-  stateRef.current = state;
+  useEffect(() => { stateRef.current = state; });
 
   const btn = (active) => ({
     padding: '9px 20px', borderRadius: 10, cursor: 'pointer', fontWeight: 600,

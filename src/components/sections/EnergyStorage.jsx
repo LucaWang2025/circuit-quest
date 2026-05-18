@@ -95,7 +95,6 @@ function GridCanvas({ stateRef }) {
       ctx.fillText('家庭', homeX, homeY + 38);
 
       // ── 导线流向 ──
-      const flowDir = st === 'store' ? 1 : -1;
       ctx.setLineDash([4, 4]);
       // 光伏→储能
       if (st === 'store') {
@@ -146,7 +145,7 @@ function GridCanvas({ stateRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [stateRef]);
 
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
@@ -163,7 +162,7 @@ function ICard({ color, title, children }) {
 export default function EnergyStorage() {
   const [state, setState] = useState('store');
   const stateRef = useRef(state);
-  stateRef.current = state;
+  useEffect(() => { stateRef.current = state; });
 
   const btn = (id, col, label) => (
     <button onClick={() => setState(id)} style={{

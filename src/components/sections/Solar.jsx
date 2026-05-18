@@ -136,7 +136,7 @@ function SolarCanvas({ stateRef, sunRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [stateRef, sunRef]);
 
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
@@ -155,8 +155,7 @@ export default function Solar() {
   const [sun, setSun] = useState(80);
   const stateRef = useRef(state);
   const sunRef = useRef(sun);
-  stateRef.current = state;
-  sunRef.current = sun;
+  useEffect(() => { stateRef.current = state; sunRef.current = sun; });
 
   const btn = (id, col, label) => (
     <button onClick={() => setState(id)} style={{

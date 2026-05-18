@@ -78,7 +78,7 @@ function WiringCanvas({ scenarioRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [scenarioRef]);
 
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
@@ -86,7 +86,7 @@ function WiringCanvas({ scenarioRef }) {
 export default function GroundNeutral() {
   const [scenario, setScenario] = useState('normal');
   const scenarioRef = useRef(scenario);
-  scenarioRef.current = scenario;
+  useEffect(() => { scenarioRef.current = scenario; });
 
   const btn = (active, col) => ({
     padding: '8px 16px', borderRadius: 10, cursor: 'pointer', fontSize: 12,

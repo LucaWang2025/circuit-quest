@@ -16,7 +16,7 @@ export default function LineGame({ accent = '#7c4dff' }) {
   const [from, setFrom] = useState(null);
   const [won, setWon] = useState(false);
   const linesRef = useRef(lines);
-  linesRef.current = lines;
+  useEffect(() => { linesRef.current = lines; }, [lines]);
 
   const checkWin = (ls) => {
     const set = new Set(ls.map(([a, b]) => [a, b].sort().join('-')));

@@ -305,8 +305,7 @@ function RiceCookerCanvas({ phaseRef, tempRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [phaseRef, tempRef]);
 
   return (
     <canvas
@@ -323,27 +322,22 @@ export default function RiceCooker() {
   const phaseRef = useRef(phase);
   const tempRef  = useRef(temp);
   // 在渲染期同步 ref，保证 RAF 每帧读到最新值
-  phaseRef.current = phase;
-  tempRef.current  = temp;
+  useEffect(() => { phaseRef.current = phase; tempRef.current = temp; });
 
   useEffect(() => {
     const id = setInterval(() => {
       setTemp(prev => {
         const p = phaseRef.current;
-        if (p === 'cooking') return prev >= 103 ? 74 : Math.min(103, prev + 1.5);
-        if (p === 'warm')    return 71 + 4 * Math.sin(Date.now() / 9000);
+        if (p === 'cooking') {
+          if (prev >= 103) { setPhase('warm'); return 74; }
+          return Math.min(103, prev + 1.5);
+        }
+        if (p === 'warm') return 71 + 4 * Math.sin(Date.now() / 9000);
         return Math.max(25, prev - 0.4);
       });
     }, 160);
     return () => clearInterval(id);
   }, []);
-
-  useEffect(() => {
-    if (phase === 'cooking' && temp >= 103) {
-      setPhase('warm');
-      setTemp(74);
-    }
-  }, [temp, phase]);
 
   const btnStyle = (active, col) => ({
     padding: '9px 22px', borderRadius: 10, cursor: 'pointer',

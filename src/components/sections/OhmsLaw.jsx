@@ -55,7 +55,7 @@ function TriangleCanvas({ highlightRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [highlightRef]);
 
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
@@ -66,7 +66,7 @@ export default function OhmsLaw() {
   const [r, setR] = useState('');
   const [highlight, setHighlight] = useState('all');
   const highlightRef = useRef(highlight);
-  highlightRef.current = highlight;
+  useEffect(() => { highlightRef.current = highlight; });
 
   const vNum = v === '' ? null : parseFloat(v);
   const iNum = i === '' ? null : parseFloat(i);

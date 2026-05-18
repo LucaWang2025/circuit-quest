@@ -74,7 +74,7 @@ function MeterCanvas({ modeRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [modeRef]);
 
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
@@ -82,7 +82,7 @@ function MeterCanvas({ modeRef }) {
 export default function MmMeasure() {
   const [mode, setMode] = useState('voltage');
   const modeRef = useRef(mode);
-  modeRef.current = mode;
+  useEffect(() => { modeRef.current = mode; });
 
   return (
     <section id="mm-measure" className="sec">

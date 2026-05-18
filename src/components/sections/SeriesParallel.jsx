@@ -95,7 +95,7 @@ function CircuitCanvas({ modeRef, voltageRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [modeRef, voltageRef]);
 
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
@@ -114,8 +114,7 @@ export default function SeriesParallel() {
   const [voltage, setVoltage] = useState(12);
   const modeRef = useRef(mode);
   const voltageRef = useRef(voltage);
-  modeRef.current = mode;
-  voltageRef.current = voltage;
+  useEffect(() => { modeRef.current = mode; voltageRef.current = voltage; });
 
   const btn = (active) => ({
     padding: '9px 20px', borderRadius: 10, cursor: 'pointer',

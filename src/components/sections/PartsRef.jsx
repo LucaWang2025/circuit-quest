@@ -46,7 +46,6 @@ function ResistorCanvas({ b1i, b2i, b3i, b4i }) {
     ctx.strokeStyle = '#8b6914'; ctx.lineWidth = 1.5;
     ctx.beginPath(); ctx.roundRect(80, 30, 160, 40, 8); ctx.stroke();
     // 标注
-    const colorNames = cols.map(c => c.name);
     const val1 = cols[0].val, val2 = cols[1].val, multIdx = cols[2].mult, tol = cols[3].tol;
     let resistance = 'N/A';
     if (val1 !== null && val2 !== null && multIdx !== null) {
@@ -108,7 +107,6 @@ export default function PartsRef() {
   const [b4, setB4] = useState(10); // 金 (±5%)
 
   const filteredCats = activeCat ? PARTS.filter(p => p.cat === activeCat) : PARTS;
-  const b3Options = COLOR_BANDS.map((c, i) => ({ ...c, i })); // 倍率可包含金银
 
   return (
     <section id="parts-ref" className="sec">

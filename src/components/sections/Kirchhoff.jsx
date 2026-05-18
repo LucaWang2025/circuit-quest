@@ -69,7 +69,6 @@ function KirchhoffCanvas({ lawRef }) {
           ctx.fillText(e.label, e.x, e.y);
         });
 
-        let a = 0;
         ctx.strokeStyle = `rgba(0,230,118,${0.4 + 0.3 * Math.sin(t * 3)})`;
         ctx.lineWidth = 2;
         for (let i = 0; i < 4; i++) {
@@ -77,7 +76,7 @@ function KirchhoffCanvas({ lawRef }) {
           const frac = ((t * 0.5 + i * 0.25) % 1);
           const px = p1[0] + (p2[0] - p1[0]) * frac;
           const py = p1[1] + (p2[1] - p1[1]) * frac;
-          if (i === 0) { ctx.beginPath(); ctx.moveTo(px, py); a = 1; }
+          if (i === 0) { ctx.beginPath(); ctx.moveTo(px, py); }
           else ctx.lineTo(px, py);
         }
         ctx.stroke();
@@ -90,7 +89,7 @@ function KirchhoffCanvas({ lawRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [lawRef]);
 
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
@@ -98,7 +97,7 @@ function KirchhoffCanvas({ lawRef }) {
 export default function Kirchhoff() {
   const [law, setLaw] = useState('kcl');
   const lawRef = useRef(law);
-  lawRef.current = law;
+  useEffect(() => { lawRef.current = law; });
 
   const btn = (active) => ({
     padding: '9px 20px', borderRadius: 10, cursor: 'pointer',

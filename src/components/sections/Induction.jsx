@@ -105,7 +105,7 @@ function InductionCanvas({ stateRef, powerRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [stateRef, powerRef]);
 
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
@@ -124,8 +124,7 @@ export default function Induction() {
   const [power, setPower] = useState(70);
   const stateRef = useRef(on);
   const powerRef = useRef(power);
-  stateRef.current = on;
-  powerRef.current = power;
+  useEffect(() => { stateRef.current = on; powerRef.current = power; });
 
   const btn = (active, col) => ({
     padding: '9px 20px', borderRadius: 10, cursor: 'pointer', fontWeight: 600,

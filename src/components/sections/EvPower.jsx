@@ -102,7 +102,6 @@ function EvCanvas({ stateRef, throttleRef }) {
 
       // 导线
       ctx.setLineDash([4, 4]);
-      const flowDir = st === 'regen' ? -1 : 1;
       // 电池→逆变器
       const dCol = st === 'drive' ? `rgba(255,171,0,${0.5 + 0.2 * Math.sin(t * 4)})` :
                    st === 'regen' ? `rgba(64,196,255,${0.5 + 0.2 * Math.sin(t * 4)})` :
@@ -148,7 +147,7 @@ function EvCanvas({ stateRef, throttleRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [stateRef, throttleRef]);
 
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
@@ -167,8 +166,7 @@ export default function EvPower() {
   const [throttle, setThrottle] = useState(60);
   const stateRef = useRef(state);
   const throttleRef = useRef(throttle);
-  stateRef.current = state;
-  throttleRef.current = throttle;
+  useEffect(() => { stateRef.current = state; throttleRef.current = throttle; });
 
   const btn = (id, col, label) => (
     <button onClick={() => setState(id)} style={{

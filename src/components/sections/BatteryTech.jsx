@@ -131,7 +131,7 @@ function BatteryCanvas({ typeRef, stateRef }) {
     }
     draw();
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [typeRef, stateRef]);
 
   return <canvas ref={ref} style={{ width: '100%', maxWidth: 480, flexShrink: 0, display: 'block' }} />;
 }
@@ -150,8 +150,7 @@ export default function BatteryTech() {
   const [state, setState] = useState('idle');
   const typeRef = useRef(type);
   const stateRef = useRef(state);
-  typeRef.current = type;
-  stateRef.current = state;
+  useEffect(() => { typeRef.current = type; stateRef.current = state; });
 
   const btn = (id, val, setter, ref, col, label) => (
     <button onClick={() => { setter(id); ref.current = id; }} style={{
