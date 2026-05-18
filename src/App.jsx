@@ -12,6 +12,11 @@ import CompleteButton from './components/CompleteButton';
 
 import Home          from './components/sections/Home';
 import Voltage       from './components/sections/Voltage';
+import AcDc          from './components/sections/AcDc';
+import SeriesParallel from './components/sections/SeriesParallel';
+import OhmsLaw       from './components/sections/OhmsLaw';
+import Kirchhoff     from './components/sections/Kirchhoff';
+import GroundNeutral from './components/sections/GroundNeutral';
 import Current       from './components/sections/Current';
 import Resistance    from './components/sections/Resistance';
 import Multimeter    from './components/sections/Multimeter';
@@ -54,6 +59,11 @@ import Arduino       from './components/sections/Arduino';
 const SECTION_MAP = {
   home:             Home,
   voltage:          Voltage,
+  'ac-dc':          AcDc,
+  'series-parallel': SeriesParallel,
+  'ohms-law':       OhmsLaw,
+  kirchhoff:        Kirchhoff,
+  'ground-neutral': GroundNeutral,
   current:          Current,
   resistance:       Resistance,
   multimeter:       Multimeter,

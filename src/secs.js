@@ -6,6 +6,11 @@ export const CATEGORIES = [
     sections: [
       { id: 'home',        label: '首页',   icon: '🏠' },
       { id: 'voltage',     label: '电压',   icon: '⚡' },
+      { id: 'ac-dc',       label: '交直流', icon: '〰️' },
+      { id: 'series-parallel', label: '串并联', icon: '🔗' },
+      { id: 'ohms-law',    label: '欧姆定律', icon: '📐' },
+      { id: 'kirchhoff',   label: '基尔霍夫', icon: '🔁' },
+      { id: 'ground-neutral', label: '接地零线', icon: '🛡️' },
       { id: 'current',     label: '电流',   icon: '〜' },
       { id: 'resistance',  label: '电阻',   icon: 'Ω'  },
       { id: 'multimeter',  label: '万用表', icon: '📟' },

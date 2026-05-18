@@ -8,6 +8,11 @@ const CARD_GROUPS = [
     color: '#ffab00',
     cards: [
       { id: 'voltage',     icon: '⚡', title: '电压',       en: 'VOLTAGE',       color: '#ffab00', desc: '电路推动力，了解伏特、电位差与欧姆定律' },
+      { id: 'ac-dc',       icon: '〰️', title: '交直流',     en: 'AC / DC',       color: '#00bcd4', desc: '正弦波与直流对比、有效值、频率、220Vrms 解读' },
+      { id: 'series-parallel', icon: '🔗', title: '串并联', en: 'SERIES/PARALLEL', color: '#9c7dff', desc: '灯泡亮度对比、电流电压分配、串并联公式' },
+      { id: 'ohms-law',    icon: '📐', title: '欧姆定律',   en: "OHM'S LAW",     color: '#ffab00', desc: '交互计算器：输入两量算第三量，功率三角形' },
+      { id: 'kirchhoff',   icon: '🔁', title: '基尔霍夫',   en: 'KIRCHHOFF',     color: '#00e676', desc: 'KCL 节点电流守恒、KVL 回路电压守恒动画演示' },
+      { id: 'ground-neutral', icon: '🛡️', title: '接地零线', en: 'L/N/PE',       color: '#ff1744', desc: '火零地线角色、漏电与零线断路的危险场景' },
       { id: 'current',     icon: '〜', title: '电流',       en: 'CURRENT',       color: '#00bcd4', desc: '电荷有序流动，安培、串并联与电流分配' },
       { id: 'resistance',  icon: 'Ω',  title: '电阻',       en: 'RESISTANCE',    color: '#ff6b35', desc: '阻碍电流，色环识别、串并联计算' },
       { id: 'multimeter',  icon: '📟', title: '万用表',     en: 'MULTIMETER',    color: '#9c7dff', desc: '一表测三量，表笔使用与安全操作全流程' },
