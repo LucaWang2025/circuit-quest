@@ -197,7 +197,7 @@ export default function Home() {
   const navigate = useNav();
   return (
     <section id="home" className={`sec ${styles.home}`}>
-      <div className={styles.badge}>⚡ 电力工程师培养门户 · v4.0 六阶段学习路径</div>
+      <div className={styles.badge}>📚 知识探索 · 107 章互动学习 · 六阶段路径</div>
 
       <div className={styles.titleWrap}>
         <div className={styles.t1}>成为你家的</div>

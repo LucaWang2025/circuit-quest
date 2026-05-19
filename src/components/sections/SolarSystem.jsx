@@ -114,7 +114,7 @@ export default function SolarSystem() {
         <div>
           <div className={styles.brand}>
             SOLARIS
-            <span className={styles.brandSub}>电路探索 · 宇宙专题 · 3D 太阳系</span>
+            <span className={styles.brandSub}>知识探索 · 宇宙专题 · 3D 太阳系</span>
           </div>
           <button type="button" className={styles.backBtn} onClick={() => navigate('cosmos')} style={{ marginTop: 10 }}>
             ← 返回宇宙概览

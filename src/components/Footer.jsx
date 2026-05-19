@@ -34,7 +34,7 @@ export default function Footer({ onNavigate }) {
         </div>
 
         <p style={{ color: 'rgba(96,122,144,.35)', font: '11px "Courier New",monospace', letterSpacing: 2 }}>
-          ⚡ CircuitQuest · {DONE.length} 章节
+          📚 知识探索 · {DONE.length} 章节
         </p>
         <p style={{
           marginTop: 12,

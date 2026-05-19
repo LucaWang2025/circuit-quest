@@ -30,7 +30,7 @@ export default function Nav({ theme, onToggleTheme, activeSection, onNavigate, c
       {/* 一级：大类 */}
       <div className={styles.row1}>
         <button type="button" className={styles.logo} onClick={() => onNavigate('home')} title="返回首页">
-          ⚡ 电路<em>探索</em>
+          📚 知识<em>探索</em>
         </button>
 
         <div className={styles.groupRow}>
