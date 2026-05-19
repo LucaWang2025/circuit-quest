@@ -127,6 +127,66 @@ export const CATEGORIES = [
     ],
   },
   {
+    id: 'industrial',
+    label: '工业用电',
+    color: '#ff9800',
+    sections: [
+      { id: 'industrial',           label: '工业概览', icon: '🏭' },
+      { id: 'industrial-phase',     label: '三相基础', icon: '🔺' },
+      { id: 'industrial-wiring',    label: '星三角',   icon: '△' },
+      { id: 'industrial-motor',     label: '电机启动', icon: '🌀' },
+      { id: 'industrial-compare',   label: '家用对比', icon: '⚖️' },
+    ],
+  },
+  {
+    id: 'evchain',
+    label: '充电链路',
+    color: '#00e676',
+    sections: [
+      { id: 'evchain',         label: '充电概览', icon: '🔌' },
+      { id: 'evchain-ac',      label: '交流慢充', icon: '〰️' },
+      { id: 'evchain-dc',      label: '直流快充', icon: '⚡' },
+      { id: 'evchain-bms',     label: 'BMS',     icon: '🔋' },
+      { id: 'evchain-cable',   label: '线缆协议', icon: '🔗' },
+    ],
+  },
+  {
+    id: 'panel',
+    label: '配电箱全景',
+    color: '#26a69a',
+    sections: [
+      { id: 'panel-hub',          label: '配电概览', icon: '🗂️' },
+      { id: 'panel-anatomy',      label: '箱内结构', icon: '📦' },
+      { id: 'panel-breaker-sim',  label: '空开跳闸', icon: '⚡' },
+      { id: 'panel-rcd-sim',      label: '漏电保护', icon: '🛡️' },
+      { id: 'panel-spd-sim',      label: '浪涌保护', icon: '🌩️' },
+    ],
+  },
+  {
+    id: 'scope-lab',
+    label: '示波器实验',
+    color: '#00e5ff',
+    sections: [
+      { id: 'scope-lab',           label: '实验概览', icon: '📊' },
+      { id: 'scope-lab-wave',      label: '波形基础', icon: '📈' },
+      { id: 'scope-lab-measure',   label: '周期幅值', icon: '📏' },
+      { id: 'scope-lab-rc',        label: 'RC/RL',   icon: '⚙️' },
+      { id: 'scope-lab-trigger',   label: '触发稳定', icon: '🎯' },
+    ],
+  },
+  {
+    id: 'backup',
+    label: '应急户储',
+    color: '#ff7043',
+    sections: [
+      { id: 'backup',            label: '应急概览', icon: '🔋' },
+      { id: 'backup-outage',     label: '停电场景', icon: '🔌' },
+      { id: 'backup-ats',        label: '自动切换', icon: '🔀' },
+      { id: 'backup-priority',   label: '供电优先级', icon: '☀️' },
+      { id: 'backup-emergency',  label: '应急清单', icon: '📋' },
+    ],
+  },
+  {
     id: 'cosmos',
     label: '宇宙',
     color: '#9c7dff',
@@ -145,6 +205,69 @@ export const CATEGORIES = [
     ],
   },
 ];
+
+/** 顶栏一级分组（避免 14 个分类标签挤满一行） */
+export const NAV_GROUPS = [
+  {
+    id: 'core',
+    label: '基础学习',
+    shortLabel: '基础',
+    icon: '📚',
+    color: '#ffab00',
+    categoryIds: ['basics', 'practice', 'reference'],
+  },
+  {
+    id: 'home',
+    label: '家用实战',
+    shortLabel: '家用',
+    icon: '🏠',
+    color: '#00e676',
+    categoryIds: ['home-elec', 'repair', 'appliance'],
+  },
+  {
+    id: 'energy',
+    label: '能源电动',
+    shortLabel: '能源',
+    icon: '🔋',
+    color: '#00c853',
+    categoryIds: ['energy', 'evchain', 'backup'],
+  },
+  {
+    id: 'topics',
+    label: '拓展专题',
+    shortLabel: '拓展',
+    icon: '✨',
+    color: '#26a69a',
+    categoryIds: ['industrial', 'panel', 'scope-lab'],
+  },
+  {
+    id: 'advanced',
+    label: '进阶动手',
+    shortLabel: '进阶',
+    icon: '🔧',
+    color: '#00e5ff',
+    categoryIds: ['advanced'],
+  },
+  {
+    id: 'cosmos',
+    label: '宇宙专题',
+    shortLabel: '宇宙',
+    icon: '🌌',
+    color: '#9c7dff',
+    categoryIds: ['cosmos'],
+  },
+];
+
+export const CATEGORY_BY_ID = Object.fromEntries(CATEGORIES.map(c => [c.id, c]));
+
+export function navGroupForCategory(categoryId) {
+  return NAV_GROUPS.find(g => g.categoryIds.includes(categoryId)) ?? NAV_GROUPS[0];
+}
+
+export function navGroupForSection(sectionId) {
+  const cat = SEC_CATEGORY[sectionId];
+  return cat ? navGroupForCategory(cat.id) : NAV_GROUPS[0];
+}
 
 export const ALL_SECS = CATEGORIES.flatMap(c => c.sections);
 export const SEC_LABEL    = Object.fromEntries(ALL_SECS.map(s => [s.id, s.label]));

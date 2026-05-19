@@ -1,5 +1,5 @@
 import { useNav } from '../NavContext';
-import { RELATED_BY_SECTION } from '../data/cosmosData';
+import { RELATED_BY_SECTION } from '../data/relatedSections';
 import { SEC_LABEL } from '../secs';
 
 export default function RelatedSections({ sectionId, title = '继续探索' }) {

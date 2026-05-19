@@ -17,7 +17,7 @@ html { scroll-behavior: smooth; font-size: 16px; }
   --red:    #ff1744;
   --white:  #e8f4f8;
   --dim:    #607a90;
-  --nav-h:  98px;
+  --nav-h:  118px;
 }
 
 /* ── Light theme overrides ── */

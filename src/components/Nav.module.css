@@ -13,58 +13,65 @@
   border-bottom-color: rgba(0,80,160,0.12);
 }
 
-/* ── Row 1 ── */
+/* ── Row 1：一级大类 ── */
 .row1 {
-  height: 54px;
+  height: 50px;
   display: flex; align-items: center;
-  padding: 0 24px; gap: 8px;
+  padding: 0 20px; gap: 8px;
   border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
 }
 [data-theme="light"] .row1 { border-bottom-color: rgba(0,0,0,0.06); }
 
 .logo {
-  font-size: 17px; font-weight: 800;
+  font-size: 16px; font-weight: 800;
   font-family: 'Courier New', monospace;
   color: var(--blue);
   text-shadow: 0 0 22px rgba(0,229,255,0.5);
   letter-spacing: 2px;
   white-space: nowrap;
   user-select: none;
-  margin-right: 12px;
+  margin-right: 8px;
+  background: none; border: none; cursor: pointer;
+  padding: 4px 0;
 }
+.logo:hover { opacity: 0.85; }
 .logo em { color: var(--gold); font-style: normal; }
 
-/* ── Category tabs ── */
-.catRow {
-  display: flex; gap: 6px; align-items: center;
+.groupRow {
+  display: flex; gap: 4px; align-items: center;
   flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px 0;
 }
+.groupRow::-webkit-scrollbar { display: none; }
 
-.catTab {
-  padding: 6px 20px; border-radius: 24px;
-  border: 1px solid rgba(255,255,255,0.1);
+.groupTab {
+  padding: 5px 12px; border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
   background: transparent;
   color: var(--dim); cursor: pointer;
-  font: 13px/1 inherit; font-weight: 500;
-  transition: all .22s;
+  font: 12px/1 inherit; font-weight: 500;
+  transition: all .2s;
   white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 5px;
+  flex-shrink: 0;
 }
-.catTab:hover {
+.groupTab:hover {
   color: var(--white);
   border-color: color-mix(in srgb, var(--cat-color) 40%, transparent);
   background: color-mix(in srgb, var(--cat-color) 8%, transparent);
 }
-.catTab.catOn {
+.groupTab.groupOn {
   color: var(--cat-color);
   border-color: var(--cat-color);
   background: color-mix(in srgb, var(--cat-color) 14%, transparent);
-  text-shadow: 0 0 10px color-mix(in srgb, var(--cat-color) 60%, transparent);
   font-weight: 700;
 }
-[data-theme="light"] .catTab { color: var(--dim); }
-[data-theme="light"] .catTab.catOn { color: var(--cat-color); }
+.groupIcon { font-size: 13px; line-height: 1; }
+.groupLabel { font-size: 12px; }
 
-/* ── Theme button ── */
 .themeBtn {
   margin-left: auto;
   width: 34px; height: 34px;
@@ -85,31 +92,69 @@
   background: rgba(0,100,180,0.08);
 }
 
-/* ── Row 2: Section pills ── */
+/* ── Row 2：二级子分类 + 三级章节 ── */
 .row2 {
-  height: 44px;
-  display: flex; align-items: center;
-  padding: 0 24px;
+  flex: 1;
+  display: flex; flex-direction: column;
+  min-height: 0;
   overflow: hidden;
+}
+
+.catSubRow {
+  display: flex; gap: 4px; align-items: center;
+  padding: 4px 20px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+.catSubRow::-webkit-scrollbar { display: none; }
+
+.catSub {
+  padding: 3px 12px; border-radius: 14px;
+  border: 1px solid transparent;
+  background: rgba(255,255,255,0.03);
+  color: var(--dim); cursor: pointer;
+  font: 11px/1 inherit; font-weight: 500;
+  white-space: nowrap;
+  transition: all .18s;
+  flex-shrink: 0;
+}
+.catSub:hover {
+  color: var(--white);
+  border-color: color-mix(in srgb, var(--cat-color) 30%, transparent);
+}
+.catSub.catSubOn {
+  color: var(--cat-color);
+  border-color: color-mix(in srgb, var(--cat-color) 50%, transparent);
+  background: color-mix(in srgb, var(--cat-color) 12%, transparent);
+  font-weight: 600;
+}
+
+.pillWrap {
+  flex: 1;
+  display: flex; align-items: center;
+  padding: 4px 16px 6px;
+  min-height: 0;
 }
 
 .pillRow {
   display: flex; gap: 4px; align-items: center;
   overflow-x: auto;
   scrollbar-width: none;
+  width: 100%;
   -webkit-overflow-scrolling: touch;
 }
 .pillRow::-webkit-scrollbar { display: none; }
 
 .pill {
-  padding: 5px 14px; border-radius: 18px;
+  padding: 5px 12px; border-radius: 16px;
   border: 1px solid transparent;
   background: transparent;
   color: var(--dim); cursor: pointer;
-  font: 12px/1 inherit;
+  font: 11px/1 inherit;
   white-space: nowrap;
   transition: all .2s;
-  display: flex; align-items: center; gap: 5px;
+  display: flex; align-items: center; gap: 4px;
   flex-shrink: 0;
 }
 .pill:hover {
@@ -120,27 +165,30 @@
   background: color-mix(in srgb, var(--cat-color) 16%, transparent);
   border-color: var(--cat-color);
   color: var(--cat-color);
-  text-shadow: 0 0 8px color-mix(in srgb, var(--cat-color) 55%, transparent);
   font-weight: 600;
 }
 [data-theme="light"] .pill { color: var(--dim); }
 [data-theme="light"] .pill.on { color: var(--cat-color); }
 
 .pillIcon {
-  font-size: 11px;
+  font-size: 10px;
   line-height: 1;
 }
 
 /* ── Responsive ── */
 @media (max-width: 860px) {
-  .row1 { padding: 0 12px; gap: 6px; }
-  .logo { font-size: 14px; }
-  .catTab { padding: 5px 12px; font-size: 12px; }
-  .row2 { padding: 0 8px; }
-  .pill { padding: 4px 10px; font-size: 11px; }
-  .pillIcon { display: none; }
+  .row1 { padding: 0 10px; }
+  .logo { font-size: 14px; margin-right: 4px; }
+  .groupTab { padding: 4px 10px; }
+  .groupLabel { font-size: 11px; }
+  .catSubRow { padding: 4px 10px 0; }
+  .pillWrap { padding: 4px 8px 6px; }
+  .pill { padding: 4px 9px; font-size: 10px; }
 }
+
 @media (max-width: 540px) {
-  .logo { display: none; }
-  .catTab { padding: 4px 10px; font-size: 11px; }
+  .logo { font-size: 0; width: 28px; overflow: hidden; letter-spacing: 0; }
+  .logo::before { content: '⚡'; font-size: 18px; }
+  .groupLabel { display: none; }
+  .groupTab { padding: 6px 10px; }
 }

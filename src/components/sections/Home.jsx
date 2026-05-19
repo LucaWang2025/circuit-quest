@@ -16,6 +16,56 @@ const CARD_GROUPS = [
     ],
   },
   {
+    label: '拓展专题 · 工业用电',
+    tag: 'INDUSTRIAL',
+    color: '#ff9800',
+    cards: [
+      { id: 'industrial', icon: '🏭', title: '工业概览', en: 'HUB', color: '#ff9800', desc: '380V 三相 · 星三角 · 电机启动' },
+      { id: 'industrial-phase', icon: '🔺', title: '三相基础', en: '3-PHASE', color: '#ffc107', desc: '120° 相量 · 线电压/相电压' },
+      { id: 'industrial-motor', icon: '🌀', title: '电机启动', en: 'MOTOR', color: '#ff6b35', desc: '直接/星三角/软启动' },
+    ],
+  },
+  {
+    label: '拓展专题 · 充电链路',
+    tag: 'EV CHAIN',
+    color: '#00e676',
+    cards: [
+      { id: 'evchain', icon: '🔌', title: '充电概览', en: 'HUB', color: '#00e676', desc: '慢充 OBC · 快充 · BMS 全链路' },
+      { id: 'evchain-ac', icon: '〰️', title: '交流慢充', en: 'AC', color: '#00e676', desc: '电网→桩→车载充电机→电池' },
+      { id: 'evchain-bms', icon: '🔋', title: 'BMS', en: 'BMS', color: '#00c853', desc: '预充·恒流·恒压·满充' },
+    ],
+  },
+  {
+    label: '拓展专题 · 配电箱',
+    tag: 'PANEL',
+    color: '#26a69a',
+    cards: [
+      { id: 'panel-hub', icon: '🗂️', title: '配电概览', en: 'HUB', color: '#26a69a', desc: '空开·漏电·SPD 全景' },
+      { id: 'panel-breaker-sim', icon: '⚡', title: '空开跳闸', en: 'BREAKER', color: '#ff6b35', desc: '过载/短路模拟' },
+      { id: 'panel-rcd-sim', icon: '🛡️', title: '漏电保护', en: 'RCD', color: '#00e676', desc: '30mA 人体保护' },
+    ],
+  },
+  {
+    label: '拓展专题 · 示波器实验',
+    tag: 'SCOPE LAB',
+    color: '#00e5ff',
+    cards: [
+      { id: 'scope-lab', icon: '📊', title: '实验概览', en: 'HUB', color: '#00e5ff', desc: '波形·测量·RC·触发' },
+      { id: 'scope-lab-wave', icon: '📈', title: '波形基础', en: 'WAVE', color: '#00e5ff', desc: '正弦/方波/三角' },
+      { id: 'scope-lab-rc', icon: '⚙️', title: 'RC 响应', en: 'RC', color: '#ffab00', desc: '充电曲线与时间常数' },
+    ],
+  },
+  {
+    label: '拓展专题 · 应急户储',
+    tag: 'BACKUP',
+    color: '#ff7043',
+    cards: [
+      { id: 'backup', icon: '🔋', title: '应急概览', en: 'HUB', color: '#ff7043', desc: '停电·ATS·供电优先级' },
+      { id: 'backup-outage', icon: '🔌', title: '停电场景', en: 'OUTAGE', color: '#ff7043', desc: '电网失电与负载分级' },
+      { id: 'backup-priority', icon: '☀️', title: '供电优先级', en: 'PRIORITY', color: '#00e676', desc: '光伏→储能→柴发' },
+    ],
+  },
+  {
     label: '第一阶段 · 基础知识',
     tag: 'FUNDAMENTALS',
     color: '#ffab00',
@@ -155,7 +205,7 @@ export default function Home() {
       </div>
 
       <p className={styles.desc}>
-        基础理论、维修工坊、互动练习、家用电路、小电器拆解、新能源、宇宙专题与速查手册——多阶段 82 章循序渐进，
+        基础理论、维修工坊、家用电路、五大拓展专题（工业/充电/配电/示波器/应急）与宇宙深空——多阶段 107 章循序渐进，
         让你能安全、自信地理解和处理身边的每一个电气问题。
       </p>
 
