@@ -1,5 +1,6 @@
 import styles from './Home.module.css';
 import { useNav } from '../../NavContext';
+import { COSMOS_LEARNING_PATH, COSMOS_ACC } from '../../data/cosmosData';
 
 const CARD_GROUPS = [
   {
@@ -7,8 +8,11 @@ const CARD_GROUPS = [
     tag: 'COSMOS',
     color: '#9c7dff',
     cards: [
-      { id: 'cosmos',       icon: '🌌', title: '宇宙知识',     en: 'COSMOS',       color: '#9c7dff', desc: '天文单位、行星分类、太阳系结构——与电路并行的拓展阅读' },
-      { id: 'solar-system', icon: '🪐', title: '3D 太阳系',    en: 'SOLARIS',      color: '#ffc850', desc: 'WebGL 深空探索：公转动画、行星贴图、点击聚焦，已整合进本站' },
+      { id: 'cosmos', icon: '🌌', title: '宇宙概览', en: 'HUB', color: '#9c7dff', desc: '专题入口 · 推荐路径 · 10+ 互动课' },
+      { id: 'cosmos-scale', icon: '📏', title: '天文尺度', en: 'SCALE', color: '#00bcd4', desc: 'AU/光年/光分 · 火星通信延迟' },
+      { id: 'cosmos-energy', icon: '🔗', title: '能源链', en: 'ENERGY', color: '#ffd600', desc: '太阳→光伏→电网（衔接电路章）' },
+      { id: 'cosmos-mission', icon: '🛰️', title: '任务台', en: 'MISSION', color: '#6eb5ff', desc: '深空延迟 · Δv · 储能预算' },
+      { id: 'solar-system', icon: '🛸', title: '3D深空', en: 'SOLARIS', color: '#ff6b9d', desc: 'WebGL · 对比模式 · 光速雷达' },
     ],
   },
   {
@@ -151,9 +155,26 @@ export default function Home() {
       </div>
 
       <p className={styles.desc}>
-        基础理论、维修工坊、互动练习、家用电路、小电器拆解、新能源、宇宙专题与速查手册——多阶段 73 章循序渐进，
+        基础理论、维修工坊、互动练习、家用电路、小电器拆解、新能源、宇宙专题与速查手册——多阶段 82 章循序渐进，
         让你能安全、自信地理解和处理身边的每一个电气问题。
       </p>
+
+      <div className="reveal" style={{
+        width: '100%', maxWidth: 980, marginBottom: 24, padding: '18px 22px',
+        borderRadius: 14, border: `1px solid ${COSMOS_ACC}44`, background: 'rgba(156,125,255,.06)',
+      }}>
+        <div style={{ font: '10px "Courier New",monospace', color: COSMOS_ACC, letterSpacing: 2, marginBottom: 12 }}>
+          推荐路径 · 从电路到深空
+        </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center' }}>
+          {COSMOS_LEARNING_PATH.map((s, i) => (
+            <span key={s.id} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              <button type="button" className="chip" onClick={() => navigate(s.id)}>{s.icon} {s.label}</button>
+              {i < COSMOS_LEARNING_PATH.length - 1 && <span style={{ color: 'var(--dim)', fontSize: 12 }}>→</span>}
+            </span>
+          ))}
+        </div>
+      </div>
 
       {CARD_GROUPS.map(group => (
         <div key={group.label} style={{ width: '100%', maxWidth: 980, marginBottom: 16 }}>

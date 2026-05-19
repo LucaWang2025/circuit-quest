@@ -73,8 +73,17 @@ const sectionComponents = {
   'wire-table':      lazy(() => import('./components/sections/WireTable')),
   'symbol-ref':      lazy(() => import('./components/sections/SymbolRef')),
   'parts-ref':       lazy(() => import('./components/sections/PartsRef')),
-  cosmos:            lazy(() => import('./components/sections/Cosmos')),
-  'solar-system':    lazy(() => import('./components/sections/SolarSystem')),
+  cosmos:              lazy(() => import('./components/sections/Cosmos')),
+  'cosmos-scale':      lazy(() => import('./components/sections/CosmosScale')),
+  'cosmos-planets':    lazy(() => import('./components/sections/CosmosPlanets')),
+  'cosmos-structure':  lazy(() => import('./components/sections/CosmosStructure')),
+  'cosmos-energy':     lazy(() => import('./components/sections/CosmosEnergy')),
+  'cosmos-power-budget': lazy(() => import('./components/sections/CosmosPowerBudget')),
+  'cosmos-habitable':  lazy(() => import('./components/sections/CosmosHabitable')),
+  'cosmos-gravity':    lazy(() => import('./components/sections/CosmosGravity')),
+  'cosmos-mission':    lazy(() => import('./components/sections/CosmosMission')),
+  'cosmos-space-weather': lazy(() => import('./components/sections/CosmosSpaceWeather')),
+  'solar-system':      lazy(() => import('./components/sections/SolarSystem')),
 };
 
 export default sectionComponents;

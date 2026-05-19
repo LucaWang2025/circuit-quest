@@ -7,6 +7,7 @@ import { ALL_SECS, SEC_CATEGORY } from './secs';
 import SECTION_MAP from './sectionComponents';
 
 import CircuitBg from './components/CircuitBg';
+import StarfieldBg from './components/StarfieldBg';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
 import ProgressBar from './components/ProgressBar';
@@ -143,10 +144,11 @@ export default function App() {
 
   const ActiveComponent = SECTION_MAP[activeSection] ?? Home;
   const immersive = IMMERSIVE_SECTIONS.has(activeSection);
+  const isCosmosTheme = SEC_CATEGORY[activeSection]?.id === 'cosmos';
 
   return (
     <NavContext.Provider value={navigate}>
-      {!immersive && <CircuitBg />}
+      {!immersive && (isCosmosTheme ? <StarfieldBg /> : <CircuitBg />)}
       {!immersive && (
         <Nav theme={theme} onToggleTheme={toggle} activeSection={activeSection} onNavigate={navigate}>
           <ProgressBar completed={completedCount} total={totalCount} />
