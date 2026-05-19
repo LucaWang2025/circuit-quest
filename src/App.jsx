@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { useTheme } from './hooks/useTheme';
 import { useProgress } from './hooks/useProgress';
+import { bindScrollReveal } from './hooks/useScrollReveal';
 import { NavContext } from './NavContext';
 import { ALL_SECS, SEC_CATEGORY } from './secs';
 import SECTION_MAP from './sectionComponents';
@@ -113,14 +114,31 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const io = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); }),
-      { threshold: 0.1 }
-    );
-    const timer = setTimeout(() => {
-      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-    }, 80);
-    return () => { clearTimeout(timer); io.disconnect(); };
+    const main = document.querySelector('main');
+    if (!main) return undefined;
+
+    const { observe, disconnect } = bindScrollReveal(main);
+
+    observe();
+    const t1 = setTimeout(observe, 0);
+    const t2 = setTimeout(observe, 150);
+    const t3 = setTimeout(observe, 500);
+
+    let debounce;
+    const mo = new MutationObserver(() => {
+      clearTimeout(debounce);
+      debounce = setTimeout(observe, 50);
+    });
+    mo.observe(main, { childList: true, subtree: true });
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(debounce);
+      mo.disconnect();
+      disconnect();
+    };
   }, [activeSection]);
 
   const ActiveComponent = SECTION_MAP[activeSection] ?? Home;
