@@ -73,6 +73,8 @@ const sectionComponents = {
   'wire-table':      lazy(() => import('./components/sections/WireTable')),
   'symbol-ref':      lazy(() => import('./components/sections/SymbolRef')),
   'parts-ref':       lazy(() => import('./components/sections/PartsRef')),
+  cosmos:            lazy(() => import('./components/sections/Cosmos')),
+  'solar-system':    lazy(() => import('./components/sections/SolarSystem')),
 };
 
 export default sectionComponents;

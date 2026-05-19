@@ -3,6 +3,15 @@ import { useNav } from '../../NavContext';
 
 const CARD_GROUPS = [
   {
+    label: '拓展专题 · 宇宙',
+    tag: 'COSMOS',
+    color: '#9c7dff',
+    cards: [
+      { id: 'cosmos',       icon: '🌌', title: '宇宙知识',     en: 'COSMOS',       color: '#9c7dff', desc: '天文单位、行星分类、太阳系结构——与电路并行的拓展阅读' },
+      { id: 'solar-system', icon: '🪐', title: '3D 太阳系',    en: 'SOLARIS',      color: '#ffc850', desc: 'WebGL 深空探索：公转动画、行星贴图、点击聚焦，已整合进本站' },
+    ],
+  },
+  {
     label: '第一阶段 · 基础知识',
     tag: 'FUNDAMENTALS',
     color: '#ffab00',
@@ -142,7 +151,7 @@ export default function Home() {
       </div>
 
       <p className={styles.desc}>
-        基础理论、维修工坊、互动练习、家用电路、小电器拆解、新能源与速查手册——六阶段 70 章循序渐进，
+        基础理论、维修工坊、互动练习、家用电路、小电器拆解、新能源、宇宙专题与速查手册——多阶段 73 章循序渐进，
         让你能安全、自信地理解和处理身边的每一个电气问题。
       </p>
 

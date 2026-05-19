@@ -126,6 +126,15 @@ export const CATEGORIES = [
       { id: 'parts-ref',   label: '元件库',   icon: '🧰' },
     ],
   },
+  {
+    id: 'cosmos',
+    label: '宇宙',
+    color: '#9c7dff',
+    sections: [
+      { id: 'cosmos',        label: '宇宙知识', icon: '🌌' },
+      { id: 'solar-system',  label: '3D太阳系', icon: '🪐' },
+    ],
+  },
 ];
 
 export const ALL_SECS = CATEGORIES.flatMap(c => c.sections);

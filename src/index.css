@@ -62,6 +62,8 @@ body {
 
 /* ── Main wrapper ── */
 main { position: relative; z-index: 1; padding-top: var(--nav-h); }
+main.main-immersive { padding-top: 0; overflow: hidden; height: 100vh; }
+body[data-immersive="solar"] { overflow: hidden; }
 
 /* ── Section switch animation ── */
 @keyframes secIn {

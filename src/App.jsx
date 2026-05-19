@@ -14,6 +14,9 @@ import CompleteButton from './components/CompleteButton';
 // Home 单独保留静态 import，避免首屏白屏
 const Home = lazy(() => import('./components/sections/Home'));
 
+/** 全屏沉浸式章节：隐藏顶栏/底栏与电路背景 */
+const IMMERSIVE_SECTIONS = new Set(['solar-system']);
+
 function SectionFallback() {
   return (
     <div style={{
@@ -121,24 +124,27 @@ export default function App() {
   }, [activeSection]);
 
   const ActiveComponent = SECTION_MAP[activeSection] ?? Home;
+  const immersive = IMMERSIVE_SECTIONS.has(activeSection);
 
   return (
     <NavContext.Provider value={navigate}>
-      <CircuitBg />
-      <Nav theme={theme} onToggleTheme={toggle} activeSection={activeSection} onNavigate={navigate}>
-        <ProgressBar completed={completedCount} total={totalCount} />
-      </Nav>
-      <main>
-        <div key={activeSection} className="sec-fade">
+      {!immersive && <CircuitBg />}
+      {!immersive && (
+        <Nav theme={theme} onToggleTheme={toggle} activeSection={activeSection} onNavigate={navigate}>
+          <ProgressBar completed={completedCount} total={totalCount} />
+        </Nav>
+      )}
+      <main className={immersive ? 'main-immersive' : undefined}>
+        <div key={activeSection} className={immersive ? undefined : 'sec-fade'}>
           <Suspense fallback={<SectionFallback />}>
             <ActiveComponent />
           </Suspense>
-          {activeSection !== 'home' && (
+          {!immersive && activeSection !== 'home' && (
             <CompleteButton sectionId={activeSection} isCompleted={isCompleted} onComplete={markCompleted} />
           )}
         </div>
-        <BottomNav currentId={activeSection} onNavigate={navigate} />
-        {activeSection === 'home' && <Footer onNavigate={navigate} />}
+        {!immersive && <BottomNav currentId={activeSection} onNavigate={navigate} />}
+        {!immersive && activeSection === 'home' && <Footer onNavigate={navigate} />}
       </main>
     </NavContext.Provider>
   );
