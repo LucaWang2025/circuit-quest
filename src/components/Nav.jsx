@@ -7,7 +7,7 @@ import {
   navGroupForSection,
 } from '../secs';
 
-export default function Nav({ theme, onToggleTheme, activeSection, onNavigate, children }) {
+export default function Nav({ theme, onToggleTheme, activeSection, onNavigate }) {
   const activeCat = SEC_CATEGORY[activeSection] ?? CATEGORY_BY_ID.basics;
   const activeGroup = navGroupForSection(activeSection);
 
@@ -48,8 +48,6 @@ export default function Nav({ theme, onToggleTheme, activeSection, onNavigate, c
             </button>
           ))}
         </div>
-
-        {children}
 
         <button type="button" className={styles.themeBtn} onClick={onToggleTheme} title="切换主题">
           {theme === 'dark' ? '☀️' : '🌙'}

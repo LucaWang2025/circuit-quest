@@ -24,28 +24,6 @@ export const CATEGORIES = [
     ],
   },
   {
-    id: 'practice',
-    label: '练习闯关',
-    color: '#7c4dff',
-    sections: [
-      { id: 'calc-hub',     label: '计算器',   icon: '🧮' },
-      { id: 'fault-sim',    label: '故障模拟', icon: '🔍' },
-      { id: 'quiz-hub',     label: '小测验',   icon: '📝' },
-      { id: 'line-game',    label: '连线游戏', icon: '🎮' },
-      { id: 'repair-quest', label: '维修闯关', icon: '🏆' },
-    ],
-  },
-  {
-    id: 'reference',
-    label: '速查工具',
-    color: '#607d8b',
-    sections: [
-      { id: 'wire-table',  label: '线径表',   icon: '📋' },
-      { id: 'symbol-ref',  label: '符号',     icon: '📐' },
-      { id: 'parts-ref',   label: '元件库',   icon: '🧰' },
-    ],
-  },
-  {
     id: 'home-elec',
     label: '住宅布线',
     color: '#00e676',
@@ -208,7 +186,7 @@ export const CATEGORIES = [
 
 /**
  * 顶栏一级分组：按学习路径与主题相关性排列
- * - 入门：理论 → 练习 → 速查
+ * - 入门：电路理论
  * - 家用：布线 → 配电互动 → 排障 → 家电（同一住宅场景）
  * - 能源：储能光伏 → 电车充电 → 停电应急（供能链路）
  * - 进阶：示波实验 → 动手开发 → 工业三相（由小到大）
@@ -221,7 +199,7 @@ export const NAV_GROUPS = [
     shortLabel: '入门',
     icon: '📚',
     color: '#ffab00',
-    categoryIds: ['basics', 'practice', 'reference'],
+    categoryIds: ['basics'],
   },
   {
     id: 'home',

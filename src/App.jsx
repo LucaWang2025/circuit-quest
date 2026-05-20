@@ -10,7 +10,6 @@ import CircuitBg from './components/CircuitBg';
 import StarfieldBg from './components/StarfieldBg';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
-import ProgressBar from './components/ProgressBar';
 import CompleteButton from './components/CompleteButton';
 
 // Home 单独保留静态 import，避免首屏白屏
@@ -100,7 +99,7 @@ export default function App() {
   };
 
   const [activeSection, setActiveSection] = useState(getHashId);
-  const { markCompleted, isCompleted, completedCount, totalCount } = useProgress(ALL_SECS);
+  const { markCompleted, isCompleted } = useProgress(ALL_SECS);
 
   const navigate = useCallback(id => {
     setActiveSection(id);
@@ -150,9 +149,7 @@ export default function App() {
     <NavContext.Provider value={navigate}>
       {!immersive && (isCosmosTheme ? <StarfieldBg /> : <CircuitBg />)}
       {!immersive && (
-        <Nav theme={theme} onToggleTheme={toggle} activeSection={activeSection} onNavigate={navigate}>
-          <ProgressBar completed={completedCount} total={totalCount} />
-        </Nav>
+        <Nav theme={theme} onToggleTheme={toggle} activeSection={activeSection} onNavigate={navigate} />
       )}
       <main className={immersive ? 'main-immersive' : undefined}>
         <div key={activeSection} className={immersive ? undefined : 'sec-fade'}>

@@ -27,28 +27,6 @@ const CARD_GROUPS = [
     ],
   },
   {
-    label: '入门 · 练习闯关',
-    tag: 'PRACTICE',
-    color: '#7c4dff',
-    cards: [
-      { id: 'calc-hub',     icon: '🧮', title: '电学计算器', en: 'CALCULATOR',  color: '#7c4dff', desc: '欧姆/功率/电费/并联电阻 五合一' },
-      { id: 'fault-sim',    icon: '🔍', title: '故障模拟',   en: 'SIMULATOR',   color: '#7c4dff', desc: '根据现象选原因，训练诊断判断力' },
-      { id: 'quiz-hub',     icon: '📝', title: '知识测验',   en: 'QUIZ',        color: '#7c4dff', desc: '综合选择题，错题解析' },
-      { id: 'line-game',    icon: '🎮', title: '连线游戏',   en: 'LINE GAME',   color: '#7c4dff', desc: '连接电池电阻 LED 构成闭合回路' },
-      { id: 'repair-quest', icon: '🏆', title: '维修闯关',   en: 'QUEST',       color: '#7c4dff', desc: '真实场景步骤打卡，进度本地保存' },
-    ],
-  },
-  {
-    label: '入门 · 速查工具',
-    tag: 'REFERENCE',
-    color: '#607d8b',
-    cards: [
-      { id: 'wire-table', icon: '📋', title: '线径载流量', en: 'WIRE TABLE', color: '#607d8b', desc: '国标铜线载流量与安全选型' },
-      { id: 'symbol-ref', icon: '📐', title: '电气符号',   en: 'SYMBOLS',    color: '#607d8b', desc: '常用符号与实物对照' },
-      { id: 'parts-ref',  icon: '🧰', title: '元件库',     en: 'PARTS',      color: '#607d8b', desc: '色环电阻、电容标识、接线端子' },
-    ],
-  },
-  {
     label: '家用 · 住宅布线',
     tag: 'HOME WIRING',
     color: '#00e676',
@@ -196,7 +174,7 @@ export default function Home() {
   const navigate = useNav();
   return (
     <section id="home" className={`sec ${styles.home}`}>
-      <div className={styles.badge}>📚 知识探索 · 107 章 · 五大板块路径</div>
+      <div className={styles.badge}>📚 知识探索 · 99 章 · 五大板块路径</div>
 
       <div className={styles.titleWrap}>
         <div className={styles.t1}>成为你家的</div>
@@ -204,7 +182,7 @@ export default function Home() {
       </div>
 
       <p className={styles.desc}>
-        入门理论 → 家用电工 → 能源电力 → 进阶实验 → 宇宙探索，五大板块 107 章按相关性排列：
+        入门理论 → 家用电工 → 能源电力 → 进阶实验 → 宇宙探索，五大板块 99 章按相关性排列：
         配电与排障归家用、充电与光伏归能源、示波器实验与工业三相归进阶，减少跨栏找章的歧义。
       </p>
 
