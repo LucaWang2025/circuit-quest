@@ -93,7 +93,7 @@ function ICard({ color, title, children }) {
   return (
     <div className="icard" style={{ borderLeftColor: color }}>
       <h4 style={{ color }}>{title}</h4>
-      <div style={{ fontSize: 13.5, color: '#aabfc8', lineHeight: 1.65 }}>{children}</div>
+      <div style={{ fontSize: 13.5, color: 'var(--text-muted)', lineHeight: 1.65 }}>{children}</div>
     </div>
   );
 }
@@ -182,7 +182,7 @@ export default function CosmosPowerBudget() {
           </div>
           <div className="glass" style={{ borderColor: 'rgba(0,230,118,.2)' }}>
             <h4 style={{ color: ACC, marginBottom: 12 }}>预算结果</h4>
-            <p style={{ fontSize: 14, color: '#aabfc8', lineHeight: 2 }}>
+            <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 2 }}>
               日发电约 <strong style={{ color: '#fff' }}>{result.dailyGen} Wh</strong><br />
               日净能量 <strong style={{ color: result.surplus ? ACC : '#ff6b35' }}>{result.netDaily} Wh</strong>（发电−全天负载）<br />
               纯电池续航 <strong>{result.hours} h</strong><br />

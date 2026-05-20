@@ -109,7 +109,7 @@ function ICard({ color, title, children }) {
   return (
     <div className="icard" style={{ borderLeftColor: color }}>
       <h4 style={{ color }}>{title}</h4>
-      <div style={{ fontSize: 13.5, color: '#aabfc8', lineHeight: 1.65 }}>{children}</div>
+      <div style={{ fontSize: 13.5, color: 'var(--text-muted)', lineHeight: 1.65 }}>{children}</div>
     </div>
   );
 }
@@ -172,7 +172,7 @@ export default function CosmosEnergy() {
           </div>
           <div className="glass" style={{ borderColor: `${current.color}44` }}>
             <h4 style={{ color: current.color, marginBottom: 10 }}>{current.icon} {current.title}</h4>
-            <p style={{ fontSize: 13.5, color: '#aabfc8', lineHeight: 1.75 }}>{current.text}</p>
+            <p style={{ fontSize: 13.5, color: 'var(--text-muted)', lineHeight: 1.75 }}>{current.text}</p>
           </div>
           <ICard color={ACC} title="☀️ 太阳常数">
             地球大气层外垂直辐照度约 <strong style={{ color: ACC }}>{SOLAR_CONSTANT} W/m²</strong>。大气吸收、入射角、云层会使地面实际值更低。

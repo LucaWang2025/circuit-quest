@@ -1,7 +1,10 @@
 import { useEffect, useRef } from 'react';
+import { readCssVar } from '../utils/themeColors';
 
-export default function StarfieldBg() {
+export default function StarfieldBg({ active = true, theme = 'dark' }) {
   const canvasRef = useRef(null);
+  const activeRef = useRef(active);
+  activeRef.current = active;
 
   useEffect(() => {
     const cv = canvasRef.current;
@@ -28,18 +31,28 @@ export default function StarfieldBg() {
     }
 
     function draw() {
+      if (!activeRef.current) {
+        rafId = requestAnimationFrame(draw);
+        return;
+      }
       t += 0.012;
-      ctx.fillStyle = '#03060e';
+      const bg = readCssVar('--bg', theme === 'light' ? '#edf3fb' : '#03060e');
+      ctx.fillStyle = bg;
       ctx.fillRect(0, 0, W, H);
+
+      const nebula = theme === 'light'
+        ? 'rgba(110,78,214,0.08)'
+        : 'rgba(156,125,255,0.06)';
       const g = ctx.createRadialGradient(W * 0.5, H * 0.35, 0, W * 0.5, H * 0.35, W * 0.65);
-      g.addColorStop(0, 'rgba(156,125,255,0.06)');
+      g.addColorStop(0, nebula);
       g.addColorStop(1, 'transparent');
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, W, H);
 
+      const starRgb = theme === 'light' ? '60,70,120' : '200,220,255';
       stars.forEach(s => {
         const a = s.a * (0.65 + 0.35 * Math.sin(t + s.tw));
-        ctx.fillStyle = `rgba(200,220,255,${a})`;
+        ctx.fillStyle = `rgba(${starRgb},${a})`;
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
         ctx.fill();
@@ -54,12 +67,13 @@ export default function StarfieldBg() {
       cancelAnimationFrame(rafId);
       window.removeEventListener('resize', build);
     };
-  }, []);
+  }, [theme]);
 
   return (
     <canvas
       ref={canvasRef}
-      style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}
+      id="bgStarCanvas"
+      className={`scene-bg-layer${active ? ' is-active' : ''}`}
       aria-hidden
     />
   );

@@ -17,6 +17,14 @@ html { scroll-behavior: smooth; font-size: 16px; }
   --red:    #ff1744;
   --white:  #e8f4f8;
   --dim:    #607a90;
+  --text-muted: #aabfc8;
+  --canvas-label: #c8dce6;
+  --scene-accent: #00e5ff;
+  --scene-accent-rgb: 0, 229, 255;
+  --surface: rgba(8, 16, 36, 0.6);
+  --surface-strong: rgba(4, 9, 26, 0.7);
+  --surface-border: rgba(255, 255, 255, 0.07);
+  --accent-line: rgba(0, 229, 255, 0.11);
   --nav-h:  118px;
 }
 
@@ -33,6 +41,20 @@ html { scroll-behavior: smooth; font-size: 16px; }
   --red:    #d4002e;
   --white:  #1a2840;
   --dim:    #5a7284;
+  --text-muted: #4a6070;
+  --canvas-label: #3a5060;
+  --scene-accent-rgb: 0, 100, 180;
+}
+
+/* ── 场景：宇宙 / 电路（与顶栏 data-scene 同步）── */
+[data-scene="cosmos"] {
+  --scene-accent: #9c7dff;
+  --scene-accent-rgb: 156, 125, 255;
+  --accent-line: rgba(156, 125, 255, 0.14);
+}
+[data-scene="cosmos"][data-theme="light"] {
+  --scene-accent: #6e4ed6;
+  --scene-accent-rgb: 110, 78, 214;
 }
 
 body {
@@ -47,18 +69,22 @@ body {
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.25); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: rgba(var(--scene-accent-rgb), 0.28); border-radius: 3px; }
 [data-theme="light"] ::-webkit-scrollbar-track { background: #edf3fb; }
-[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(0,100,200,0.22); }
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(var(--scene-accent-rgb), 0.22); }
 
-/* ── Background Canvas ── */
-#bgCanvas {
-  position: fixed; top: 0; left: 0;
+/* ── 双背景层交叉淡入 ── */
+.scene-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.scene-bg-layer {
+  position: fixed; inset: 0;
   width: 100%; height: 100%;
-  z-index: 0; pointer-events: none;
-  transition: opacity .35s;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s ease;
 }
-[data-theme="light"] #bgCanvas { opacity: 0.18; filter: invert(1) hue-rotate(200deg); }
+.scene-bg-layer.is-active { opacity: 1; }
+[data-theme="light"] #bgCanvas.is-active { opacity: 0.2; filter: invert(1) hue-rotate(200deg); }
+[data-theme="light"] #bgStarCanvas.is-active { opacity: 0.55; }
 
 /* ── Main wrapper ── */
 main { position: relative; z-index: 1; padding-top: var(--nav-h); }
@@ -87,10 +113,7 @@ body[data-immersive="solar"] { overflow: hidden; }
   content: '';
   position: absolute; top: 0;
   left: -48px; right: -48px; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0,229,255,.13), transparent);
-}
-[data-theme="light"] .sec + .sec::before {
-  background: linear-gradient(90deg, transparent, rgba(0,100,180,.12), transparent);
+  background: linear-gradient(90deg, transparent, rgba(var(--scene-accent-rgb), .14), transparent);
 }
 
 /* ── Section header ── */
@@ -117,7 +140,7 @@ body[data-immersive="solar"] { overflow: hidden; }
 .divider {
   width: 56px; height: 3px; border-radius: 2px;
   margin: 20px auto 0;
-  background: linear-gradient(90deg, transparent, var(--blue), transparent);
+  background: linear-gradient(90deg, transparent, var(--scene-accent), transparent);
 }
 
 /* ── Two-column layout ── */
@@ -131,8 +154,8 @@ body[data-immersive="solar"] { overflow: hidden; }
 
 /* ── Animation box ── */
 .anim-box {
-  background: rgba(4,9,26,0.7);
-  border: 1px solid rgba(0,229,255,0.11);
+  background: var(--surface-strong);
+  border: 1px solid var(--accent-line);
   border-radius: 22px; overflow: hidden;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
@@ -146,24 +169,32 @@ body[data-immersive="solar"] { overflow: hidden; }
 }
 .anim-box::after {
   content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(ellipse at 50% 0%, rgba(0,229,255,.045) 0%, transparent 68%);
+  background: radial-gradient(ellipse at 50% 0%, rgba(var(--scene-accent-rgb), .05) 0%, transparent 68%);
 }
 [data-theme="light"] .anim-box {
   background: rgba(225,238,255,0.72);
-  border-color: rgba(0,100,180,0.13);
+  border-color: rgba(var(--scene-accent-rgb), 0.16);
+}
+[data-scene="cosmos"] .anim-box {
+  background: rgba(8, 10, 32, 0.82);
+  border-color: rgba(156, 125, 255, 0.16);
+}
+[data-scene="cosmos"][data-theme="light"] .anim-box {
+  background: rgba(248, 246, 255, 0.88);
+  border-color: rgba(110, 78, 214, 0.2);
 }
 
 /* ── Glass card ── */
 .glass {
-  background: rgba(8,16,36,0.6);
-  border: 1px solid rgba(255,255,255,0.07);
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
   border-radius: 18px; padding: 26px 30px;
   backdrop-filter: blur(10px);
   transition: border-color .3s, transform .3s, box-shadow .3s;
 }
 .glass:hover {
-  border-color: rgba(0,229,255,0.2);
-  box-shadow: 0 6px 40px rgba(0,229,255,.07);
+  border-color: rgba(var(--scene-accent-rgb), 0.28);
+  box-shadow: 0 6px 40px rgba(var(--scene-accent-rgb), .08);
   transform: translateY(-3px);
 }
 [data-theme="light"] .glass {
@@ -172,8 +203,16 @@ body[data-immersive="solar"] { overflow: hidden; }
   box-shadow: 0 2px 14px rgba(0,0,0,.06);
 }
 [data-theme="light"] .glass:hover {
-  border-color: rgba(0,130,210,0.28);
-  box-shadow: 0 6px 28px rgba(0,130,210,.1);
+  border-color: rgba(var(--scene-accent-rgb), 0.32);
+  box-shadow: 0 6px 28px rgba(var(--scene-accent-rgb), .12);
+}
+[data-scene="cosmos"] .glass {
+  background: rgba(10, 12, 32, 0.72);
+  border-color: rgba(156, 125, 255, 0.12);
+}
+[data-scene="cosmos"][data-theme="light"] .glass {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(110, 78, 214, 0.14);
 }
 
 /* ── Info card stack ── */
@@ -191,10 +230,21 @@ body[data-immersive="solar"] { overflow: hidden; }
   letter-spacing: 1.5px; text-transform: uppercase;
   color: var(--blue); margin-bottom: 7px;
 }
-.icard p { font-size: 13.5px; color: #aabfc8; line-height: 1.65; }
+.icard > div,
+.icard p { font-size: 13.5px; color: var(--text-muted); line-height: 1.65; }
+.text-muted { color: var(--text-muted); }
+.text-muted-sm { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
 [data-theme="light"] .icard { background: rgba(255,255,255,0.82); }
 [data-theme="light"] .icard:hover { background: rgba(235,246,255,0.95); }
-[data-theme="light"] .icard p { color: #3a5060; }
+[data-scene="cosmos"] .icard {
+  background: rgba(10, 12, 30, 0.78);
+}
+[data-scene="cosmos"] .icard:hover {
+  background: rgba(156, 125, 255, 0.08);
+}
+[data-scene="cosmos"][data-theme="light"] .icard {
+  background: rgba(255, 255, 255, 0.88);
+}
 
 /* ── Formula box ── */
 .fbox {

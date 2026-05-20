@@ -107,7 +107,7 @@ function ICard({ color, title, children }) {
   return (
     <div className="icard" style={{ borderLeftColor: color }}>
       <h4 style={{ color }}>{title}</h4>
-      <div style={{ fontSize: 13.5, color: '#aabfc8', lineHeight: 1.65 }}>{children}</div>
+      <div style={{ fontSize: 13.5, color: 'var(--text-muted)', lineHeight: 1.65 }}>{children}</div>
     </div>
   );
 }
@@ -156,7 +156,7 @@ export default function CosmosSpaceWeather() {
           </div>
           <div className="glass">
             <h4 style={{ color: ACC, marginBottom: 8 }}>当前：{info.label} · Kp≈{info.kp}</h4>
-            <p style={{ fontSize: 13, color: '#aabfc8', lineHeight: 1.75 }}>
+            <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.75 }}>
               风险等级：<strong style={{ color: info.risk === '高' ? '#ff5252' : '#00e676' }}>{info.risk}</strong><br />
               {info.grid}
             </p>

@@ -1,16 +1,13 @@
 import { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { useTheme } from './hooks/useTheme';
-import { useProgress } from './hooks/useProgress';
 import { bindScrollReveal } from './hooks/useScrollReveal';
 import { NavContext } from './NavContext';
 import { ALL_SECS, SEC_CATEGORY } from './secs';
 import SECTION_MAP from './sectionComponents';
 
-import CircuitBg from './components/CircuitBg';
-import StarfieldBg from './components/StarfieldBg';
+import SceneBackground from './components/SceneBackground';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
-import CompleteButton from './components/CompleteButton';
 
 // Home 单独保留静态 import，避免首屏白屏
 const Home = lazy(() => import('./components/sections/Home'));
@@ -33,7 +30,8 @@ function BottomNav({ currentId, onNavigate }) {
   const idx = ALL_SECS.findIndex(s => s.id === currentId);
   const prev = idx > 0 ? ALL_SECS[idx - 1] : null;
   const next = idx < ALL_SECS.length - 1 ? ALL_SECS[idx + 1] : null;
-  const cat  = SEC_CATEGORY[currentId];
+  const cat = SEC_CATEGORY[currentId];
+  const current = ALL_SECS[idx];
 
   const btnStyle = (sec) => ({
     display: 'flex', alignItems: 'center', gap: 8,
@@ -43,14 +41,18 @@ function BottomNav({ currentId, onNavigate }) {
     color: sec ? 'var(--dim)' : 'transparent',
     cursor: sec ? 'pointer' : 'default',
     font: '13px/1 inherit', transition: 'all .2s', flexShrink: 0,
+    visibility: sec ? 'visible' : 'hidden',
   });
 
   return (
-    <div style={{ maxWidth: 1240, margin: '0 auto', padding: '20px 48px 44px',
-      display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-
+    <div style={{
+      maxWidth: 1240, margin: '0 auto', padding: '20px 48px 44px',
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+    }}>
       <button
-        onClick={() => prev && onNavigate(prev.id)} disabled={!prev}
+        type="button"
+        onClick={() => prev && onNavigate(prev.id)}
+        disabled={!prev}
         style={btnStyle(prev)}
         onMouseEnter={e => { if (prev) e.currentTarget.style.borderColor = `${SEC_CATEGORY[prev.id]?.color}55`; }}
         onMouseLeave={e => { if (prev) e.currentTarget.style.borderColor = 'rgba(255,255,255,.12)'; }}
@@ -59,27 +61,23 @@ function BottomNav({ currentId, onNavigate }) {
         &nbsp;<strong>{prev?.label}</strong>
       </button>
 
-      <div style={{ textAlign: 'center', flex: 1, minWidth: 0 }}>
-        <div style={{ font: '10px "Courier New",monospace', color: cat?.color ?? 'var(--dim)',
-          letterSpacing: 2, marginBottom: 6 }}>{cat?.label?.toUpperCase()}</div>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 4, flexWrap: 'wrap' }}>
-          {ALL_SECS.map(s => (
-            <button key={s.id} onClick={() => onNavigate(s.id)} style={{
-              width: s.id === currentId ? 22 : 7, height: 7, borderRadius: 4,
-              border: 'none', cursor: 'pointer', padding: 0,
-              background: s.id === currentId
-                ? (SEC_CATEGORY[s.id]?.color ?? '#00e5ff')
-                : SEC_CATEGORY[s.id]?.id === cat?.id
-                  ? 'rgba(255,255,255,.2)'
-                  : 'rgba(255,255,255,.07)',
-              transition: 'all .25s',
-            }} />
-          ))}
+      <div style={{ textAlign: 'center', flex: 1, minWidth: 0, padding: '0 8px' }}>
+        <div style={{
+          font: '10px "Courier New",monospace', color: cat?.color ?? 'var(--dim)',
+          letterSpacing: 2, marginBottom: 4,
+        }}>
+          {cat?.label}
+        </div>
+        <div style={{ fontSize: 12, color: 'var(--dim)' }}>
+          {current?.icon} {current?.label}
+          <span style={{ opacity: 0.45, marginLeft: 8 }}>{idx + 1} / {ALL_SECS.length}</span>
         </div>
       </div>
 
       <button
-        onClick={() => next && onNavigate(next.id)} disabled={!next}
+        type="button"
+        onClick={() => next && onNavigate(next.id)}
+        disabled={!next}
         style={btnStyle(next)}
         onMouseEnter={e => { if (next) e.currentTarget.style.borderColor = `${SEC_CATEGORY[next.id]?.color}55`; }}
         onMouseLeave={e => { if (next) e.currentTarget.style.borderColor = 'rgba(255,255,255,.12)'; }}
@@ -99,7 +97,6 @@ export default function App() {
   };
 
   const [activeSection, setActiveSection] = useState(getHashId);
-  const { markCompleted, isCompleted } = useProgress(ALL_SECS);
 
   const navigate = useCallback(id => {
     setActiveSection(id);
@@ -143,11 +140,15 @@ export default function App() {
 
   const ActiveComponent = SECTION_MAP[activeSection] ?? Home;
   const immersive = IMMERSIVE_SECTIONS.has(activeSection);
-  const isCosmosTheme = SEC_CATEGORY[activeSection]?.id === 'cosmos';
+  const scene = SEC_CATEGORY[activeSection]?.id === 'cosmos' ? 'cosmos' : 'circuit';
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-scene', scene);
+  }, [scene]);
 
   return (
     <NavContext.Provider value={navigate}>
-      {!immersive && (isCosmosTheme ? <StarfieldBg /> : <CircuitBg />)}
+      {!immersive && <SceneBackground scene={scene} theme={theme} />}
       {!immersive && (
         <Nav theme={theme} onToggleTheme={toggle} activeSection={activeSection} onNavigate={navigate} />
       )}
@@ -156,11 +157,10 @@ export default function App() {
           <Suspense fallback={<SectionFallback />}>
             <ActiveComponent />
           </Suspense>
-          {!immersive && activeSection !== 'home' && (
-            <CompleteButton sectionId={activeSection} isCompleted={isCompleted} onComplete={markCompleted} />
-          )}
         </div>
-        {!immersive && <BottomNav currentId={activeSection} onNavigate={navigate} />}
+        {!immersive && activeSection !== 'home' && (
+          <BottomNav currentId={activeSection} onNavigate={navigate} />
+        )}
         {!immersive && activeSection === 'home' && <Footer onNavigate={navigate} />}
       </main>
     </NavContext.Provider>

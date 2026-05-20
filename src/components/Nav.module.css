@@ -12,6 +12,13 @@
   background: rgba(228,238,250,0.94);
   border-bottom-color: rgba(0,80,160,0.12);
 }
+[data-scene="cosmos"] .nav {
+  border-bottom-color: rgba(156,125,255,0.14);
+}
+[data-scene="cosmos"][data-theme="light"] .nav {
+  background: rgba(242,240,252,0.96);
+  border-bottom-color: rgba(110,78,214,0.14);
+}
 
 /* ── Row 1：一级大类 ── */
 .row1 {

@@ -73,7 +73,7 @@ function ICard({ color, title, children }) {
   return (
     <div className="icard" style={{ borderLeftColor: color }}>
       <h4 style={{ color }}>{title}</h4>
-      <div style={{ fontSize: 13.5, color: '#aabfc8', lineHeight: 1.65 }}>{children}</div>
+      <div style={{ fontSize: 13.5, color: 'var(--text-muted)', lineHeight: 1.65 }}>{children}</div>
     </div>
   );
 }
@@ -111,8 +111,8 @@ export default function CosmosStructure() {
           <div className="glass" style={{ borderColor: `${layer.color}55` }}>
             <h3 style={{ color: layer.color, marginBottom: 6 }}>{layer.label}</h3>
             <div style={{ font: '11px monospace', color: 'var(--dim)', marginBottom: 10 }}>范围：{layer.range}</div>
-            <p style={{ fontSize: 14, color: '#aabfc8', lineHeight: 1.75, marginBottom: 12 }}>{layer.desc}</p>
-            <ul style={{ fontSize: 13, color: '#aabfc8', lineHeight: 1.8, paddingLeft: 18 }}>
+            <p style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.75, marginBottom: 12 }}>{layer.desc}</p>
+            <ul style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.8, paddingLeft: 18 }}>
               {layer.bullets.map(b => <li key={b}>{b}</li>)}
             </ul>
           </div>

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { setupHiDpi } from '../../utils/canvas';
+import { themeCanvasColors } from '../../utils/themeColors';
 import Quiz from '../Quiz';
 import RelatedSections from '../RelatedSections';
 import {
@@ -85,7 +86,7 @@ function ScaleCanvas({ auRef, unitRef, pulseRef }) {
 
       ctx.fillStyle = 'rgba(156,125,255,.12)'; ctx.strokeStyle = 'rgba(156,125,255,.3)';
       ctx.beginPath(); ctx.roundRect(12, H - 56, W - 24, 44, 8); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = '#c8dce6'; ctx.font = '10px monospace'; ctx.textAlign = 'left';
+      ctx.fillStyle = themeCanvasColors().label; ctx.font = '10px monospace'; ctx.textAlign = 'left';
       ctx.fillText(`距离 ${au.toFixed(2)} AU → ${conv}`, 22, H - 36);
       ctx.fillText(`单程光时 ${lightTravelMinutes(au).toFixed(2)} 分 · 往返 ${(lightTravelMinutes(au) * 2).toFixed(2)} 分`, 22, H - 20);
 
@@ -102,7 +103,7 @@ function ICard({ color, title, children }) {
   return (
     <div className="icard" style={{ borderLeftColor: color }}>
       <h4 style={{ color }}>{title}</h4>
-      <div style={{ fontSize: 13.5, color: '#aabfc8', lineHeight: 1.65 }}>{children}</div>
+      <div style={{ fontSize: 13.5, color: 'var(--text-muted)', lineHeight: 1.65 }}>{children}</div>
     </div>
   );
 }
@@ -170,7 +171,7 @@ export default function CosmosScale() {
                 <button key={u.id} type="button" className="chip" style={{ borderColor: unit === u.id ? COSMOS_ACC : undefined, background: unit === u.id ? 'rgba(156,125,255,.12)' : undefined }} onClick={() => setUnit(u.id)}>{u.label}</button>
               ))}
             </div>
-            <p style={{ fontSize: 13, color: '#aabfc8', lineHeight: 1.8 }}>
+            <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.8 }}>
               <strong style={{ color: 'var(--white)' }}>{au.toFixed(2)} AU</strong> ≈ {formatSci(km)}<br />
               ≈ {(km / LY_KM).toExponential(2)} 光年<br />
               单程光时 <strong style={{ color: COSMOS_ACC }}>{ltMin.toFixed(2)} 分钟</strong>（地球–太阳约 8.3 光分）

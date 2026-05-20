@@ -101,7 +101,7 @@ function ICard({ color, title, children }) {
   return (
     <div className="icard" style={{ borderLeftColor: color }}>
       <h4 style={{ color }}>{title}</h4>
-      <div style={{ fontSize: 13.5, color: '#aabfc8', lineHeight: 1.65 }}>{children}</div>
+      <div style={{ fontSize: 13.5, color: 'var(--text-muted)', lineHeight: 1.65 }}>{children}</div>
     </div>
   );
 }
@@ -149,7 +149,7 @@ export default function CosmosHabitable() {
           </div>
           <div className="glass">
             <h4 style={{ color: star.color, marginBottom: 8 }}>{star.label}</h4>
-            <p style={{ fontSize: 13, color: '#aabfc8', lineHeight: 1.7 }}>
+            <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.7 }}>
               光度 {star.lum} L☉ · 宜居带约 {star.hzInner}–{star.hzOuter} AU<br />
               寿命约 {star.life} · 代表：{star.example}
             </p>

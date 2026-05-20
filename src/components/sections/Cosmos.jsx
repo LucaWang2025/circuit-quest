@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { setupHiDpi } from '../../utils/canvas';
+import { themeCanvasColors } from '../../utils/themeColors';
 import Quiz from '../Quiz';
 import { useNav } from '../../NavContext';
 import RelatedSections from '../RelatedSections';
@@ -42,7 +43,7 @@ function HubOrbitCanvas() {
 
       ctx.fillStyle = 'rgba(156,125,255,.2)';
       ctx.beginPath(); ctx.roundRect(10, 10, W - 20, 24, 6); ctx.fill();
-      ctx.fillStyle = '#c8dce6'; ctx.font = '10px monospace'; ctx.textAlign = 'center';
+      ctx.fillStyle = themeCanvasColors().label; ctx.font = '10px monospace'; ctx.textAlign = 'center';
       ctx.fillText('内太阳系公转示意 · 开普勒第三定律 T²∝a³', W / 2, 26);
 
       ctx.fillStyle = '#ffc850'; ctx.shadowColor = '#ffc850'; ctx.shadowBlur = 20;
@@ -71,7 +72,7 @@ function ICard({ color, title, children }) {
   return (
     <div className="icard" style={{ borderLeftColor: color }}>
       <h4 style={{ color }}>{title}</h4>
-      <div style={{ fontSize: 13.5, color: '#aabfc8', lineHeight: 1.65 }}>{children}</div>
+      <div style={{ fontSize: 13.5, color: 'var(--text-muted)', lineHeight: 1.65 }}>{children}</div>
     </div>
   );
 }
@@ -148,7 +149,7 @@ export default function Cosmos() {
             <span style={{ fontSize: 28 }}>{link.icon}</span>
             <div style={{ fontSize: '1.05rem', fontWeight: 700, margin: '8px 0 2px' }}>{link.title}</div>
             <div style={{ font: '10px monospace', color: link.color, letterSpacing: 2, marginBottom: 8 }}>{link.en}</div>
-            <p style={{ fontSize: 13, color: '#aabfc8', lineHeight: 1.6 }}>{link.desc}</p>
+            <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>{link.desc}</p>
             <div style={{ marginTop: 12, font: '11px monospace', color: 'var(--cyan)' }}>进入章节 →</div>
           </div>
         ))}

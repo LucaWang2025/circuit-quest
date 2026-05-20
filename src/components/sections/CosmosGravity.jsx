@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { setupHiDpi } from '../../utils/canvas';
+import { themeCanvasColors } from '../../utils/themeColors';
 import Quiz from '../Quiz';
 import RelatedSections from '../RelatedSections';
 import { COSMOS_ACC, GRAVITY_BODIES, QUIZ_GRAVITY } from '../../data/cosmosData';
@@ -58,7 +59,7 @@ function GravityCanvas({ bodyRef, launchRef }) {
       ctx.beginPath();
       ctx.arc(wellX, baseY + body.depth - 10, 16, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = '#c8dce6';
+      ctx.fillStyle = themeCanvasColors().label;
       ctx.font = '10px monospace';
       ctx.textAlign = 'center';
       ctx.fillText(body.label, wellX, baseY + body.depth + 24);
@@ -120,7 +121,7 @@ function ICard({ color, title, children }) {
   return (
     <div className="icard" style={{ borderLeftColor: color }}>
       <h4 style={{ color }}>{title}</h4>
-      <div style={{ fontSize: 13.5, color: '#aabfc8', lineHeight: 1.65 }}>{children}</div>
+      <div style={{ fontSize: 13.5, color: 'var(--text-muted)', lineHeight: 1.65 }}>{children}</div>
     </div>
   );
 }
@@ -172,7 +173,7 @@ export default function CosmosGravity() {
           </div>
           <div className="glass">
             <h4 style={{ color: COSMOS_ACC, marginBottom: 8 }}>{body.label}</h4>
-            <p style={{ fontSize: 13, color: '#aabfc8', lineHeight: 1.75 }}>
+            <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.75 }}>
               质量 {body.mass} · 逃逸速度 <strong style={{ color: COSMOS_ACC }}>{body.escape}</strong><br />
               {body.note}
             </p>

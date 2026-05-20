@@ -1,5 +1,6 @@
 import { useEffect, useRef, useMemo, useState } from 'react';
 import { setupHiDpi } from '../../utils/canvas';
+import { themeCanvasColors } from '../../utils/themeColors';
 import Quiz from '../Quiz';
 import RelatedSections from '../RelatedSections';
 import { COSMOS_ACC, MISSION_TARGETS, QUIZ_MISSION, lightTravelMinutes } from '../../data/cosmosData';
@@ -59,7 +60,7 @@ function MissionCanvas({ targetRef, cmdRef }) {
       const logY = 220;
       ctx.fillStyle = 'rgba(0,0,0,.4)';
       ctx.beginPath(); ctx.roundRect(20, logY, W - 40, 70, 8); ctx.fill();
-      ctx.fillStyle = '#aabfc8';
+      ctx.fillStyle = themeCanvasColors().muted;
       ctx.font = '9px monospace'; ctx.textAlign = 'left';
       ctx.fillText('> 慢回路：发出指令 → 等待单程光时 → 执行 → 等待回传', 28, logY + 18);
       ctx.fillText(`> 往返确认需 ${((delaySec * 2) / 60).toFixed(1)} 分钟`, 28, logY + 34);
@@ -78,7 +79,7 @@ function ICard({ color, title, children }) {
   return (
     <div className="icard" style={{ borderLeftColor: color }}>
       <h4 style={{ color }}>{title}</h4>
-      <div style={{ fontSize: 13.5, color: '#aabfc8', lineHeight: 1.65 }}>{children}</div>
+      <div style={{ fontSize: 13.5, color: 'var(--text-muted)', lineHeight: 1.65 }}>{children}</div>
     </div>
   );
 }
@@ -119,7 +120,7 @@ export default function CosmosMission() {
                 display: 'block', width: '100%', textAlign: 'left', padding: '12px 16px', borderRadius: 12, cursor: 'pointer', font: 'inherit',
                 border: `1px solid ${targetId === t.id ? COSMOS_ACC : 'rgba(255,255,255,.1)'}`,
                 background: targetId === t.id ? 'rgba(156,125,255,.15)' : 'rgba(255,255,255,.03)',
-                color: targetId === t.id ? '#fff' : '#aabfc8',
+                color: targetId === t.id ? 'var(--white)' : 'var(--text-muted)',
               }}>
                 <strong>{t.name}</strong>
                 <span style={{ float: 'right', fontSize: 11, color: 'var(--dim)' }}>{t.au} AU</span>
@@ -144,7 +145,7 @@ export default function CosmosMission() {
               <div style={{ padding: 10, background: 'rgba(0,0,0,.2)', borderRadius: 8 }}><div style={{ fontSize: 10, color: 'var(--dim)' }}>Δv 量级</div><strong>{target.deltaV}</strong></div>
               <div style={{ padding: 10, background: 'rgba(0,0,0,.2)', borderRadius: 8 }}><div style={{ fontSize: 10, color: 'var(--dim)' }}>建议储能</div><strong>{target.batteryKWh} kWh</strong></div>
             </div>
-            <p style={{ fontSize: 13, color: '#aabfc8', lineHeight: 1.7 }}>{target.note}</p>
+            <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.7 }}>{target.note}</p>
             {target.powerW && <p style={{ marginTop: 8, fontSize: 12, color: 'var(--cyan)' }}>典型功耗 {target.powerW}</p>}
           </div>
           <ICard color={COSMOS_ACC} title="🎮 慢回路控制">火星车不能实时转向：先上传指令序列，等待执行结果。软件需容错、超时与状态机。</ICard>

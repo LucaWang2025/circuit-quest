@@ -81,7 +81,7 @@ function ICard({ color, title, children }) {
   return (
     <div className="icard" style={{ borderLeftColor: color }}>
       <h4 style={{ color }}>{title}</h4>
-      <div style={{ fontSize: 13.5, color: '#aabfc8', lineHeight: 1.65 }}>{children}</div>
+      <div style={{ fontSize: 13.5, color: 'var(--text-muted)', lineHeight: 1.65 }}>{children}</div>
     </div>
   );
 }
@@ -137,21 +137,21 @@ export default function CosmosPlanets() {
                 </div>
               ))}
             </div>
-            <p style={{ fontSize: 13.5, color: '#aabfc8', lineHeight: 1.65 }}>{planet.fact}</p>
+            <p style={{ fontSize: 13.5, color: 'var(--text-muted)', lineHeight: 1.65 }}>{planet.fact}</p>
           </div>
           <ICard color={planet.color} title="⚡ 工程师视角">{planet.engineer}</ICard>
           <ICard color="var(--cyan)" title="🔌 与电路的关联">{planet.circuit}</ICard>
           <button type="button" className="glass icard reveal" style={{ borderColor: 'rgba(255,200,80,.3)', cursor: 'pointer', textAlign: 'left', width: '100%' }} onClick={() => navigate('solar-system')}>
             <div style={{ font: '10px monospace', color: 'var(--gold)', letterSpacing: 1.5, marginBottom: 6 }}>3D 交互 · SOLARIS</div>
             <div style={{ fontWeight: 700, marginBottom: 6 }}>进入 WebGL 深空探索 →</div>
-            <p style={{ fontSize: 13, color: '#aabfc8' }}>飞行靠近、对比模式、光速雷达、电力工程师提示。</p>
+            <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>飞行靠近、对比模式、光速雷达、电力工程师提示。</p>
           </button>
         </div>
       </div>
 
       <div className="glass reveal" style={{ maxWidth: 980, margin: '24px auto 0', padding: '16px 20px', borderColor: 'rgba(156,125,255,.2)' }}>
         <h4 style={{ color: COSMOS_ACC, marginBottom: 10 }}>行星分类速览</h4>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12, fontSize: 13, color: '#aabfc8', lineHeight: 1.7 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12, fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.7 }}>
           <div><strong style={{ color: '#4a9eff' }}>类地行星</strong>：岩石表面，水星–火星。地球唯一宜居；金星温室失控；火星弱光弱大气。</div>
           <div><strong style={{ color: '#d4a574' }}>气态巨行星</strong>：木星、土星。无固态表面，强辐射带，太阳能+RTG 混合供电。</div>
           <div><strong style={{ color: '#7de3f4' }}>冰巨星</strong>：天王星、海王星。低温弱光，探测器依赖 RTG。</div>
