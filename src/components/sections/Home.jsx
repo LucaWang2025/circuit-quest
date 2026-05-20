@@ -4,70 +4,8 @@ import { COSMOS_LEARNING_PATH, COSMOS_ACC } from '../../data/cosmosData';
 
 const CARD_GROUPS = [
   {
-    label: '拓展专题 · 宇宙',
-    tag: 'COSMOS',
-    color: '#9c7dff',
-    cards: [
-      { id: 'cosmos', icon: '🌌', title: '宇宙概览', en: 'HUB', color: '#9c7dff', desc: '专题入口 · 推荐路径 · 10+ 互动课' },
-      { id: 'cosmos-scale', icon: '📏', title: '天文尺度', en: 'SCALE', color: '#00bcd4', desc: 'AU/光年/光分 · 火星通信延迟' },
-      { id: 'cosmos-energy', icon: '🔗', title: '能源链', en: 'ENERGY', color: '#ffd600', desc: '太阳→光伏→电网（衔接电路章）' },
-      { id: 'cosmos-mission', icon: '🛰️', title: '任务台', en: 'MISSION', color: '#6eb5ff', desc: '深空延迟 · Δv · 储能预算' },
-      { id: 'solar-system', icon: '🛸', title: '3D深空', en: 'SOLARIS', color: '#ff6b9d', desc: 'WebGL · 对比模式 · 光速雷达' },
-    ],
-  },
-  {
-    label: '拓展专题 · 工业用电',
-    tag: 'INDUSTRIAL',
-    color: '#ff9800',
-    cards: [
-      { id: 'industrial', icon: '🏭', title: '工业概览', en: 'HUB', color: '#ff9800', desc: '380V 三相 · 星三角 · 电机启动' },
-      { id: 'industrial-phase', icon: '🔺', title: '三相基础', en: '3-PHASE', color: '#ffc107', desc: '120° 相量 · 线电压/相电压' },
-      { id: 'industrial-motor', icon: '🌀', title: '电机启动', en: 'MOTOR', color: '#ff6b35', desc: '直接/星三角/软启动' },
-    ],
-  },
-  {
-    label: '拓展专题 · 充电链路',
-    tag: 'EV CHAIN',
-    color: '#00e676',
-    cards: [
-      { id: 'evchain', icon: '🔌', title: '充电概览', en: 'HUB', color: '#00e676', desc: '慢充 OBC · 快充 · BMS 全链路' },
-      { id: 'evchain-ac', icon: '〰️', title: '交流慢充', en: 'AC', color: '#00e676', desc: '电网→桩→车载充电机→电池' },
-      { id: 'evchain-bms', icon: '🔋', title: 'BMS', en: 'BMS', color: '#00c853', desc: '预充·恒流·恒压·满充' },
-    ],
-  },
-  {
-    label: '拓展专题 · 配电箱',
-    tag: 'PANEL',
-    color: '#26a69a',
-    cards: [
-      { id: 'panel-hub', icon: '🗂️', title: '配电概览', en: 'HUB', color: '#26a69a', desc: '空开·漏电·SPD 全景' },
-      { id: 'panel-breaker-sim', icon: '⚡', title: '空开跳闸', en: 'BREAKER', color: '#ff6b35', desc: '过载/短路模拟' },
-      { id: 'panel-rcd-sim', icon: '🛡️', title: '漏电保护', en: 'RCD', color: '#00e676', desc: '30mA 人体保护' },
-    ],
-  },
-  {
-    label: '拓展专题 · 示波器实验',
-    tag: 'SCOPE LAB',
-    color: '#00e5ff',
-    cards: [
-      { id: 'scope-lab', icon: '📊', title: '实验概览', en: 'HUB', color: '#00e5ff', desc: '波形·测量·RC·触发' },
-      { id: 'scope-lab-wave', icon: '📈', title: '波形基础', en: 'WAVE', color: '#00e5ff', desc: '正弦/方波/三角' },
-      { id: 'scope-lab-rc', icon: '⚙️', title: 'RC 响应', en: 'RC', color: '#ffab00', desc: '充电曲线与时间常数' },
-    ],
-  },
-  {
-    label: '拓展专题 · 应急户储',
-    tag: 'BACKUP',
-    color: '#ff7043',
-    cards: [
-      { id: 'backup', icon: '🔋', title: '应急概览', en: 'HUB', color: '#ff7043', desc: '停电·ATS·供电优先级' },
-      { id: 'backup-outage', icon: '🔌', title: '停电场景', en: 'OUTAGE', color: '#ff7043', desc: '电网失电与负载分级' },
-      { id: 'backup-priority', icon: '☀️', title: '供电优先级', en: 'PRIORITY', color: '#00e676', desc: '光伏→储能→柴发' },
-    ],
-  },
-  {
-    label: '第一阶段 · 基础知识',
-    tag: 'FUNDAMENTALS',
+    label: '入门 · 电路理论',
+    tag: 'THEORY',
     color: '#ffab00',
     cards: [
       { id: 'voltage',     icon: '⚡', title: '电压',       en: 'VOLTAGE',       color: '#ffab00', desc: '电路推动力，了解伏特、电位差与欧姆定律' },
@@ -89,20 +27,30 @@ const CARD_GROUPS = [
     ],
   },
   {
-    label: '维修工坊 · 实战排修',
-    tag: 'REPAIR WORKSHOP',
-    color: '#ff6b35',
+    label: '入门 · 练习闯关',
+    tag: 'PRACTICE',
+    color: '#7c4dff',
     cards: [
-      { id: 'mm-measure',  icon: '📟', title: '万用表 5 式',   en: '5 MEASURES',    color: '#ff6b35', desc: '电压/电流/电阻/通断/二极管——接线动画与档位要点' },
-      { id: 'light-fix',   icon: '💡', title: '灯不亮排查',   en: 'LIGHT FIX',     color: '#ffab00', desc: '交互决策树：灯泡→开关→线路逐步定位' },
-      { id: 'outlet-fix',  icon: '🔌', title: '插座没电',     en: 'OUTLET FIX',    color: '#00bcd4', desc: '单孔/区域/零线断——万用表步进诊断模拟' },
-      { id: 'breaker-fix', icon: '⚡', title: '跳闸排查',     en: 'BREAKER FIX',   color: '#ff6b35', desc: '漏电/过载/短路三路分支决策' },
-      { id: 'teardown',    icon: '🔧', title: '拆机十诫',     en: 'TEARDOWN',      color: '#ff9800', desc: '断电验电、防静电、放高压——安全拆修流程' },
+      { id: 'calc-hub',     icon: '🧮', title: '电学计算器', en: 'CALCULATOR',  color: '#7c4dff', desc: '欧姆/功率/电费/并联电阻 五合一' },
+      { id: 'fault-sim',    icon: '🔍', title: '故障模拟',   en: 'SIMULATOR',   color: '#7c4dff', desc: '根据现象选原因，训练诊断判断力' },
+      { id: 'quiz-hub',     icon: '📝', title: '知识测验',   en: 'QUIZ',        color: '#7c4dff', desc: '综合选择题，错题解析' },
+      { id: 'line-game',    icon: '🎮', title: '连线游戏',   en: 'LINE GAME',   color: '#7c4dff', desc: '连接电池电阻 LED 构成闭合回路' },
+      { id: 'repair-quest', icon: '🏆', title: '维修闯关',   en: 'QUEST',       color: '#7c4dff', desc: '真实场景步骤打卡，进度本地保存' },
     ],
   },
   {
-    label: '第二阶段 · 家用电路',
-    tag: 'HOME ELECTRICAL',
+    label: '入门 · 速查工具',
+    tag: 'REFERENCE',
+    color: '#607d8b',
+    cards: [
+      { id: 'wire-table', icon: '📋', title: '线径载流量', en: 'WIRE TABLE', color: '#607d8b', desc: '国标铜线载流量与安全选型' },
+      { id: 'symbol-ref', icon: '📐', title: '电气符号',   en: 'SYMBOLS',    color: '#607d8b', desc: '常用符号与实物对照' },
+      { id: 'parts-ref',  icon: '🧰', title: '元件库',     en: 'PARTS',      color: '#607d8b', desc: '色环电阻、电容标识、接线端子' },
+    ],
+  },
+  {
+    label: '家用 · 住宅布线',
+    tag: 'HOME WIRING',
     color: '#00e676',
     cards: [
       { id: 'home-ckt',    icon: '🏠', title: '家用电路基础', en: 'HOME CIRCUIT',    color: '#ffab00', desc: '火零地线、断路器、回路划分，配电箱全解析' },
@@ -116,27 +64,35 @@ const CARD_GROUPS = [
       { id: 'safety',      icon: '🛡️', title: '安全用电',   en: 'SAFETY',          color: '#ff1744', desc: '接地原理、漏电保护器、触电急救五步法' },
       { id: 'troubleshoot',icon: '🔍', title: '故障排查',   en: 'TROUBLESHOOT',    color: '#ff6b35', desc: '交互决策树：断路器/插座/灯具/家电四大场景' },
       { id: 'meter-entry', icon: '⚡', title: '入户线与电表', en: 'METER ENTRY',   color: '#ffab00', desc: '家庭电力入口、电表、总开关与接地' },
-      { id: 'ev-charger',  icon: '🔌', title: '充电桩',     en: 'EV CHARGER',      color: '#00e676', desc: '7kW/11kW 交流桩接线与漏电保护' },
-      { id: 'solar',       icon: '☀️', title: '家用光伏',   en: 'SOLAR PV',        color: '#ffeb3b', desc: '组件、逆变器、并网与储能' },
       { id: 'lightning',   icon: '🌩️', title: '防雷接地',   en: 'LIGHTNING',       color: '#64b5f6', desc: '避雷、等电位连接与接地电阻' },
       { id: 'smart-switch',icon: '📱', title: '智能开关',   en: 'SMART SWITCH',    color: '#9c7dff', desc: '零火/单火接线、Wi-Fi 与继电器' },
     ],
   },
   {
-    label: '互动练习 · 测练闯关',
-    tag: 'PRACTICE',
-    color: '#7c4dff',
+    label: '家用 · 配电箱互动',
+    tag: 'PANEL LAB',
+    color: '#26a69a',
     cards: [
-      { id: 'calc-hub',     icon: '🧮', title: '电学计算器', en: 'CALCULATOR',  color: '#7c4dff', desc: '欧姆/功率/电费/并联电阻 五合一' },
-      { id: 'fault-sim',    icon: '🔍', title: '故障模拟',   en: 'SIMULATOR',   color: '#7c4dff', desc: '根据现象选原因，训练诊断判断力' },
-      { id: 'quiz-hub',     icon: '📝', title: '知识测验',   en: 'QUIZ',        color: '#7c4dff', desc: '综合选择题，错题解析' },
-      { id: 'line-game',    icon: '🎮', title: '连线游戏',   en: 'LINE GAME',   color: '#7c4dff', desc: '连接电池电阻 LED 构成闭合回路' },
-      { id: 'repair-quest', icon: '🏆', title: '维修闯关',   en: 'QUEST',       color: '#7c4dff', desc: '真实场景步骤打卡，进度本地保存' },
+      { id: 'panel-hub',         icon: '🗂️', title: '配电概览', en: 'HUB', color: '#26a69a', desc: '空开·漏电·SPD 全景' },
+      { id: 'panel-breaker-sim', icon: '⚡', title: '空开跳闸', en: 'BREAKER', color: '#ff6b35', desc: '过载/短路模拟' },
+      { id: 'panel-rcd-sim',     icon: '🛡️', title: '漏电保护', en: 'RCD', color: '#00e676', desc: '30mA 人体保护' },
     ],
   },
   {
-    label: '第三阶段 · 小电器电路',
-    tag: 'APPLIANCE CIRCUITS',
+    label: '家用 · 现场排障',
+    tag: 'FIELD REPAIR',
+    color: '#ff6b35',
+    cards: [
+      { id: 'mm-measure',  icon: '📟', title: '万用表 5 式',   en: '5 MEASURES',    color: '#ff6b35', desc: '电压/电流/电阻/通断/二极管——接线动画与档位要点' },
+      { id: 'light-fix',   icon: '💡', title: '灯不亮排查',   en: 'LIGHT FIX',     color: '#ffab00', desc: '交互决策树：灯泡→开关→线路逐步定位' },
+      { id: 'outlet-fix',  icon: '🔌', title: '插座没电',     en: 'OUTLET FIX',    color: '#00bcd4', desc: '单孔/区域/零线断——万用表步进诊断模拟' },
+      { id: 'breaker-fix', icon: '⚡', title: '跳闸排查',     en: 'BREAKER FIX',   color: '#ff6b35', desc: '漏电/过载/短路三路分支决策' },
+      { id: 'teardown',    icon: '🔧', title: '拆机十诫',     en: 'TEARDOWN',      color: '#ff9800', desc: '断电验电、防静电、放高压——安全拆修流程' },
+    ],
+  },
+  {
+    label: '家用 · 家电原理',
+    tag: 'APPLIANCE',
     color: '#e040fb',
     cards: [
       { id: 'bldc-fan',        icon: '🌀', title: '无刷电机风扇', en: 'BLDC FAN',        color: '#e040fb', desc: '三相绕组、六步换相、MOSFET全桥、PWM调速全解析' },
@@ -159,19 +115,51 @@ const CARD_GROUPS = [
     ],
   },
   {
-    label: '新能源专题',
-    tag: 'NEW ENERGY',
+    label: '能源 · 储能与光伏',
+    tag: 'STORAGE',
     color: '#00c853',
     cards: [
       { id: 'battery-tech',   icon: '🔋', title: '锂电池',     en: 'BATTERY',    color: '#00c853', desc: '三元 vs 磷酸铁锂、BMS 保护' },
       { id: 'fast-charge',    icon: '⚡', title: '快充协议',   en: 'FAST CHARGE', color: '#00c853', desc: 'PD/QC/UFCS 握手与安全' },
+      { id: 'energy-storage', icon: '🏠', title: '户储并网',   en: 'STORAGE',    color: '#00c853', desc: '户储、削峰填谷、V2G' },
+      { id: 'solar',          icon: '☀️', title: '家用光伏',   en: 'SOLAR PV',   color: '#ffeb3b', desc: '组件、逆变器、并网与储能' },
       { id: 'ev-power',       icon: '🚗', title: '汽车三电',   en: 'EV POWER',   color: '#00c853', desc: '电池包、驱动电机、电控' },
-      { id: 'energy-storage', icon: '🏠', title: '储能电网',   en: 'STORAGE',    color: '#00c853', desc: '户储、削峰填谷、V2G' },
     ],
   },
   {
-    label: '第五阶段 · 进阶动手',
-    tag: 'HANDS-ON ADVANCED',
+    label: '能源 · 电车充电',
+    tag: 'EV CHAIN',
+    color: '#00e676',
+    cards: [
+      { id: 'evchain',    icon: '🔌', title: '充电概览', en: 'HUB', color: '#00e676', desc: '慢充 OBC · 快充 · BMS 全链路' },
+      { id: 'ev-charger', icon: '🏠', title: '家用桩',   en: 'WALLBOX', color: '#00e676', desc: '7kW/11kW 交流桩接线与漏电保护' },
+      { id: 'evchain-ac', icon: '〰️', title: '交流慢充', en: 'AC', color: '#00e676', desc: '电网→桩→车载充电机→电池' },
+      { id: 'evchain-dc', icon: '⚡', title: '直流快充', en: 'DC', color: '#00c853', desc: '高压快充与热管理' },
+    ],
+  },
+  {
+    label: '能源 · 停电应急',
+    tag: 'BACKUP',
+    color: '#ff7043',
+    cards: [
+      { id: 'backup',          icon: '🔋', title: '应急概览', en: 'HUB', color: '#ff7043', desc: '停电·ATS·供电优先级' },
+      { id: 'backup-outage',   icon: '🔌', title: '停电场景', en: 'OUTAGE', color: '#ff7043', desc: '电网失电与负载分级' },
+      { id: 'backup-priority', icon: '☀️', title: '供电优先级', en: 'PRIORITY', color: '#00e676', desc: '光伏→储能→柴发' },
+    ],
+  },
+  {
+    label: '进阶 · 示波器实验',
+    tag: 'SCOPE LAB',
+    color: '#00e5ff',
+    cards: [
+      { id: 'scope-lab',      icon: '📊', title: '实验概览', en: 'HUB', color: '#00e5ff', desc: '波形·测量·RC·触发' },
+      { id: 'scope-lab-wave', icon: '📈', title: '波形基础', en: 'WAVE', color: '#00e5ff', desc: '正弦/方波/三角' },
+      { id: 'scope-lab-rc',   icon: '⚙️', title: 'RC 响应', en: 'RC', color: '#ffab00', desc: '充电曲线与时间常数' },
+    ],
+  },
+  {
+    label: '进阶 · 焊接与开发',
+    tag: 'MAKER',
     color: '#00e5ff',
     cards: [
       { id: 'soldering',    icon: '🔩', title: '焊接技术',    en: 'SOLDERING',    color: '#ff6b35', desc: '无铅焊接步骤、焊点缺陷识别、SMD贴片与拆焊技巧' },
@@ -182,13 +170,24 @@ const CARD_GROUPS = [
     ],
   },
   {
-    label: '速查手册',
-    tag: 'REFERENCE',
-    color: '#607d8b',
+    label: '进阶 · 工业三相',
+    tag: 'INDUSTRIAL',
+    color: '#ff9800',
     cards: [
-      { id: 'wire-table', icon: '📋', title: '线径载流量', en: 'WIRE TABLE', color: '#607d8b', desc: '国标铜线载流量与安全选型' },
-      { id: 'symbol-ref', icon: '📐', title: '电气符号',   en: 'SYMBOLS',    color: '#607d8b', desc: '常用符号与实物对照' },
-      { id: 'parts-ref',  icon: '🧰', title: '元件库',     en: 'PARTS',      color: '#607d8b', desc: '色环电阻、电容标识、接线端子' },
+      { id: 'industrial',       icon: '🏭', title: '工业概览', en: 'HUB', color: '#ff9800', desc: '380V 三相 · 星三角 · 电机启动' },
+      { id: 'industrial-phase', icon: '🔺', title: '三相基础', en: '3-PHASE', color: '#ffc107', desc: '120° 相量 · 线电压/相电压' },
+      { id: 'industrial-motor', icon: '🌀', title: '电机启动', en: 'MOTOR', color: '#ff6b35', desc: '直接/星三角/软启动' },
+    ],
+  },
+  {
+    label: '宇宙 · 天文探索',
+    tag: 'COSMOS',
+    color: '#9c7dff',
+    cards: [
+      { id: 'cosmos', icon: '🌌', title: '宇宙概览', en: 'HUB', color: '#9c7dff', desc: '专题入口 · 推荐路径' },
+      { id: 'cosmos-scale', icon: '📏', title: '天文尺度', en: 'SCALE', color: '#00bcd4', desc: 'AU/光年/光分' },
+      { id: 'cosmos-energy', icon: '🔗', title: '能源链', en: 'ENERGY', color: '#ffd600', desc: '太阳→光伏→电网' },
+      { id: 'solar-system', icon: '🛸', title: '3D深空', en: 'SOLARIS', color: '#ff6b9d', desc: 'WebGL 太阳系' },
     ],
   },
 ];
@@ -197,7 +196,7 @@ export default function Home() {
   const navigate = useNav();
   return (
     <section id="home" className={`sec ${styles.home}`}>
-      <div className={styles.badge}>📚 知识探索 · 107 章互动学习 · 六阶段路径</div>
+      <div className={styles.badge}>📚 知识探索 · 107 章 · 五大板块路径</div>
 
       <div className={styles.titleWrap}>
         <div className={styles.t1}>成为你家的</div>
@@ -205,8 +204,8 @@ export default function Home() {
       </div>
 
       <p className={styles.desc}>
-        基础理论、维修工坊、家用电路、五大拓展专题（工业/充电/配电/示波器/应急）与宇宙深空——多阶段 107 章循序渐进，
-        让你能安全、自信地理解和处理身边的每一个电气问题。
+        入门理论 → 家用电工 → 能源电力 → 进阶实验 → 宇宙探索，五大板块 107 章按相关性排列：
+        配电与排障归家用、充电与光伏归能源、示波器实验与工业三相归进阶，减少跨栏找章的歧义。
       </p>
 
       <div className="reveal" style={{
